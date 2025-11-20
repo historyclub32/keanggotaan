@@ -1,9 +1,8 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pendaftaran Anggota HC 32</title>
+  <script src="config.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -212,246 +211,24 @@
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   
-  <script>
-    // ==== KONFIGURASI ====
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec"; 
-    const MAX_FILE_SIZE_MB = 1; // Batas Maksimal MB
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  
+<script>
+    // ==== 1. DROPDOWN KELAS & ANGKATAN ====
+    // (Kode dropdown & kamera Anda sebelumnya SUDAH BENAR, biarkan saja)
+    // ... (Copy-paste logika populateDropdowns, Camera, Cropper di sini) ...
+    // ... (Atau biarkan kode lama Anda untuk bagian UI & Kamera, HANYA GANTI BAGIAN SUBMIT DI BAWAH INI) ...
 
-    // ==== ELEMEN UI ====
-    const tipeSel = document.getElementById('fd-tipe');
-    const grpSiswa = document.getElementById('group-siswa');
-    const grpJab   = document.getElementById('group-jabatan');
-    const grpLulus = document.getElementById('group-lulus');
-    const msg      = document.getElementById('msg');
-    const nisInput = document.getElementById('fd-nis');
-    const nisLabel = document.getElementById('label-id');
+    // ==== LOGIKA SUBMIT FORM (YANG PERLU DIGANTI) ====
     
-    // ==== 1. DROPDOWN KELAS & ANGKATAN (DIPERBAIKI) ====
-    function populateDropdowns() {
-        // Kelas: X-1 sampai X-8 (XI dan XII juga)
-        const kelasSelect = document.getElementById('fd-kelas');
-        const tingkat = ['X', 'XI', 'XII'];
-        while (kelasSelect.options.length > 1) kelasSelect.remove(1);
-        
-        tingkat.forEach(t => {
-            for(let i=1; i<=8; i++) { // Loop hanya sampai 8
-                let val = `${t}-${i}`;
-                kelasSelect.add(new Option(val, val));
-            }
-        });
+    // Konfigurasi URL dihapus karena sudah ada di config.js
+    // const WEB_APP_URL = "...";  <-- INI DIHAPUS SAJA
 
-        // Angkatan: Hanya 2026, 2027, 2028
-        const angkatanSelect = document.getElementById('fd-angkatan');
-        const tahunList = [2026, 2027, 2028]; // Array statis
-        while (angkatanSelect.options.length > 1) angkatanSelect.remove(1);
-        
-        tahunList.forEach(yr => {
-            angkatanSelect.add(new Option(yr, yr));
-        });
-    }
+    // ... (Logika UI, Kamera, dan Cropper tetap sama seperti kode Anda sebelumnya) ...
+    // ... (Pastikan kode populateDropdowns, camera logic, dll tetap ada di atas ini) ...
 
-    // ==== 2. CAMERA, FILE & CROPPER LOGIC ====
-    const btnCam = document.getElementById('btn-open-cam');
-    const btnFile = document.getElementById('btn-open-file');
-    const inpFile = document.getElementById('inp-file-foto');
-    
-    // Elements Camera
-    const camModal = document.getElementById('cam-modal');
-    const video = document.getElementById('cam-video');
-    const btnCapture = document.getElementById('btn-cam-capture');
-    const btnCancelCam = document.getElementById('btn-cam-cancel');
-    let stream = null;
-
-    // Elements Cropper
-    const cropModal = document.getElementById('crop-modal');
-    const cropperImgElement = document.getElementById('cropper-img');
-    const btnCropSave = document.getElementById('btn-crop-save');
-    const btnCropCancel = document.getElementById('btn-crop-cancel');
-    let cropper = null;
-
-    // Elements Preview
-    const previewCont = document.getElementById('foto-preview-container');
-    const previewImg = document.getElementById('foto-preview-img');
-    const btnHapusFoto = document.getElementById('btn-hapus-foto');
-    const hiddenBase64 = document.getElementById('fd-foto-base64');
-
-    // --- A. File Input ---
-    btnFile.addEventListener('click', () => inpFile.click());
-    inpFile.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(file) startCropper(file);
-    });
-
-    // --- B. Camera Logic (DIPERBAIKI) ---
-    btnCam.addEventListener('click', async () => {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: 'user' }, 
-                audio: false 
-            });
-            video.srcObject = stream;
-            // Pastikan video dimainkan (diperlukan di beberapa browser mobile)
-            video.onloadedmetadata = () => {
-                video.play();
-            };
-            camModal.style.display = 'flex';
-        } catch (err) {
-            alert('Gagal akses kamera: ' + err.message + '\nPastikan Anda memberi izin kamera di browser.');
-        }
-    });
-
-    btnCancelCam.addEventListener('click', stopCamera);
-
-    btnCapture.addEventListener('click', () => {
-        // Tunggu sebentar untuk memastikan dimensi video tersedia
-        if (video.videoWidth === 0 || video.videoHeight === 0) {
-            alert("Tunggu sebentar, kamera sedang memuat...");
-            return;
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        canvas.toBlob(blob => {
-            stopCamera();
-            startCropper(blob);
-        }, 'image/jpeg');
-    });
-
-    function stopCamera() {
-        if(stream) {
-            stream.getTracks().forEach(t => t.stop());
-            stream = null;
-        }
-        camModal.style.display = 'none';
-    }
-
-    // --- C. Cropper Logic (Inti Fitur) ---
-    function startCropper(blob) {
-        const url = URL.createObjectURL(blob);
-        cropperImgElement.src = url;
-        cropModal.style.display = 'flex';
-        
-        if(cropper) cropper.destroy();
-        cropper = new Cropper(cropperImgElement, {
-            aspectRatio: 1, // WAJIB 1:1
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 1,
-        });
-    }
-
-    btnCropCancel.addEventListener('click', () => {
-        cropModal.style.display = 'none';
-        inpFile.value = '';
-        if(cropper) cropper.destroy();
-    });
-
-    btnCropSave.addEventListener('click', () => {
-        if(!cropper) return;
-        
-        // 1. Get Canvas (Resize to max 600x600 for reasonable quality)
-        const canvas = cropper.getCroppedCanvas({
-            width: 600, height: 600,
-            fillColor: '#fff',
-            imageSmoothingEnabled: true,
-            imageSmoothingQuality: 'high',
-        });
-
-        // 2. Convert to Blob & Validate Size
-        canvas.toBlob((blob) => {
-            const sizeMB = blob.size / (1024 * 1024);
-            
-            if (sizeMB > MAX_FILE_SIZE_MB) {
-                // Jika masih > 1MB, kompres lebih kuat
-                canvas.toBlob((blob2) => {
-                    if((blob2.size / 1024 / 1024) > MAX_FILE_SIZE_MB) {
-                        alert("Ukuran foto masih terlalu besar. Silakan gunakan foto lain.");
-                        return;
-                    }
-                    saveFinalImage(blob2);
-                }, 'image/jpeg', 0.6); // Turunkan kualitas ke 60%
-            } else {
-                saveFinalImage(blob);
-            }
-        }, 'image/jpeg', 0.9); // Default kualitas 90%
-    });
-
-    function saveFinalImage(blob) {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-            hiddenBase64.value = reader.result;
-            previewImg.src = reader.result;
-            previewCont.style.display = 'block';
-            document.getElementById('photo-buttons').style.display = 'none';
-            cropModal.style.display = 'none';
-            if(cropper) cropper.destroy();
-        };
-    }
-
-    btnHapusFoto.addEventListener('click', () => {
-        hiddenBase64.value = '';
-        previewImg.src = '';
-        previewCont.style.display = 'none';
-        document.getElementById('photo-buttons').style.display = 'flex';
-        inpFile.value = '';
-    });
-
-    // ==== 3. LOGIKA UI UMUM ====
-    const onlyDigits = s => (s || '').toString().replace(/\D+/g, '');
-    const mapUiTypeToBackend = (ui) => {
-      if (ui === 'siswa') return 'siswa-aktif';
-      if (ui === 'lain')  return 'non-32';
-      return ui;
-    };
-
-    function setIdFieldByType(type){
-      let label = 'NIS / NISN / NIP *';
-      let ph = 'Masukkan Nomor Identitas';
-      if(type === 'siswa'){ label = 'NIS *'; ph = 'Masukkan NIS (maks 7 digit)'; }
-      else if(type === 'guru'){ label = 'NIP *'; ph = 'Masukkan NIP (18 digit)'; }
-      else if(type === 'alumni'){ label = 'Nomor Anggota Perpus 32 *'; ph = 'Masukkan No. Anggota / NIS lama'; }
-      else if(type === 'lain'){ label = 'Identitas (NISN/NIP/Lainnya) *'; ph = 'Masukkan NISN atau NIP'; }
-      nisLabel.textContent = label; nisInput.placeholder = ph;
-    }
-
-    function applyTypeUI(){
-      const v = tipeSel.value;
-      grpSiswa.classList.add('hidden');
-      grpJab.classList.add('hidden');
-      grpLulus.classList.add('hidden');
-
-      if (v === 'siswa') { grpSiswa.classList.remove('hidden'); }
-      else if (v === 'guru')   { grpJab.classList.remove('hidden'); grpLulus.classList.remove('hidden'); }
-      else if (v === 'alumni') { grpLulus.classList.remove('hidden'); }
-      else { grpJab.classList.remove('hidden'); }
-      setIdFieldByType(v);
-    }
-    tipeSel.addEventListener('change', applyTypeUI);
-
-    // ==== 4. SIGNATURE PAD ====
-    const sigCanvas = document.getElementById('sig-canvas');
-    let signaturePad = null;
-
-    function resizeSigCanvas(){
-      const ratio = Math.max(window.devicePixelRatio || 1, 1);
-      sigCanvas.width = sigCanvas.offsetWidth * ratio;
-      sigCanvas.height = sigCanvas.offsetHeight * ratio;
-      sigCanvas.getContext("2d").scale(ratio, ratio);
-      if(signaturePad) signaturePad.clear();
-    }
-
-    window.addEventListener('load', ()=>{ 
-        populateDropdowns();
-        applyTypeUI(); 
-        signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255, 255, 255, 0)' });
-        resizeSigCanvas();
-    });
-    window.addEventListener('resize', resizeSigCanvas);
-    document.getElementById('sig-clear').addEventListener('click', () => signaturePad.clear());
-
-    // ==== 5. SUBMIT FORM ====
+    // ==== 5. SUBMIT FORM (VERSI BARU) ====
     document.getElementById('form-daftar').addEventListener('submit', async (e)=>{
       e.preventDefault();
       msg.textContent = ''; msg.className = '';
@@ -483,8 +260,7 @@
              else payloadId.nis = d;
         }
 
-        const payload = {
-          action: 'pendaftaran',
+        const bodyData = {
           ...payloadId,
           nama: document.getElementById('fd-nama').value.trim(),
           tipe: tipe,
@@ -492,15 +268,16 @@
           angkatan: (tipe === 'siswa-aktif') ? document.getElementById('fd-angkatan').value : '',
           nohp: document.getElementById('fd-nohp').value.trim(),
           email: document.getElementById('fd-email').value.trim(),
-          fotoBase64: hiddenBase64.value, // KIRIM BASE64
+          fotoBase64: hiddenBase64.value,
           jabatan: (tipe!=='siswa-aktif' && tipe!=='alumni') ? document.getElementById('fd-jabatan').value.trim() : '',
           tahunLulus: (tipe==='alumni' || tipe==='guru') ? document.getElementById('fd-thn-lulus').value.trim() : '',
           tanggalLahir: document.getElementById('fd-tgllahir').value,
           tandaTangan: signaturePad.toDataURL('image/png')
         };
 
-        const res = await fetch(WEB_APP_URL, { method:'POST', body: JSON.stringify(payload) });
-        const out = await res.json();
+        // ▼▼▼ BAGIAN INI YANG BERUBAH (Memakai fungsi dari config.js) ▼▼▼
+        const out = await hc32_post('pendaftaran', bodyData);
+        // ▲▲▲▲▲▲
 
         if(out.status==='ok'){
           msg.textContent = 'Pendaftaran Berhasil! Terima kasih.'; msg.className='success';
@@ -520,6 +297,6 @@
         submitBtn.disabled = false; submitBtn.textContent = 'Kirim Pendaftaran';
       }
     });
-  </script>
+</script>
 </body>
 </html>
