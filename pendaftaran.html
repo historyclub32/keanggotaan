@@ -12,441 +12,482 @@
   
   <style>
     :root {
-      --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
-      --hc-green: #15a256; --hc-red: #d30e14; --hc-bg: #f8fafc;
-      --hc-blue-light-bg: rgba(26, 71, 135, 0.08);
-      --border: #cbd5e1; --card: #ffffff;
+      --brand-blue: #1a4787; --brand-teal: #0f8a94; --brand-dark: #2e2e2e;
+      --text-main: #0f172a; --text-muted: #64748b;
+      --bg-page: #ffffff; --border-color: #e2e8f0;
+      --active-bg: #f1f5f9; --active-text: #1a4787;
     }
 
-    /* === 1. BASE STYLES & DASHBOARD LAYOUT === */
     body {
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--hc-bg);
-        color: var(--hc-dark);
-        margin: 0; padding: 0;
-        display: flex;
-        min-height: 100vh;
+        font-family: 'Poppins', sans-serif; margin: 0; padding: 0;
+        background-color: var(--bg-page); color: var(--text-main);
+        padding-top: 70px; /* Space for fixed header */
     }
 
-    /* Loading Spinner */
-    #hc32-loading-overlay {
-        position: fixed; inset: 0; background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(2px); display: none;
-        align-items: center; justify-content: center; z-index: 3000;
-    }
-    .hc-loader { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
-    .hc-loader-spinner { position: absolute; inset: 0; border-radius: 50%; border: 5px solid var(--hc-blue); border-top-color: var(--hc-toska); animation: hcspin 1s linear infinite; }
-    .hc-loader-logo { width: 44px; height: 44px; border-radius: 50%; }
-    @keyframes hcspin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-    /* Sidebar */
-    aside {
-        width: 240px; background: #ffffff; border-right: 1px solid #e2e8f0;
-        display: flex; flex-direction: column; padding: 20px;
-        box-sizing: border-box; flex-shrink: 0;
-        position: fixed; inset: 0 auto 0 0; z-index: 50;
-        transition: transform 0.3s ease;
-    }
-    .aside-header { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
-    .aside-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-    aside nav { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-    .nav-item {
-        display: block; text-decoration: none; color: #334155;
-        font-size: 14px; font-weight: 500; padding: 8px 12px;
-        border-radius: 6px; transition: all 0.2s ease;
-    }
-    .nav-item:hover { background-color: #f1f5f9; }
-    .nav-item.active { background-color: var(--hc-blue-light-bg); color: var(--hc-blue); font-weight: 600; }
-
-    /* Main Content */
-    main {
-        flex-grow: 1; padding: 32px; overflow-y: auto;
-        margin-left: 240px; position: relative;
-    }
-    header.page-header {
-        display: flex; justify-content: space-between; align-items: center; margin: 0 0 24px 0;
-    }
-    .page-title { font-size: 28px; font-weight: 700; color: var(--hc-dark); margin: 0; }
-    #btn-open-sidebar {
-        display: none; background: white; border: 1px solid #cbd5e1;
-        border-radius: 6px; width: 36px; height: 36px;
-        align-items: center; justify-content: center; cursor: pointer; font-size: 20px;
-    }
-
-    /* === 2. FORM STYLES (Diadaptasi ke Layout Dashboard) === */
-    .content-section {
-        background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
-        padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
-        max-width: 800px; margin-left: auto; margin-right: auto; /* Center form */
+    /* === 1. HEADER (Sesuai Gambar 1) === */
+    .app-header {
+        position: fixed; top: 0; left: 0; right: 0;
+        height: 64px; background: #fff;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        z-index: 1000; border-bottom: 3px solid #eab308; /* Garis emas tipis di atas header seperti gambar */
+        border-top: 0;
     }
     
-    .welcome-banner {
-        background: linear-gradient(135deg,var(--hc-blue),var(--hc-toska));
-        color: #fff; padding: 18px 22px; border-radius: 12px; margin-bottom: 24px;
-    }
-    .welcome-banner h2 { margin: 0; font-size: 24px; }
-    .welcome-banner small { opacity: 0.9; font-weight: 500; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    /* Logo placeholder - ganti src dengan URL logo asli Anda */
+    .header-logo { width: 40px; height: 40px; object-fit: contain; } 
+    .header-title { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0; }
 
-    .row { display: grid; gap: 8px; margin-bottom: 16px; }
-    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #334155; }
+    .menu-btn {
+        background: none; border: none; cursor: pointer;
+        display: flex; flex-direction: column; gap: 5px;
+        padding: 5px;
+    }
+    .menu-btn span {
+        display: block; width: 24px; height: 3px;
+        background-color: #1e293b; border-radius: 2px;
+    }
+
+    /* === 2. SIDEBAR / MENU NAVIGASI (Sesuai Gambar 2) === */
+    .sidebar-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+        z-index: 1100; opacity: 0; visibility: hidden;
+        transition: all 0.3s;
+    }
+    .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+    .sidebar {
+        position: fixed; top: 0; right: 0; bottom: 0;
+        width: 280px; background: #fff; z-index: 1200;
+        transform: translateX(100%); transition: transform 0.3s ease-out;
+        display: flex; flex-direction: column;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    .sidebar-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 20px; border-bottom: 1px solid #f1f5f9;
+    }
+    .sidebar-title { font-size: 18px; font-weight: 700; color: #1e293b; }
+    .close-btn { font-size: 28px; background: none; border: none; color: #64748b; cursor: pointer; line-height: 1; }
+
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 10px 0; }
+
+    /* Menu Items */
+    .menu-category {
+        padding: 16px 24px 8px;
+        font-size: 13px; font-weight: 600;
+        color: var(--brand-blue); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    
+    /* Link tunggal (Beranda) */
+    .nav-link-single {
+        display: block; padding: 12px 24px;
+        color: #334155; text-decoration: none; font-weight: 500; font-size: 15px;
+        transition: background 0.2s;
+    }
+
+    /* Link dalam kategori */
+    .nav-link {
+        display: block; padding: 10px 24px 10px 40px; /* Indent */
+        color: #334155; text-decoration: none; font-size: 15px;
+        transition: background 0.2s;
+    }
+    
+    .nav-link:hover, .nav-link-single:hover { background-color: #f8fafc; color: var(--brand-blue); }
+    
+    /* Active State (Biru Muda seperti gambar) */
+    .nav-link.active {
+        background-color: #eff6ff; color: var(--brand-blue); font-weight: 600;
+        border-radius: 0 20px 20px 0; margin-right: 10px;
+    }
+
+    /* === 3. FORM CONTENT === */
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .card {
+        background: #fff; border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        padding: 24px; border: 1px solid #f1f5f9;
+    }
+    
+    .welcome-banner { margin-bottom: 24px; text-align: center; }
+    .welcome-banner h2 { margin: 0 0 4px; font-size: 22px; color: var(--brand-blue); }
+    .welcome-banner p { margin: 0; color: #64748b; font-size: 14px; }
+
+    /* Form Elements */
+    .row { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #334155; }
     input, select {
-        width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 14px;
-        border: 1px solid var(--border); border-radius: 8px; outline: none;
-        background: #fff; color: var(--hc-dark); min-height: 42px;
-        transition: border-color .2s;
+        width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1;
+        border-radius: 8px; font-size: 15px; outline: none;
+        background: #fff; box-sizing: border-box; transition: border-color 0.2s;
     }
-    input:focus, select:focus { border-color: var(--hc-blue); }
+    input:focus, select:focus { border-color: var(--brand-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1); }
     
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .note { font-size: 12px; color: #64748b; margin: -4px 0 0 0; }
-    .hidden { display: none !important; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .note { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+    .hidden { display: none; }
 
+    /* Buttons */
     button[type="submit"] {
-        width: 100%; background: linear-gradient(135deg,var(--hc-blue),var(--hc-toska));
-        color: #fff; border: none; padding: 14px; border-radius: 8px;
+        width: 100%; background: linear-gradient(135deg, var(--brand-blue), var(--brand-teal));
+        color: #fff; border: none; padding: 14px; border-radius: 10px;
         font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 10px;
-        transition: opacity 0.2s;
+        box-shadow: 0 4px 12px rgba(26, 71, 135, 0.2);
     }
-    button[type="submit"]:hover { opacity: 0.9; }
-    button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; }
+    button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
 
-    /* Signature */
-    .sig-wrap { position: relative; height: 180px; border: 2px dashed var(--border); border-radius: 8px; background: #f8fafc; }
-    canvas#sig-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
-    .sig-actions { position: absolute; right: 10px; top: 10px; }
-    
-    /* Buttons Ghost (untuk tool kamera/ttd) */
-    .ghost {
-        background: #f1f5f9; color: #475569; border: 1px solid var(--border);
-        padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
-        cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-    }
-    .ghost.danger { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
-
-    /* Foto & Kamera */
-    .photo-actions { display: flex; gap: 10px; margin-top: 10px; }
-    .photo-actions button { flex: 1; padding: 10px; }
+    /* Upload & Camera UI */
+    .photo-area { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 16px; text-align: center; background: #f8fafc; }
     #foto-preview-container { 
-        position: relative; width: 140px; height: 140px; 
-        background: #f1f5f9; border-radius: 50%; overflow: hidden; 
-        margin: 10px auto; border: 4px solid white; 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; 
+        width: 120px; height: 120px; margin: 0 auto 12px; 
+        border-radius: 50%; overflow: hidden; border: 3px solid #fff; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: none; background: #ddd;
     }
     #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
-    #btn-hapus-foto { 
-        position: absolute; bottom: 0; left: 0; right: 0; 
-        background: rgba(0,0,0,0.6); color: white; 
-        font-size: 10px; border: none; padding: 4px; cursor: pointer; width: 100%; 
+    .photo-btn-group { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+    .btn-small {
+        padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500;
+        border: 1px solid #cbd5e1; background: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px;
     }
+    .btn-small.danger { color: #ef4444; border-color: #fecaca; background: #fef2f2; }
 
-    /* Modal Overlay (Kamera & Cropper) */
+    /* Signature */
+    .sig-wrapper { height: 160px; border: 1px solid #cbd5e1; border-radius: 8px; position: relative; background: #fff; }
+    canvas#sig-canvas { width: 100%; height: 100%; display: block; }
+    .sig-clear-btn { position: absolute; top: 8px; right: 8px; }
+
+    /* Modals (Camera/Crop) */
     .modal-overlay { 
         position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; 
         display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; 
     }
-    .modal-content { 
-        width: 100%; max-width: 500px; background: #000; 
-        border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; 
-    }
-    .modal-controls { 
-        display: flex; gap: 12px; width: 100%; padding: 16px; 
-        background: #1a1a1a; box-sizing: border-box; 
-    }
+    .modal-box { width: 100%; max-width: 400px; background: #000; border-radius: 12px; overflow: hidden; }
+    .modal-actions { display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 16px; }
+    .btn-modal { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-modal.cancel { background: #333; color: white; }
+    .btn-modal.confirm { background: white; color: black; }
     #cropper-img { max-width: 100%; display: block; }
 
-    /* Messages */
-    #msg { font-size: 13px; margin-top: 12px; text-align: center; font-weight: 500; }
-    #msg.success { color: var(--hc-green); } 
-    #msg.error { color: var(--hc-red); } 
-    #msg.loading { color: var(--hc-blue); }
-
     /* Footer */
-    .site-footer { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center; color: #64748b; font-size: 13px; }
+    .site-footer { text-align: center; padding: 30px 20px; color: #94a3b8; font-size: 13px; }
 
-    /* Responsif */
-    @media (max-width: 900px) {
-        aside { transform: translateX(-100%); height: 100%; position: fixed; }
-        aside.open { transform: translateX(0); }
-        main { margin-left: 0; padding: 20px; }
-        #btn-open-sidebar { display: inline-flex; }
-    }
+    /* Message */
+    #msg { text-align: center; margin-top: 12px; font-size: 14px; font-weight: 500; }
+    #msg.success { color: var(--hc-green); } #msg.error { color: var(--hc-red); } #msg.loading { color: var(--hc-blue); }
+
     @media (max-width: 600px) {
-        .two { grid-template-columns: 1fr; gap: 8px; }
+        .two-col { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <div id="hc32-loading-overlay">
-      <div class="hc-loader">
-          <div class="hc-loader-spinner"></div>
-          <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" class="hc-loader-logo" alt="Logo HC">
+  <header class="app-header">
+      <div class="header-left">
+          <img src="https://lh3.googleusercontent.com/d/1J9aA5f4a8s1FnCOhgTInv7hzW-AEeu6b=s220" alt="HC Logo" class="header-logo">
+          <h1 class="header-title">Pendaftaran Anggota</h1>
+      </div>
+      <button class="menu-btn" id="btn-menu" aria-label="Menu">
+          <span></span><span></span><span></span>
+      </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+          <span class="sidebar-title">Menu Navigasi</span>
+          <button class="close-btn" id="btn-close">&times;</button>
+      </div>
+      
+      <div class="sidebar-content">
+          <a href="https://sites.google.com/view/historyclub32/beranda" class="nav-link-single">Beranda</a>
+
+          <div class="menu-category">Profil</div>
+          <a href="https://sites.google.com/view/historyclub32/profil/tentang-kami" class="nav-link">Tentang Kami</a>
+          <a href="https://sites.google.com/view/historyclub32/profil/sejarah" class="nav-link">Sejarah</a>
+          <a href="https://sites.google.com/view/historyclub32/profil/kepengurusan" class="nav-link">Kepengurusan</a>
+
+          <div class="menu-category">Aktivitas</div>
+          <a href="https://sites.google.com/view/historyclub32/aktivitas/agenda" class="nav-link">Agenda</a>
+          <a href="https://sites.google.com/view/historyclub32/aktivitas/kegiatan" class="nav-link">Kegiatan</a>
+
+          <div class="menu-category">Keanggotaan</div>
+          <a href="https://sites.google.com/view/historyclub32/keanggotaan/anggota" class="nav-link">Anggota</a>
+          <a href="https://sites.google.com/view/historyclub32/keanggotaan/presensi" class="nav-link">Presensi</a>
+          <a href="#" class="nav-link active">Pendaftaran</a> 
+      </div>
+  </aside>
+
+  <div class="container">
+      <div class="card">
+          <div class="welcome-banner">
+              <h2>Formulir Pendaftaran</h2>
+              <p>Silakan lengkapi data diri Anda dengan benar.</p>
+          </div>
+
+          <form id="form-daftar" novalidate>
+              <div class="row">
+                  <label for="fd-nis" id="label-id">NIS / Identitas *</label>
+                  <input id="fd-nis" placeholder="Nomor Induk Siswa" required />
+              </div>
+              <div class="row">
+                  <label for="fd-nama">Nama Lengkap *</label>
+                  <input id="fd-nama" placeholder="Sesuai Absen/Dapodik" required autocapitalize="words" />
+              </div>
+              <div class="row">
+                  <label for="fd-tipe">Tipe Keanggotaan *</label>
+                  <select id="fd-tipe">
+                      <option value="siswa">Siswa Aktif SMAN 32</option>
+                      <option value="guru">Guru/Tendik</option>
+                      <option value="alumni">Alumni</option>
+                      <option value="lain">Lainnya (Non-32)</option>
+                  </select>
+              </div>
+
+              <div id="group-siswa" class="row">
+                  <div class="two-col">
+                      <div>
+                          <label>Kelas *</label>
+                          <select id="fd-kelas"><option value="">Pilih...</option></select>
+                      </div>
+                      <div>
+                          <label>Angkatan *</label>
+                          <select id="fd-angkatan"><option value="">Pilih...</option></select>
+                      </div>
+                  </div>
+              </div>
+
+              <div id="group-jabatan" class="row hidden">
+                  <label>Jabatan</label>
+                  <input id="fd-jabatan" placeholder="Contoh: Pembina" />
+              </div>
+              <div id="group-lulus" class="row hidden">
+                  <label>Tahun Lulus</label>
+                  <input id="fd-thn-lulus" type="number" placeholder="YYYY" />
+              </div>
+
+              <div class="two-col row">
+                  <div>
+                      <label>No HP (WA) *</label>
+                      <input id="fd-nohp" type="tel" placeholder="08..." required />
+                  </div>
+                  <div>
+                      <label>Tanggal Lahir</label>
+                      <input id="fd-tgllahir" type="date" />
+                  </div>
+              </div>
+              <div class="row">
+                  <label>Email (Opsional)</label>
+                  <input id="fd-email" type="email" placeholder="email@address.com" />
+              </div>
+
+              <div class="row" style="margin-top:24px">
+                  <label>Foto Profil (Wajib, 1:1)</label>
+                  <div class="photo-area">
+                      <div id="foto-preview-container">
+                          <img id="foto-preview-img" src="" alt="Preview">
+                      </div>
+                      <input type="file" id="inp-file-foto" accept="image/*" hidden>
+                      <input type="hidden" id="fd-foto-base64">
+                      
+                      <div class="photo-btn-group" id="photo-buttons">
+                          <button type="button" class="btn-small" id="btn-open-cam">📷 Kamera</button>
+                          <button type="button" class="btn-small" id="btn-open-file">📁 Upload</button>
+                      </div>
+                      <div class="photo-btn-group hidden" id="photo-delete-group">
+                           <button type="button" class="btn-small danger" id="btn-hapus-foto">Hapus Foto</button>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <label>Tanda Tangan Digital *</label>
+                  <div class="sig-wrapper">
+                      <canvas id="sig-canvas"></canvas>
+                      <button type="button" class="btn-small danger sig-clear-btn" id="sig-clear">Ulangi</button>
+                  </div>
+                  <p class="note">Goreskan tanda tangan pada kotak di atas.</p>
+              </div>
+
+              <button type="submit" id="btn-submit">Kirim Data</button>
+              <p id="msg"></p>
+          </form>
       </div>
   </div>
 
-  <aside id="sidebar">
-      <div class="aside-header">
-           <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" alt="Logo" class="aside-logo">
-          <div>
-              <div style="font-weight: 700; color: var(--hc-blue);">History Club 32</div>
-              <div style="font-size: 12px; color: #64748b;">Pendaftaran Anggota</div>
-          </div>
-      </div>
-      <nav>
-          <a href="dashboard.html" class="nav-item">Dashboard</a>
-          <a href="presensi.html" class="nav-item">Presensi</a>
-          <a href="admin-agenda.html" class="nav-item">Agenda</a>
-          <a href="admin-posting.html" class="nav-item">Posting</a>
-          <a href="admin-anggota.html" class="nav-item">Anggota</a>
-          <a href="admin-kepengurusan.html" class="nav-item">Kepengurusan</a>
-          <a href="pendaftaran.html" class="nav-item active">Pendaftaran Baru</a>
-          <a href="#" class="nav-item" style="color: var(--hc-red); margin-top: auto;">Kembali / Logout</a>
-      </nav>
-  </aside>
-
-  <main>
-    <header class="page-header">
-        <h1 class="page-title">Formulir Pendaftaran</h1>
-        <button id="btn-open-sidebar" aria-label="Buka menu">☰</button>
-    </header>
-
-    <div class="content-section">
-        <div class="welcome-banner">
-            <small>Selamat Datang Calon Anggota</small>
-            <h2>History Club SMAN 32 Jakarta</h2>
-        </div>
-
-        <form id="form-daftar" novalidate>
-            <div class="row">
-              <label id="label-id" for="fd-nis">NIS / NISN / NIP *</label>
-              <input id="fd-nis" placeholder="Masukkan Nomor Identitas" required />
-            </div>
-
-            <div class="row">
-              <label for="fd-nama">Nama Lengkap *</label>
-              <input id="fd-nama" required autocomplete="name" autocapitalize="words" placeholder="Sesuai Absen/Dapodik" />
-            </div>
-
-            <div class="row">
-              <label for="fd-tipe">Tipe Keanggotaan *</label>
-              <select id="fd-tipe" required>
-                <option value="siswa" selected>Siswa/Siswi Aktif SMAN 32</option>
-                <option value="guru">Guru/Tendik</option>
-                <option value="alumni">Alumni SMAN 32</option>
-                <option value="lain">Selain SMAN 32</option>
-              </select>
-            </div>
-
-            <div id="group-siswa" class="row">
-              <div class="two">
-                <div>
-                  <label for="fd-kelas">Kelas *</label>
-                  <select id="fd-kelas"><option value="">Pilih Kelas...</option></select>
-                </div>
-                <div>
-                  <label for="fd-angkatan">Angkatan *</label>
-                  <select id="fd-angkatan"><option value="">Pilih Tahun...</option></select>
-                </div>
-              </div>
-            </div>
-
-            <div id="group-jabatan" class="row hidden">
-              <label for="fd-jabatan">Jabatan (mis. Pembina, Pelatih)</label>
-              <input id="fd-jabatan" />
-            </div>
-
-            <div id="group-lulus" class="row hidden">
-              <label for="fd-thn-lulus">Tahun Lulus</label>
-              <input id="fd-thn-lulus" type="number" placeholder="Contoh: 2020" />
-            </div>
-
-            <div class="two">
-              <div class="row">
-                <label for="fd-nohp">No HP (WhatsApp) *</label>
-                <input id="fd-nohp" type="tel" inputmode="numeric" required placeholder="08..." />
-              </div>
-              <div class="row">
-                <label for="fd-email">Email (Opsional)</label>
-                <input id="fd-email" type="email" placeholder="email@google.com" />
-              </div>
-            </div>
-            
-            <div class="row">
-               <label for="fd-tgllahir">Tanggal Lahir (Opsional)</label>
-               <input id="fd-tgllahir" type="date" />
-            </div>
-
-            <div class="row" style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed #e2e8f0;">
-              <label>Foto Profil (Wajib 1:1, Maks 1MB)</label>
-              
-              <div id="foto-preview-container">
-                  <img id="foto-preview-img" src="" alt="Preview">
-                  <button type="button" id="btn-hapus-foto">Hapus Foto</button>
-              </div>
-              
-              <div class="photo-actions" id="photo-buttons">
-                  <button type="button" class="ghost" id="btn-open-cam">📷 Kamera</button>
-                  <button type="button" class="ghost" id="btn-open-file">📁 Pilih File</button>
-              </div>
-              <input type="file" id="inp-file-foto" accept="image/*" hidden>
-              <input type="hidden" id="fd-foto-base64">
-              <p class="note" style="text-align: center;">Foto akan otomatis di-crop menjadi persegi.</p>
-            </div>
-
-            <div class="row" style="margin-top: 16px;">
-              <label for="sig-canvas">Tanda Tangan Digital *</label>
-              <div class="sig-wrap">
-                <canvas id="sig-canvas"></canvas>
-                <div class="sig-actions">
-                  <button class="ghost danger" type="button" id="sig-clear">Hapus</button>
-                </div>
-              </div>
-              <p class="note">Silakan tanda tangan di dalam kotak di atas.</p>
-            </div>
-
-            <button type="submit" id="btn-submit">Kirim Pendaftaran</button>
-            <p id="msg" aria-live="polite"></p>
-        </form>
-    </div>
-
-    <footer class="site-footer">
-       <p>© 2025 History Club SMAN 32 Jakarta. All rights reserved.</p>
-    </footer>
-  </main>
+  <footer class="site-footer">
+      <p>© 2025 History Club SMAN 32 Jakarta</p>
+  </footer>
 
   <div id="cam-modal" class="modal-overlay">
-      <div class="modal-content">
+      <div class="modal-box">
          <video id="cam-video" autoplay playsinline style="width:100%; background:black; min-height: 300px;"></video>
       </div>
-      <div class="modal-controls">
-          <button type="button" class="ghost danger" id="btn-cam-cancel" style="flex:1">Batal</button>
-          <button type="button" class="ghost" id="btn-cam-capture" style="flex:2; background:white; color:black;">Ambil Foto</button>
+      <div class="modal-actions">
+          <button class="btn-modal cancel" id="btn-cam-cancel">Batal</button>
+          <button class="btn-modal confirm" id="btn-cam-capture">Jepret</button>
       </div>
   </div>
 
   <div id="crop-modal" class="modal-overlay">
-      <div class="modal-content" style="background: #333;">
-          <div style="height: 400px; width: 100%;">
+      <div class="modal-box" style="background:#222; max-height:60vh;">
+          <div style="height: 300px; width: 100%;">
               <img id="cropper-img" src="" style="max-width: 100%;">
           </div>
       </div>
-      <div class="modal-controls">
-          <button type="button" class="ghost danger" id="btn-crop-cancel" style="flex:1">Batal</button>
-          <button type="button" class="ghost" id="btn-crop-save" style="flex:2; background:white; color:black;">Simpan (Crop 1:1)</button>
+      <div class="modal-actions">
+          <button class="btn-modal cancel" id="btn-crop-cancel">Batal</button>
+          <button class="btn-modal confirm" id="btn-crop-save">Simpan</button>
       </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  
-  <script>
-    // ==== KONFIGURASI ====
-    // URL sudah diambil dari config.js
-    const MAX_FILE_SIZE_MB = 1; 
 
-    // ==== UI ELEMENTS ====
+  <script>
+    // ==== UI INTERACTION (SIDEBAR) ====
+    const btnMenu = document.getElementById('btn-menu');
+    const btnClose = document.getElementById('btn-close');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    btnMenu.addEventListener('click', toggleSidebar);
+    btnClose.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // ==== KONFIGURASI FORM ====
+    const MAX_FILE_SIZE_MB = 1;
+
+    // ==== ELEMEN FORM ====
     const tipeSel = document.getElementById('fd-tipe');
     const grpSiswa = document.getElementById('group-siswa');
-    const grpJab   = document.getElementById('group-jabatan');
+    const grpJab = document.getElementById('group-jabatan');
     const grpLulus = document.getElementById('group-lulus');
-    const msg      = document.getElementById('msg');
     const nisInput = document.getElementById('fd-nis');
     const nisLabel = document.getElementById('label-id');
-    const loader   = document.getElementById("hc32-loading-overlay");
-    
-    // Sidebar Toggle
-    const sb = document.getElementById("sidebar");
-    document.getElementById("btn-open-sidebar").addEventListener("click", () => sb.classList.toggle("open"));
+    const msg = document.getElementById('msg');
 
-    // ==== 1. DROPDOWN KELAS & ANGKATAN ====
+    // 1. DROPDOWN LOGIC
     function populateDropdowns() {
         const kelasSelect = document.getElementById('fd-kelas');
         const tingkat = ['X', 'XI', 'XII'];
+        // Reset
         while (kelasSelect.options.length > 1) kelasSelect.remove(1);
         tingkat.forEach(t => {
-            for(let i=1; i<=8; i++) { // Hanya sampai 8
-                let val = `${t}-${i}`;
-                kelasSelect.add(new Option(val, val));
+            for(let i=1; i<=8; i++) { // X-1 sd X-8
+                kelasSelect.add(new Option(`${t}-${i}`, `${t}-${i}`));
             }
         });
 
         const angkatanSelect = document.getElementById('fd-angkatan');
-        const tahunList = [2026, 2027, 2028];
+        const tahun = [2026, 2027, 2028];
         while (angkatanSelect.options.length > 1) angkatanSelect.remove(1);
-        tahunList.forEach(yr => {
+        tahun.forEach(yr => {
             angkatanSelect.add(new Option(yr, yr));
         });
     }
 
-    // ==== 2. CAMERA, FILE & CROPPER ====
+    // 2. TIPE ANGGOTA LOGIC
+    function applyTypeUI() {
+        const v = tipeSel.value;
+        grpSiswa.classList.add('hidden');
+        grpJab.classList.add('hidden');
+        grpLulus.classList.add('hidden');
+
+        let labelText = 'NIS / Identitas *';
+        let phText = 'Masukkan Nomor Identitas';
+
+        if (v === 'siswa') { 
+            grpSiswa.classList.remove('hidden');
+            labelText = 'NIS *'; phText = 'NIS (Max 7 Digit)';
+        } else if (v === 'guru') {
+            grpJab.classList.remove('hidden'); grpLulus.classList.remove('hidden');
+            labelText = 'NIP *'; phText = 'NIP (18 Digit)';
+        } else if (v === 'alumni') {
+            grpLulus.classList.remove('hidden');
+            labelText = 'No Anggota Perpus *'; phText = 'Nomor Anggota Lama';
+        } else { // Lain
+            grpJab.classList.remove('hidden');
+            labelText = 'Identitas (NISN/NIP) *'; phText = 'NISN atau NIP';
+        }
+        nisLabel.textContent = labelText;
+        nisInput.placeholder = phText;
+    }
+    tipeSel.addEventListener('change', applyTypeUI);
+
+    // ==== 3. CAMERA & CROPPER ====
     const btnCam = document.getElementById('btn-open-cam');
     const btnFile = document.getElementById('btn-open-file');
     const inpFile = document.getElementById('inp-file-foto');
-    
+    const btnHapusFoto = document.getElementById('btn-hapus-foto');
+    const hiddenBase64 = document.getElementById('fd-foto-base64');
+    const previewCont = document.getElementById('foto-preview-container');
+    const previewImg = document.getElementById('foto-preview-img');
+    const photoBtns = document.getElementById('photo-buttons');
+    const photoDelGroup = document.getElementById('photo-delete-group');
+
+    // Modal Els
     const camModal = document.getElementById('cam-modal');
     const video = document.getElementById('cam-video');
     const btnCapture = document.getElementById('btn-cam-capture');
     const btnCancelCam = document.getElementById('btn-cam-cancel');
-    let stream = null;
-
+    
     const cropModal = document.getElementById('crop-modal');
-    const cropperImgElement = document.getElementById('cropper-img');
+    const cropperImg = document.getElementById('cropper-img');
     const btnCropSave = document.getElementById('btn-crop-save');
     const btnCropCancel = document.getElementById('btn-crop-cancel');
+    
+    let stream = null;
     let cropper = null;
 
-    const previewCont = document.getElementById('foto-preview-container');
-    const previewImg = document.getElementById('foto-preview-img');
-    const btnHapusFoto = document.getElementById('btn-hapus-foto');
-    const hiddenBase64 = document.getElementById('fd-foto-base64');
-
-    // --- File Input ---
+    // File Input
     btnFile.addEventListener('click', () => inpFile.click());
     inpFile.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(file) startCropper(file);
+        if(e.target.files[0]) startCropper(e.target.files[0]);
     });
 
-    // --- Camera Logic ---
+    // Camera
     btnCam.addEventListener('click', async () => {
         try {
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
             video.srcObject = stream;
-            video.onloadedmetadata = () => { video.play(); };
+            video.onloadedmetadata = () => video.play();
             camModal.style.display = 'flex';
-        } catch (err) {
-            alert('Gagal akses kamera: ' + err.message + '\nPastikan izin kamera aktif.');
-        }
+        } catch(e) { alert("Gagal buka kamera. Izinkan akses kamera."); }
     });
 
-    btnCancelCam.addEventListener('click', stopCamera);
+    btnCancelCam.addEventListener('click', () => {
+        if(stream) stream.getTracks().forEach(t => t.stop());
+        camModal.style.display = 'none';
+    });
 
     btnCapture.addEventListener('click', () => {
-        if (video.videoWidth === 0) { alert("Tunggu kamera siap..."); return; }
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        canvas.toBlob(blob => {
-            stopCamera();
-            startCropper(blob);
+        if(video.videoWidth === 0) return;
+        const cvs = document.createElement('canvas');
+        cvs.width = video.videoWidth; cvs.height = video.videoHeight;
+        cvs.getContext('2d').drawImage(video, 0,0);
+        cvs.toBlob(b => {
+            if(stream) stream.getTracks().forEach(t => t.stop());
+            camModal.style.display = 'none';
+            startCropper(b);
         }, 'image/jpeg');
     });
 
-    function stopCamera() {
-        if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-        camModal.style.display = 'none';
-    }
-
-    // --- Cropper Logic ---
+    // Cropper
     function startCropper(blob) {
-        const url = URL.createObjectURL(blob);
-        cropperImgElement.src = url;
+        cropperImg.src = URL.createObjectURL(blob);
         cropModal.style.display = 'flex';
         if(cropper) cropper.destroy();
-        cropper = new Cropper(cropperImgElement, {
-            aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 1,
-        });
+        cropper = new Cropper(cropperImg, { aspectRatio: 1, viewMode: 1 });
     }
 
     btnCropCancel.addEventListener('click', () => {
@@ -457,164 +498,119 @@
 
     btnCropSave.addEventListener('click', () => {
         if(!cropper) return;
-        const canvas = cropper.getCroppedCanvas({
-            width: 600, height: 600, fillColor: '#fff',
-            imageSmoothingEnabled: true, imageSmoothingQuality: 'high',
-        });
-        canvas.toBlob((blob) => {
-            const sizeMB = blob.size / (1024 * 1024);
-            if (sizeMB > MAX_FILE_SIZE_MB) {
-                canvas.toBlob((blob2) => {
-                    if((blob2.size / 1024 / 1024) > MAX_FILE_SIZE_MB) {
-                        alert("Foto terlalu besar. Gunakan foto lain."); return;
-                    }
-                    saveFinalImage(blob2);
-                }, 'image/jpeg', 0.6);
+        const cvs = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
+        cvs.toBlob(blob => {
+            // Size Check
+            if(blob.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+                cvs.toBlob(b2 => finalizePhoto(b2), 'image/jpeg', 0.6); // Kompres
             } else {
-                saveFinalImage(blob);
+                finalizePhoto(blob);
             }
         }, 'image/jpeg', 0.9);
     });
 
-    function saveFinalImage(blob) {
+    function finalizePhoto(blob) {
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onloadend = () => {
             hiddenBase64.value = reader.result;
             previewImg.src = reader.result;
             previewCont.style.display = 'block';
-            document.getElementById('photo-buttons').style.display = 'none';
+            photoBtns.classList.add('hidden');
+            photoDelGroup.classList.remove('hidden');
             cropModal.style.display = 'none';
             if(cropper) cropper.destroy();
-        };
+        }
     }
 
     btnHapusFoto.addEventListener('click', () => {
         hiddenBase64.value = ''; previewImg.src = '';
         previewCont.style.display = 'none';
-        document.getElementById('photo-buttons').style.display = 'flex';
+        photoBtns.classList.remove('hidden');
+        photoDelGroup.classList.add('hidden');
         inpFile.value = '';
     });
 
-    // ==== 3. UI LOGIC ====
-    const onlyDigits = s => (s || '').toString().replace(/\D+/g, '');
-    const mapUiTypeToBackend = (ui) => {
-      if (ui === 'siswa') return 'siswa-aktif';
-      if (ui === 'lain')  return 'non-32';
-      return ui;
-    };
-
-    function setIdFieldByType(type){
-      let label = 'NIS / NISN / NIP *';
-      let ph = 'Masukkan Nomor Identitas';
-      if(type === 'siswa'){ label = 'NIS *'; ph = 'Masukkan NIS (maks 7 digit)'; }
-      else if(type === 'guru'){ label = 'NIP *'; ph = 'Masukkan NIP (18 digit)'; }
-      else if(type === 'alumni'){ label = 'Nomor Anggota Perpus 32 *'; ph = 'Masukkan No. Anggota'; }
-      else if(type === 'lain'){ label = 'Identitas (NISN/NIP) *'; ph = 'Masukkan NISN atau NIP'; }
-      nisLabel.textContent = label; nisInput.placeholder = ph;
-    }
-
-    function applyTypeUI(){
-      const v = tipeSel.value;
-      grpSiswa.classList.add('hidden');
-      grpJab.classList.add('hidden');
-      grpLulus.classList.add('hidden');
-      if (v === 'siswa') { grpSiswa.classList.remove('hidden'); }
-      else if (v === 'guru')   { grpJab.classList.remove('hidden'); grpLulus.classList.remove('hidden'); }
-      else if (v === 'alumni') { grpLulus.classList.remove('hidden'); }
-      else { grpJab.classList.remove('hidden'); }
-      setIdFieldByType(v);
-    }
-    tipeSel.addEventListener('change', applyTypeUI);
-
-    // ==== 4. SIGNATURE PAD ====
+    // ==== 4. SIGNATURE ====
     const sigCanvas = document.getElementById('sig-canvas');
     let signaturePad = null;
 
-    function resizeSigCanvas(){
-      const ratio = Math.max(window.devicePixelRatio || 1, 1);
-      sigCanvas.width = sigCanvas.offsetWidth * ratio;
-      sigCanvas.height = sigCanvas.offsetHeight * ratio;
-      sigCanvas.getContext("2d").scale(ratio, ratio);
-      if(signaturePad) signaturePad.clear();
+    function initSig() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        sigCanvas.width = sigCanvas.offsetWidth * ratio;
+        sigCanvas.height = sigCanvas.offsetHeight * ratio;
+        sigCanvas.getContext("2d").scale(ratio, ratio);
+        if(signaturePad) signaturePad.clear();
     }
-
-    window.addEventListener('load', ()=>{ 
-        populateDropdowns();
-        applyTypeUI(); 
-        signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255, 255, 255, 0)' });
-        resizeSigCanvas();
-    });
-    window.addEventListener('resize', resizeSigCanvas);
+    window.addEventListener('resize', initSig);
     document.getElementById('sig-clear').addEventListener('click', () => signaturePad.clear());
 
-    // ==== 5. SUBMIT FORM ====
-    document.getElementById('form-daftar').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      msg.textContent = ''; msg.className = '';
+    // ==== 5. INIT & SUBMIT ====
+    window.addEventListener('load', () => {
+        populateDropdowns();
+        applyTypeUI();
+        signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
+        initSig();
+    });
 
-      if(signaturePad.isEmpty()){ 
-          msg.textContent = 'Harap tanda tangan terlebih dahulu.'; msg.className='error'; return; 
-      }
-      if(!hiddenBase64.value){
-          msg.textContent = 'Harap upload foto profil.'; msg.className='error'; return;
-      }
+    document.getElementById('form-daftar').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.textContent = ''; msg.className = '';
+        
+        if(signaturePad.isEmpty()) { msg.textContent = 'Harap tanda tangan.'; msg.className='error'; return; }
+        if(!hiddenBase64.value) { msg.textContent = 'Harap upload foto.'; msg.className='error'; return; }
 
-      const submitBtn = document.getElementById('btn-submit');
-      submitBtn.disabled = true; submitBtn.textContent = 'Sedang Mengirim...';
-      loader.style.display = 'flex'; // Show loader
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true; btn.textContent = 'Mengirim...';
+        msg.textContent = 'Mohon tunggu...'; msg.className = 'loading';
 
-      try {
-        const tipeUi = tipeSel.value;
-        const tipe = mapUiTypeToBackend(tipeUi);
-        const rawId = nisInput.value.trim();
-        const d = onlyDigits(rawId);
+        try {
+            const tipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : 
+                         tipeSel.value === 'lain' ? 'non-32' : tipeSel.value;
+            const rawId = nisInput.value.trim().replace(/\D+/g, '');
+            
+            // ID Logic
+            let pl = { nis:'', nisn:'', nip:'' };
+            if(tipe==='siswa-aktif') pl.nis = rawId;
+            else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); }
+            else if(tipe==='alumni') pl.nis = rawId;
+            else if(tipe==='non-32') {
+                if(rawId.length===18) { pl.nip=rawId; pl.nis=rawId.slice(-7); }
+                else if(rawId.length===10) { pl.nisn=rawId; pl.nis=rawId.slice(-7); }
+                else pl.nis = rawId;
+            }
 
-        let payloadId = { nis:'', nisn:'', nip:'' };
-        if(tipe === 'siswa-aktif') payloadId.nis = d;
-        else if(tipe === 'guru') { payloadId.nip = d; payloadId.nis = d.slice(-7); }
-        else if(tipe === 'alumni') payloadId.nis = d;
-        else if(tipe === 'non-32') {
-             if(d.length===18) { payloadId.nip = d; payloadId.nis = d.slice(-7); }
-             else if(d.length===10) { payloadId.nisn = d; payloadId.nis = d.slice(-7); }
-             else payloadId.nis = d;
+            const data = {
+                ...pl,
+                nama: document.getElementById('fd-nama').value.trim(),
+                tipe: tipe,
+                kelas: tipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
+                angkatan: tipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
+                nohp: document.getElementById('fd-nohp').value.trim(),
+                email: document.getElementById('fd-email').value.trim(),
+                fotoBase64: hiddenBase64.value,
+                jabatan: (tipe!=='siswa-aktif' && tipe!=='alumni') ? document.getElementById('fd-jabatan').value.trim() : '',
+                tahunLulus: (tipe==='alumni' || tipe==='guru') ? document.getElementById('fd-thn-lulus').value.trim() : '',
+                tanggalLahir: document.getElementById('fd-tgllahir').value,
+                tandaTangan: signaturePad.toDataURL('image/png')
+            };
+
+            const res = await hc32_post('pendaftaran', data);
+
+            if(res.status === 'ok') {
+                msg.textContent = 'Berhasil! Data terkirim.'; msg.className = 'success';
+                e.target.reset(); signaturePad.clear(); btnHapusFoto.click(); applyTypeUI();
+            } else if (res.status === 'already') {
+                msg.textContent = 'Nomor Identitas sudah terdaftar.'; msg.className = 'error';
+            } else {
+                msg.textContent = 'Gagal: ' + res.message; msg.className = 'error';
+            }
+
+        } catch(err) {
+            msg.textContent = 'Error: ' + err.message; msg.className = 'error';
+        } finally {
+            btn.disabled = false; btn.textContent = 'Kirim Data';
         }
-
-        const bodyData = {
-          ...payloadId,
-          nama: document.getElementById('fd-nama').value.trim(),
-          tipe: tipe,
-          kelas: (tipe === 'siswa-aktif') ? document.getElementById('fd-kelas').value : '',
-          angkatan: (tipe === 'siswa-aktif') ? document.getElementById('fd-angkatan').value : '',
-          nohp: document.getElementById('fd-nohp').value.trim(),
-          email: document.getElementById('fd-email').value.trim(),
-          fotoBase64: hiddenBase64.value,
-          jabatan: (tipe!=='siswa-aktif' && tipe!=='alumni') ? document.getElementById('fd-jabatan').value.trim() : '',
-          tahunLulus: (tipe==='alumni' || tipe==='guru') ? document.getElementById('fd-thn-lulus').value.trim() : '',
-          tanggalLahir: document.getElementById('fd-tgllahir').value,
-          tandaTangan: signaturePad.toDataURL('image/png')
-        };
-
-        // Menggunakan fungsi dari config.js
-        const out = await hc32_post('pendaftaran', bodyData);
-
-        if(out.status==='ok'){
-          msg.textContent = 'Pendaftaran Berhasil! Terima kasih.'; msg.className='success';
-          e.target.reset();
-          signaturePad.clear();
-          btnHapusFoto.click();
-          applyTypeUI();
-        } else if(out.status==='already'){
-          msg.textContent = 'Gagal: Nomor Identitas ini sudah terdaftar.'; msg.className='error';
-        } else {
-          msg.textContent = 'Gagal: ' + out.message; msg.className='error';
-        }
-      } catch(err){
-        msg.textContent = 'Error Jaringan: ' + err.message; msg.className='error';
-      } finally {
-        loader.style.display = 'none'; // Hide loader
-        submitBtn.disabled = false; submitBtn.textContent = 'Kirim Pendaftaran';
-      }
     });
   </script>
 </body>
