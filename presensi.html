@@ -199,8 +199,8 @@
   </audio>
 
   <script>
-    /* Gunakan URL dari config.js, tapi jika error CORS kita fallback ke variabel ini */
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzRJr31SeGSAG1uJcVTboTTfH-RNswG5P7z0zsPljNUvW-vTVClGJgKjxYgvAv1Jy8lTw/exec";
+    /* Gunakan URL dari config.js */
+    const WEB_APP_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_CADANGAN_JIKA_CONFIG_GAGAL";
 
     // Inisialisasi Navigasi dari components.js
     document.addEventListener("DOMContentLoaded", () => {
