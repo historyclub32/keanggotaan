@@ -33,7 +33,7 @@ const HC32_STYLES = `
     /* HEADER STYLES */
     .app-header {
         position: sticky; top: 0; left: 0; right: 0;
-        height: 60px; background: #fff; /* Tinggi sedikit dikurangi */
+        height: 60px; background: #fff; 
         display: flex; align-items: center; justify-content: space-between;
         padding: 0 20px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -41,7 +41,6 @@ const HC32_STYLES = `
         border-bottom: 3px solid var(--hc-yellow); 
     }
     .header-left { display: flex; align-items: center; }
-    /* Logo Header Diperkecil */
     .header-logo { height: 32px; width: auto; object-fit: contain; }
     
     .menu-btn {
@@ -97,29 +96,45 @@ const HC32_STYLES = `
         margin-top: auto; 
     }
     
-    /* Layout Footer Utama: Grid yang fleksibel */
     .footer-content {
         max-width: 1100px; margin: 0 auto;
-        display: grid; 
-        /* Default (Desktop): 4 Kolom (Brand, Profil, Aktivitas, Keanggotaan, Ikuti) */
-        grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; 
-        gap: 40px; text-align: left;
+        /* PERUBAHAN: Menggunakan Flexbox untuk layout lebih fleksibel & rapi */
+        display: flex;
+        flex-wrap: wrap; /* Agar responsif di layar kecil */
+        justify-content: space-between; /* Menyebar menu agar tidak ada space kosong di kanan */
+        gap: 30px;
+        text-align: left;
     }
     
+    /* Bagian Brand (Logo & Slogan) */
+    .footer-brand {
+        flex: 1 1 250px; /* Mengambil ruang lebih tapi fleksibel */
+        min-width: 200px;
+    }
+
+    /* PERUBAHAN LOGO: Diperkecil agar seimbang dengan slogan */
     .footer-brand img { 
-        width: auto; height: 70px; border-radius: 0; 
-        margin-bottom: 15px; object-fit: contain;
+        width: auto; 
+        height: 50px; /* Diperkecil dari 80px ke 50px */
+        border-radius: 0; 
+        margin-bottom: 10px; 
+        object-fit: contain;
     }
     
-    /* Slogan Style (Mirip Lampiran) */
     .footer-slogan { 
-        font-family: 'Dancing Script', cursive; /* Font tulisan tangan */
+        font-family: 'Dancing Script', cursive;
         font-size: 24px; 
         color: #fff; 
-        margin-top: 10px; 
-        line-height: 1.3;
+        margin-top: 5px; 
+        line-height: 1.2;
         opacity: 0.9;
         text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    /* Bagian Menu (Profil, Aktivitas, dll) */
+    .footer-col {
+        flex: 0 1 auto; /* Lebar menyesuaikan konten */
+        min-width: 120px; /* Lebar minimal agar tidak terlalu sempit */
     }
     
     .footer-col h4 { 
@@ -147,13 +162,13 @@ const HC32_STYLES = `
     @media (max-width: 768px) {
         .app-header { padding: 0 16px; }
         
-        /* Ubah Grid Footer menjadi 2 Kolom di HP */
+        /* Di HP kembali ke Grid 2 kolom agar rapi */
         .footer-content { 
-            grid-template-columns: 1fr 1fr; /* 2 Kolom sejajar */
-            gap: 30px 20px; /* Gap antar baris 30px, antar kolom 20px */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px 20px;
         }
         
-        /* Logo & Slogan mengambil lebar penuh (span 2 kolom) */
         .footer-brand { 
             grid-column: span 2; 
             text-align: center; 
@@ -162,7 +177,6 @@ const HC32_STYLES = `
             margin-bottom: 10px;
         }
         
-        /* Kolom Ikuti Kami juga span penuh agar rapi di bawah */
         .footer-col:last-child {
             grid-column: span 2;
             text-align: center;
