@@ -93,11 +93,18 @@ const HC32_STYLES = `
     }
     .footer-content {
         max-width: 1100px; margin: 0 auto;
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Sedikit dikecilkan agar muat 4 kolom */
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 30px; text-align: left;
     }
-    /* Update Logo Footer: lebih besar karena teks dihapus */
-    .footer-brand img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; }
+    
+    /* --- PERBAIKAN LOGO DI SINI --- */
+    .footer-brand img { 
+        width: auto;          /* Lebar otomatis mengikuti aspek rasio */
+        height: 80px;         /* Tinggi tetap agar rapi */
+        border-radius: 0;     /* HAPUS LINGKARAN (0 = kotak) */
+        margin-bottom: 15px; 
+        object-fit: contain;  /* Pastikan gambar pas di dalam kotak tanpa terpotong */
+    }
     
     .footer-brand p { font-size: 13px; color: #94a3b8; margin-top: 10px; line-height: 1.6; }
     
