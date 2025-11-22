@@ -19,7 +19,7 @@ const HC32_MENU = [
     { type: 'link', text: 'Pendaftaran', href: 'pendaftaran.html', id: 'pendaftaran' }
 ];
 
-// === CSS GABUNGAN (Dari pendaftaran.html) ===
+// === CSS GABUNGAN ===
 const HC32_STYLES = `
     :root {
         --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
@@ -85,7 +85,7 @@ const HC32_STYLES = `
         color: var(--hc-blue); font-weight: 600; border-left-color: var(--hc-toska);
     }
 
-    /* FOOTER STYLES (Diambil dari pendaftaran.html) */
+    /* FOOTER STYLES */
     .site-footer {
         background-color: #0f172a; /* Dark Slate Blue */
         color: #fff; padding: 60px 20px 30px;
@@ -93,11 +93,12 @@ const HC32_STYLES = `
     }
     .footer-content {
         max-width: 1100px; margin: 0 auto;
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 40px; text-align: left;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Sedikit dikecilkan agar muat 4 kolom */
+        gap: 30px; text-align: left;
     }
-    .footer-brand img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 15px; }
-    .footer-brand h3 { margin: 0; font-size: 24px; font-weight: 700; color: #fff; }
+    /* Update Logo Footer: lebih besar karena teks dihapus */
+    .footer-brand img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; }
+    
     .footer-brand p { font-size: 13px; color: #94a3b8; margin-top: 10px; line-height: 1.6; }
     
     .footer-col h4 { 
@@ -117,11 +118,11 @@ const HC32_STYLES = `
         font-size: 12px; color: #64748b;
     }
 
-    /* Layout Helper untuk memastikan Footer di bawah */
+    /* Layout Helper */
     body { display: flex; flex-direction: column; min-height: 100vh; }
     main { margin-left: 0 !important; width: 100% !important; box-sizing: border-box; }
     
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         .app-header { padding: 0 16px; }
         .footer-content { grid-template-columns: 1fr; gap: 30px; text-align: center; }
     }
@@ -133,7 +134,7 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // 2. Render Header (Logo dan Hamburger)
+    // 2. Render Header
     let headerEl = document.querySelector('header.app-header');
     if (!headerEl) {
         headerEl = document.createElement('header');
@@ -158,7 +159,6 @@ function initHC32Navigation(activePageId) {
     sidebarEl.className = 'sidebar';
     sidebarEl.id = 'hc32-sidebar';
 
-    // Generate Menu Items (Looping dari Array)
     let menuItemsHTML = '';
     HC32_MENU.forEach(item => {
         if (item.type === 'category') {
@@ -182,7 +182,7 @@ function initHC32Navigation(activePageId) {
     document.body.appendChild(overlayEl);
     document.body.appendChild(sidebarEl);
 
-    // 4. Render Footer (HTML Diambil dari pendaftaran.html)
+    // 4. Render Footer
     let footerEl = document.querySelector('footer.site-footer');
     if (!footerEl) {
         footerEl = document.createElement('footer');
@@ -193,10 +193,10 @@ function initHC32Navigation(activePageId) {
     footerEl.innerHTML = `
       <div class="footer-content">
           <div class="footer-brand">
-              <img src="https://lh3.googleusercontent.com/d/16VXxbcOF9h5zAzYEo2faAzmgqqhtHLlH" alt="HC Logo">
-              <h3>History Club</h3>
+              <img src="https://lh3.googleusercontent.com/d/1-n36cU02E5foAGs4gQbg1pzfbDdCee_f" alt="HC Logo">
               <p>Wadah bagi siswa SMAN 32 Jakarta untuk mengeksplorasi, belajar, dan melestarikan sejarah dengan cara yang menyenangkan.</p>
           </div>
+          
           <div class="footer-col">
               <h4>PROFIL</h4>
               <ul>
@@ -205,14 +205,24 @@ function initHC32Navigation(activePageId) {
                   <li><a href="https://sites.google.com/view/historyclub32/profil/kepengurusan">Kepengurusan</a></li>
               </ul>
           </div>
+
+          <div class="footer-col">
+              <h4>AKTIVITAS</h4>
+              <ul>
+                  <li><a href="https://sites.google.com/view/historyclub32/aktivitas/agenda">Agenda</a></li>
+                  <li><a href="https://sites.google.com/view/historyclub32/aktivitas/kegiatan">Kegiatan</a></li>
+              </ul>
+          </div>
+
           <div class="footer-col">
               <h4>KEANGGOTAAN</h4>
               <ul>
                   <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/anggota">Daftar Anggota</a></li>
-                  <li><a href="presensi.html">Presensi</a></li>
+                  <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/presensi">Presensi</a></li>
                   <li><a href="pendaftaran.html">Pendaftaran</a></li>
               </ul>
           </div>
+
           <div class="footer-col">
               <h4>IKUTI KAMI</h4>
               <ul>
@@ -220,6 +230,7 @@ function initHC32Navigation(activePageId) {
               </ul>
           </div>
       </div>
+      
       <div class="footer-bottom">
           <p style="margin: 0;">© 2025 History Club SMAN 32 Jakarta.</p>
           <p style="margin: 4px 0 0 0; opacity: 0.8;">
@@ -229,7 +240,7 @@ function initHC32Navigation(activePageId) {
       </div>
     `;
 
-    // 5. Event Listeners (Untuk Animasi Sidebar)
+    // 5. Event Listeners
     const btnMenu = document.getElementById('hc32-btn-menu');
     const btnClose = document.getElementById('hc32-btn-close');
     const overlay = document.getElementById('hc32-sidebar-overlay');
