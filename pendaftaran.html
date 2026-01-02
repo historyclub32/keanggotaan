@@ -18,7 +18,7 @@
     :root {
         --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
         --hc-green: #15a256; --hc-red: #d30e14; --hc-yellow: #ecec17;
-        --hc-bg: #e7e9ea; /* Background Abu-abu (Sama dengan Presensi) */
+        --hc-bg: #e7e9ea;
         --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08);
     }
 
@@ -76,10 +76,25 @@
     .cam-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 700; color: #2e2e2e; display: flex; align-items: center; gap: 8px; }
     .cam-view-wrapper { position: relative; width: 100%; height: 0; padding-bottom: 75%; background: #000; overflow: hidden; }
     #cam-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    .cam-overlay-controls { position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 20px; z-index: 10; }
+    
+    /* Camera Controls */
+    .cam-overlay-controls { 
+        position: absolute; bottom: 20px; left: 0; right: 0; 
+        display: flex; justify-content: center; align-items: center; 
+        gap: 40px; /* Jarak antar tombol diperlebar */
+        z-index: 10; 
+    }
     .btn-shutter { background: var(--hc-blue); color: white; border: 4px solid rgba(255,255,255,0.5); padding: 10px 24px; border-radius: 30px; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.1s; }
     .btn-shutter:active { transform: scale(0.95); }
-    .btn-switch { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
+    
+    /* Tombol Switch (Kembali Muncul) */
+    .btn-switch { 
+        width: 48px; height: 48px; border-radius: 50%; 
+        background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 24px; cursor: pointer; backdrop-filter: blur(4px);
+    }
+    
     .cam-footer { padding: 15px; display: flex; gap: 10px; background: #fff; border-top: 1px solid #eee; }
     .btn-cam-action { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-red-action { background: #dc2626; color: white; }
@@ -100,12 +115,15 @@
     .sig-btn { padding: 8px 16px; font-size: 12px; border: none; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600; font-family: 'Poppins', sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; }
     .sig-btn:active { transform: scale(0.95); }
     .sig-btn-undo { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+    .sig-btn-undo:hover { background: #bae6fd; }
     .sig-btn-clear { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
+    .sig-btn-clear:hover { background: #fecaca; }
 
     /* Security Check */
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .refresh-btn { cursor: pointer; padding: 5px 10px; border-radius: 4px; font-size: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; display: none; align-items: center; gap: 5px; }
+    .refresh-btn:hover { background: #fecaca; }
     .captcha-body { padding: 20px; text-align: center; }
     .captcha-error { color: #dc2626; font-size: 13px; font-weight: 600; margin-top: 10px; background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fee2e2; display: none; animation: shake 0.3s; }
     .verified-state { display: none; flex-direction: column; align-items: center; padding: 20px; color: var(--hc-green); }
@@ -137,6 +155,24 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
+    /* TOMBOL STATUS VERIFIKASI (FIX DESAIN) */
+    .status-btn { 
+        width: 100%; padding: 12px; border: none; border-radius: 10px; 
+        background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); /* Sesuai tombol kirim */
+        color: white; font-weight: 600; margin-top: 15px; cursor: pointer; 
+        box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s;
+    }
+    .status-btn:active { transform: translateY(2px); }
+
+    /* Status Modal Styles */
+    .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
+    .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
+    .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .status-icon-circle.success { border: 4px solid var(--hc-green); }
+    .status-icon-circle.error { border: 4px solid var(--hc-red); }
+    /* Tombol Oke di Modal */
+    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
+
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
         .card { padding: 20px; }
@@ -144,6 +180,15 @@
   </style>
 </head>
 <body>
+
+  <div id="status-modal" class="status-modal-overlay" style="display: none;">
+      <div class="status-modal-box">
+          <div id="status-icon-container" class="status-icon-circle success"></div>
+          <h3 id="status-title" style="margin: 0 0 10px;"></h3>
+          <p id="status-desc" style="margin: 0; color:#666;"></p>
+          <button id="modal-ok-btn" class="modal-ok-btn">Oke</button>
+      </div>
+  </div>
 
   <div class="main-wrapper">
       <div class="container">
@@ -311,8 +356,8 @@
                   <button class="btn-switch" id="btn-cam-switch" title="Ganti Kamera">
                       <i class="ri-camera-switch-line"></i>
                   </button>
-                  <button class="btn-shutter" id="btn-cam-capture">Ambil Foto</button>
-                  <div style="width:40px; display:none;" id="spacer-mobile"></div>
+                  <button class="btn-shutter" id="btn-cam-capture"></button>
+                  <div style="width:40px;"></div>
               </div>
           </div>
           <div class="cam-footer">
@@ -346,6 +391,21 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('pendaftaran'));
 
+    // Status Modal (FIXED)
+    const statusModal = document.getElementById('status-modal');
+    const statusIconContainer = document.getElementById('status-icon-container');
+    function showStatus(type, title, msg) {
+        statusModal.style.display = 'flex';
+        document.getElementById('status-title').textContent = title;
+        document.getElementById('status-desc').textContent = msg;
+        statusIconContainer.className = 'status-icon-circle ' + type;
+        statusIconContainer.innerHTML = type === 'success' ? 
+            '<i class="ri-check-line" style="font-size:40px; color:var(--hc-green)"></i>' : 
+            '<i class="ri-close-line" style="font-size:40px; color:var(--hc-red)"></i>';
+    }
+    // Fixed: Tombol Oke menutup modal
+    document.getElementById('modal-ok-btn').onclick = () => statusModal.style.display = 'none';
+
     // ==== LOGIKA UTAMA ====
     const tipeSel = document.getElementById('fd-tipe');
     const kelasSel = document.getElementById('fd-kelas');
@@ -378,12 +438,12 @@
         else if (v === 'guru') {
             grpJab.classList.remove('hidden');
             grpLulus.classList.remove('hidden');
-            lblLulus.innerHTML = 'Tahun Lulus'; // Guru = Opsional
+            lblLulus.innerHTML = 'Tahun Lulus'; 
             setIDConstraint(18, 'NIP (18 Digit)');
         } 
         else if (v === 'alumni') {
             grpLulus.classList.remove('hidden');
-            lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; // Alumni = Wajib
+            lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
             setIDConstraint(6, 'Nomor Alumni (6 Digit)');
         } 
         else { 
@@ -462,7 +522,7 @@
 
     document.getElementById('captcha-reload').onclick = resetCaptcha;
 
-    // AI MODELS (PUZZLE, GRID, TEXT, QUIZ) - SAMA SEPERTI SEBELUMNYA
+    // AI MODELS (PUZZLE, GRID, TEXT, QUIZ)
     function initPuzzle() {
         const slider = document.getElementById('puzzle-input');
         const piece = document.getElementById('puzzle-piece');
@@ -550,14 +610,18 @@
         const optsEl = document.getElementById('quiz-options');
         optsEl.innerHTML = '';
         const shuffled = [...qData.a].sort(() => 0.5 - Math.random());
-        shuffled.forEach(opt => {
+        // FIXED: Grid 2x2 (4 Pilihan)
+        shuffled.push("Jawaban Pengecoh 1"); // Pastikan ada 4 pilihan jika data kurang
+        const finalChoices = shuffled.slice(0,4); // Ambil 4
+        
+        finalChoices.forEach(opt => {
             const btn = document.createElement('div'); btn.className = 'quiz-btn'; btn.textContent = opt;
             btn.onclick = () => { if (opt === qData.c) { btn.classList.add('correct'); setTimeout(verifySuccess, 500); } else { btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); } };
             optsEl.appendChild(btn);
         });
     }
 
-    // ==== CAMERA & UPLOAD ====
+    // ==== CAMERA & UPLOAD (FIXED: Tombol Switch Muncul) ====
     let stream = null; let currentFacingMode = 'user'; let cropper = null;
     const camPopup = document.getElementById('cam-popup'); const video = document.getElementById('cam-video');
     const cropModal = document.getElementById('crop-modal'); const cropperImg = document.getElementById('cropper-img');
@@ -565,14 +629,33 @@
     const previewContainer = document.getElementById('foto-preview-container');
 
     document.getElementById('btn-open-camera-ui').addEventListener('click', async () => {
-        try { if(stream) stopCam(); 
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
-        video.srcObject = stream; camPopup.style.display = 'flex'; } catch(e) { alert("Gagal akses kamera."); }
+        try { 
+            if(stream) stopCam(); 
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
+            video.srcObject = stream; 
+            camPopup.style.display = 'flex'; 
+            
+            // Cek Devices untuk menampilkan tombol switch
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoInputs = devices.filter(d => d.kind === 'videoinput');
+            if(videoInputs.length > 1) {
+                document.getElementById('btn-cam-switch').style.display = 'flex';
+            } else {
+                document.getElementById('btn-cam-switch').style.display = 'none';
+            }
+
+        } catch(e) { alert("Gagal akses kamera: " + e.message); }
     });
 
     function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
     document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
-    document.getElementById('btn-cam-switch').addEventListener('click', () => { currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; document.getElementById('btn-open-camera-ui').click(); });
+    
+    // Switch Camera Logic
+    document.getElementById('btn-cam-switch').addEventListener('click', () => { 
+        currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
+        video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
+        document.getElementById('btn-open-camera-ui').click(); 
+    });
     
     document.getElementById('btn-cam-capture').addEventListener('click', () => {
         const cvs = document.createElement('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
@@ -635,6 +718,7 @@
         const btn = document.getElementById('btn-submit'); btn.disabled = true;
 
         try {
+            // Data Prep & Submit Logic
             const rawId = document.getElementById('fd-nis').value.trim().replace(/\D+/g, '');
             const tipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : tipeSel.value === 'lain' ? 'non-32' : tipeSel.value;
             const dataEmail = document.getElementById('fd-email').value.trim();
