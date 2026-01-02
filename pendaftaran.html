@@ -46,6 +46,9 @@
     
     input, select { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; background: #fff; box-sizing: border-box; transition: 0.2s; font-family: 'Poppins', sans-serif; }
     input:focus, select:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
+    /* Style untuk input disabled agar terlihat jelas */
+    input:disabled, select:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
+    
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .hidden { display: none !important; }
     .note { font-size: 12px; color: #64748b; margin-top: 6px; }
@@ -89,21 +92,16 @@
     .btn-modal.cancel { background: #334155; color: white; }
     .btn-modal.confirm { background: var(--hc-blue); color: white; }
 
-    /* === SIGNATURE (Dengan Fix Touch-Action) === */
+    /* === SIGNATURE === */
     .sig-wrapper { 
         height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; 
         position: relative; background: #fff; overflow: hidden; 
     }
     
-    /* PENTING: Mencegah scroll saat tanda tangan agar garis tidak putus */
-    canvas#sig-canvas { 
-        width: 100%; height: 100%; display: block; 
-        touch-action: none; /* <-- FIX UTAMA UTK GARIS PUTUS */
-    }
+    canvas#sig-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
     
     .sig-tools { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 8px; }
     
-    /* Style Tombol Signature (Seragam dengan Kamera) */
     .sig-btn { 
         padding: 8px 16px; font-size: 12px; border: none; border-radius: 50px; cursor: pointer; 
         display: flex; align-items: center; gap: 6px; font-weight: 600; font-family: 'Poppins', sans-serif;
@@ -111,7 +109,6 @@
     }
     .sig-btn:active { transform: scale(0.95); }
     
-    /* Warna Tombol Signature */
     .sig-btn-undo { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
     .sig-btn-undo:hover { background: #bae6fd; }
     
@@ -119,7 +116,7 @@
     .sig-btn-clear:hover { background: #fecaca; }
 
     /* =========================================
-       SECURITY CHECK STYLES (4 MODELS AI - NO FLAGS)
+       SECURITY CHECK STYLES (4 MODELS AI)
        ========================================= */
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
@@ -182,7 +179,7 @@
     .captcha-input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; }
     .captcha-submit { background: var(--hc-toska); color: white; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
 
-    /* 4. QUIZ (History Only) */
+    /* 4. QUIZ (History) */
     .quiz-question { font-size: 15px; margin-bottom: 15px; color: #334155; font-weight: 500; line-height: 1.4; }
     .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .quiz-btn {
@@ -272,13 +269,13 @@
                   <div id="group-siswa" class="row">
                       <div class="two-col">
                           <div><label>Kelas <span class="req-star">*</span></label><select id="fd-kelas"><option value="">Pilih...</option></select></div>
-                          <div><label>Angkatan <span class="req-star">*</span></label><select id="fd-angkatan"><option value="">Pilih...</option></select></div>
+                          <div><label>Angkatan <span class="req-star">*</span></label><select id="fd-angkatan" disabled><option value="">Pilih...</option></select></div>
                       </div>
                   </div>
                   
                   <div id="group-jabatan" class="row hidden">
                       <label>Jabatan <span class="req-star">*</span></label>
-                      <input id="fd-jabatan" placeholder="Contoh: Pembina" />
+                      <input id="fd-jabatan" placeholder="Contoh: Pembina / Tamu" />
                   </div>
                   
                   <div id="group-lulus" class="row hidden">
@@ -294,7 +291,7 @@
                   <div class="row"><label>Email <span class="req-star">*</span></label><input id="fd-email" type="email" required></div>
 
                   <div class="row" style="margin-top:30px">
-                      <label>Foto Profil (Wajib, 1:1) <span class="req-star">*</span></label>
+                      <label>Foto Profil (Wajib, Max 1 MB) <span class="req-star">*</span></label>
                       <div class="photo-area">
                           <div id="foto-preview-container">
                               <img id="foto-preview-img" src="" alt="Preview">
@@ -338,7 +335,6 @@
                           </button>
                       </div>
                       <div class="captcha-body">
-                          
                           <div id="mode-puzzle" style="display:none;">
                               <p class="quiz-question">Geser slider agar potongan pas!</p>
                               <div class="puzzle-area" id="puzzle-bg">
@@ -347,13 +343,11 @@
                               </div>
                               <input type="range" min="0" max="100" value="0" class="puzzle-slider" id="puzzle-input">
                           </div>
-
                           <div id="mode-grid" style="display:none;">
                               <p class="quiz-question" id="grid-instruction">Loading...</p>
                               <div class="icon-grid" id="grid-container"></div>
                               <button type="button" class="status-btn" style="margin-top:15px;" id="grid-verify">Verifikasi</button>
                           </div>
-
                           <div id="mode-text" style="display:none;">
                               <p class="quiz-question">Ketik kode di bawah ini:</p>
                               <div class="text-captcha-box" id="text-captcha-bg">
@@ -364,21 +358,17 @@
                                   <button type="button" class="captcha-submit" id="text-verify">Cek</button>
                               </div>
                           </div>
-
                           <div id="mode-quiz" style="display:none;">
                               <p class="quiz-question" id="quiz-question-text">Loading...</p>
                               <div class="quiz-options" id="quiz-options"></div>
                           </div>
-
                           <div id="captcha-error-msg" class="captcha-error">
                               <i class="ri-error-warning-line"></i> Jawaban salah, silakan coba lagi.
                           </div>
-
                           <div id="verified-state" class="verified-state">
                               <i class="ri-checkbox-circle-fill verified-icon"></i>
                               <span class="verified-text">Terverifikasi</span>
                           </div>
-
                       </div>
                   </div>
                   
@@ -397,10 +387,8 @@
           <div class="cam-header">
               <i class="ri-camera-lens-line"></i> Ambil Foto
           </div>
-
           <div class="cam-view-wrapper">
               <video id="cam-video" autoplay playsinline muted></video>
-              
               <div class="cam-overlay-controls">
                   <button class="btn-switch" id="btn-cam-switch" title="Ganti Kamera">
                       <i class="ri-camera-switch-line"></i>
@@ -409,7 +397,6 @@
                   <div style="width:40px; display:none;" id="spacer-mobile"></div>
               </div>
           </div>
-
           <div class="cam-footer">
               <button class="btn-cam-action btn-red-action" id="btn-cam-cancel">
                   <i class="ri-close-circle-line"></i> Tutup Kamera
@@ -439,7 +426,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
   <script>
-    // ==== INIT COMPONENTS ====
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('pendaftaran'));
 
     // ==== UI HELPERS ====
@@ -463,7 +449,93 @@
     document.getElementById('status-btn').onclick = () => statusModal.style.display = 'none';
 
     /* =========================================
-       LOGIKA SECURITY CHECK (AI ENHANCED - NO FLAGS)
+       LOGIKA FORMULIR (Angkatan Otomatis & Validasi ID)
+       ========================================= */
+    const tipeSel = document.getElementById('fd-tipe');
+    const kelasSel = document.getElementById('fd-kelas');
+    const angkatanSel = document.getElementById('fd-angkatan');
+    const nisInput = document.getElementById('fd-nis');
+    
+    // Group Elements
+    const grpSiswa = document.getElementById('group-siswa');
+    const grpJab = document.getElementById('group-jabatan');
+    const grpLulus = document.getElementById('group-lulus');
+    const lblLulus = document.getElementById('label-lulus');
+
+    // 1. Populate Dropdowns (Kelas & Angkatan)
+    function populateDropdowns() {
+        const tingkat = ['X', 'XI', 'XII'];
+        tingkat.forEach(t => { for(let i=1; i<=8; i++) kelasSel.add(new Option(`${t}-${i}`, `${t}-${i}`)); });
+        [2026, 2027, 2028].forEach(yr => angkatanSel.add(new Option(yr, yr)));
+    }
+
+    // 2. Logika ID Constraint & Form UI
+    function handleTypeChange() {
+        const v = tipeSel.value;
+        
+        // Reset Groups
+        grpSiswa.classList.add('hidden');
+        grpJab.classList.add('hidden');
+        grpLulus.classList.add('hidden');
+        
+        // Reset NIS Input State
+        nisInput.value = '';
+        
+        if (v === 'siswa') {
+            grpSiswa.classList.remove('hidden');
+            setIDConstraint(7, 'NIS (7 Digit)');
+        } 
+        else if (v === 'guru') {
+            grpJab.classList.remove('hidden');
+            grpLulus.classList.remove('hidden');
+            lblLulus.innerHTML = 'Tahun Lulus'; // Guru = Opsional
+            setIDConstraint(18, 'NIP (18 Digit)');
+        } 
+        else if (v === 'alumni') {
+            grpLulus.classList.remove('hidden');
+            lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; // Alumni = Wajib
+            setIDConstraint(6, 'Nomor Alumni (6 Digit)');
+        } 
+        else { // Lainnya
+            grpJab.classList.remove('hidden');
+            setIDConstraint(18, 'NIK/Identitas (18 Digit)');
+        }
+    }
+
+    function setIDConstraint(maxLen, placeholder) {
+        nisInput.maxLength = maxLen;
+        nisInput.placeholder = placeholder;
+        nisInput.dataset.maxLen = maxLen; // Store for validasi input real-time
+    }
+
+    // Listener Input ID (Hanya Angka & Max Length)
+    nisInput.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, ''); // Hapus non-angka
+    });
+
+    // 3. Logika Otomatis Angkatan Berdasarkan Kelas
+    kelasSel.addEventListener('change', function() {
+        const val = this.value; // ex: "X-1"
+        if(!val) return;
+        
+        const prefix = val.split('-')[0]; // "X", "XI", or "XII"
+        
+        let targetYear = '';
+        if (prefix === 'X') targetYear = '2028';
+        else if (prefix === 'XI') targetYear = '2027';
+        else if (prefix === 'XII') targetYear = '2026';
+        
+        if (targetYear) {
+            angkatanSel.value = targetYear;
+            // Disable dropdown angkatan agar user tidak ubah manual
+            angkatanSel.disabled = true; 
+        }
+    });
+
+    tipeSel.addEventListener('change', handleTypeChange);
+
+    /* =========================================
+       LOGIKA SECURITY CHECK
        ========================================= */
     let isVerified = false;
     let puzzleTarget = 0;
@@ -647,7 +719,7 @@
         };
     }
 
-    // --- 4. QUIZ LOGIC (HISTORY ONLY) ---
+    // --- 4. QUIZ LOGIC ---
     const quizData = [
         { q: "Kapan Indonesia merdeka?", a: ["17 Agustus 1945", "20 Mei 1908", "28 Oktober 1928", "10 November 1945"], c: "17 Agustus 1945" },
         { q: "Siapa proklamator Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi", "Diponegoro"], c: "Soekarno-Hatta" },
@@ -766,18 +838,28 @@
         startCropper(canvas.toDataURL('image/jpeg'));
     });
 
+    // UPLOAD FILE LOGIC (LIMIT 1.1 MB)
     document.getElementById('btn-cam-upload').addEventListener('click', () => {
         document.getElementById('inp-file-foto').click();
     });
     
     document.getElementById('inp-file-foto').addEventListener('change', (e) => {
         if(e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const MAX_SIZE = 1.1 * 1024 * 1024; // 1.1 MB
+            
+            if(file.size > MAX_SIZE) {
+                showStatus('error', 'File Terlalu Besar', 'Maksimal ukuran foto adalah 1 MB.');
+                document.getElementById('inp-file-foto').value = ''; // Reset input
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = (evt) => {
                 stopCameraStream();
                 startCropper(evt.target.result);
             };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(file);
         }
     });
 
@@ -796,9 +878,10 @@
     document.getElementById('btn-crop-save').addEventListener('click', () => {
         if(!cropper) return;
         const canvas = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
+        
+        // Kompresi Kamera: Quality 0.7 utk pastikan < 1MB
         canvas.toBlob((blob) => {
-            const quality = (blob.size > 1000000) ? 0.6 : 0.9;
-            const finalData = canvas.toDataURL('image/jpeg', quality);
+            const finalData = canvas.toDataURL('image/jpeg', 0.7);
             hiddenBase64.value = finalData;
             previewImg.src = finalData;
             previewContainer.style.display = 'block';
@@ -806,7 +889,7 @@
             btnDeletePhoto.style.display = 'block';
             cropModal.style.display = 'none';
             if(cropper) cropper.destroy();
-        }, 'image/jpeg');
+        }, 'image/jpeg', 0.7);
     });
 
     btnDeletePhoto.addEventListener('click', () => {
@@ -818,51 +901,7 @@
         document.getElementById('inp-file-foto').value = '';
     });
 
-    // ==== DATA FORM HELPERS ====
-    const tipeSel = document.getElementById('fd-tipe');
-    
-    function populateDropdowns() {
-        const kelasSelect = document.getElementById('fd-kelas');
-        const tingkat = ['X', 'XI', 'XII'];
-        tingkat.forEach(t => { for(let i=1; i<=8; i++) kelasSelect.add(new Option(`${t}-${i}`, `${t}-${i}`)); });
-        const angkatanSelect = document.getElementById('fd-angkatan');
-        [2026, 2027, 2028].forEach(yr => angkatanSelect.add(new Option(yr, yr)));
-    }
-
-    // ===== UI LOGIC BARU: TAHUN LULUS OPSIONAL UNTUK GURU =====
-    const grpSiswa = document.getElementById('group-siswa');
-    const grpJab = document.getElementById('group-jabatan');
-    const grpLulus = document.getElementById('group-lulus');
-    const lblLulus = document.getElementById('label-lulus'); // Label Dinamis
-
-    function applyTypeUI() {
-        const v = tipeSel.value;
-        grpSiswa.classList.add('hidden');
-        grpJab.classList.add('hidden');
-        grpLulus.classList.add('hidden');
-
-        if (v === 'siswa') {
-            grpSiswa.classList.remove('hidden');
-        } 
-        else if (v === 'guru') {
-            grpJab.classList.remove('hidden');
-            grpLulus.classList.remove('hidden');
-            // GURU: Tahun lulus OPSIONAL (Tidak ada bintang)
-            lblLulus.innerHTML = 'Tahun Lulus'; 
-        } 
-        else if (v === 'alumni') {
-            grpLulus.classList.remove('hidden');
-            // ALUMNI: Tahun lulus WAJIB (Ada bintang merah)
-            lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>';
-        } 
-        else { // Lainnya
-            grpJab.classList.remove('hidden');
-        }
-    }
-    
-    tipeSel.addEventListener('change', applyTypeUI);
-
-    // ==== SIGNATURE (WITH FIX: TOUCH ACTION) ====
+    // ==== SIGNATURE (WITH UNDO PER STROKE & TOUCH FIX) ====
     const sigCanvas = document.getElementById('sig-canvas');
     let signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
     
@@ -889,7 +928,7 @@
     // ==== SUBMIT ====
     document.addEventListener('DOMContentLoaded', () => {
         populateDropdowns();
-        applyTypeUI(); // Jalankan logic UI awal
+        handleTypeChange(); // Set default UI state
         resizeSig();
         resetCaptcha(); 
     });
@@ -943,12 +982,15 @@
                 if(!pl.nis) pl.nis = rawId.slice(-7); 
             }
 
+            // AMBIL ANGKATAN (MESKIPUN DISABLED)
+            const angkatanVal = document.getElementById('fd-angkatan').value;
+
             const data = {
                 ...pl,
                 nama: dataNama,
                 tipe: tipe,
                 kelas: tipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
-                angkatan: tipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
+                angkatan: tipe === 'siswa-aktif' ? angkatanVal : '',
                 nohp: document.getElementById('fd-nohp').value.trim(),
                 email: dataEmail,
                 fotoBase64: hiddenBase64.value,
