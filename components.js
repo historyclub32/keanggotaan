@@ -1,6 +1,6 @@
 /**
  * HISTORY CLUB 32 - SHARED UI COMPONENTS
- * (Header, Sidebar, dan Footer terpusat)
+ * (Header, Sidebar, Footer, dan Global Status System)
  */
 
 // === KONFIGURASI MENU SIDEBAR ===
@@ -21,8 +21,11 @@ const HC32_MENU = [
 
 // === CSS GABUNGAN ===
 const HC32_STYLES = `
-    /* Import Font Khusus untuk Slogan */
+    /* Import Font & Variables */
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    /* Import RemixIcon untuk Status */
+    @import url('https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css');
 
     :root {
         --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
@@ -30,6 +33,54 @@ const HC32_STYLES = `
         --hc-yellow: #ecec17; --border: #cbd5e1; --card: #ffffff;
     }
     
+    /* GLOBAL LOADER & STATUS MODAL STYLES */
+    #hc32-global-overlay {
+        position: fixed; inset: 0; background: rgba(255, 255, 255, 0.92);
+        display: none; flex-direction: column; align-items: center; justify-content: center;
+        z-index: 99999; backdrop-filter: blur(4px); transition: opacity 0.3s;
+    }
+    
+    .hc-status-card {
+        background: white; padding: 30px; border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center;
+        max-width: 320px; width: 90%; transform: scale(0.9); opacity: 0;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #hc32-global-overlay.active .hc-status-card { transform: scale(1); opacity: 1; }
+
+    /* Icon Container */
+    .hc-status-icon-box {
+        width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 40px; position: relative;
+    }
+    
+    /* Animations & Colors per State */
+    .state-loading .hc-status-icon-box { background: #f0f9ff; color: var(--hc-blue); }
+    .state-loading .hc-spinner {
+        position: absolute; inset: 0; border-radius: 50%;
+        border: 4px solid rgba(26, 71, 135, 0.1);
+        border-top-color: var(--hc-toska);
+        animation: hcspin 1s linear infinite;
+    }
+    
+    .state-success .hc-status-icon-box { background: #dcfce7; color: var(--hc-green); border: 4px solid #bbf7d0; animation: popIn 0.4s; }
+    .state-error .hc-status-icon-box { background: #fee2e2; color: var(--hc-red); border: 4px solid #fecaca; animation: shake 0.4s; }
+
+    .hc-status-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: var(--hc-dark); margin-bottom: 8px; }
+    .hc-status-desc { font-family: 'Poppins', sans-serif; font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 20px; }
+    
+    .hc-status-btn {
+        width: 100%; padding: 12px; border: none; border-radius: 10px;
+        background: var(--hc-blue); color: white; font-weight: 600; font-family: 'Poppins', sans-serif;
+        cursor: pointer; transition: 0.2s; display: none; /* Hidden by default */
+    }
+    .hc-status-btn:hover { background: var(--hc-toska); }
+
+    @keyframes hcspin { to { transform: rotate(360deg); } }
+    @keyframes popIn { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
     /* HEADER STYLES */
     .app-header {
         position: sticky; top: 0; left: 0; right: 0;
@@ -70,17 +121,17 @@ const HC32_STYLES = `
         display: flex; justify-content: space-between; align-items: center;
         padding: 20px; border-bottom: 1px solid #f1f5f9;
     }
-    .sidebar-title { font-size: 18px; font-weight: 700; color: var(--hc-blue); }
+    .sidebar-title { font-size: 18px; font-weight: 700; color: var(--hc-blue); font-family: 'Poppins', sans-serif; }
     .close-btn { font-size: 28px; background: none; border: none; color: var(--hc-dark); cursor: pointer; }
     .sidebar-content { flex: 1; overflow-y: auto; padding: 10px 0; }
     .menu-category {
         padding: 16px 24px 8px; font-size: 12px; font-weight: 600;
-        color: var(--hc-toska); text-transform: uppercase; letter-spacing: 1px;
+        color: var(--hc-toska); text-transform: uppercase; letter-spacing: 1px; font-family: 'Poppins', sans-serif;
     }
     .nav-link, .nav-link-single {
         display: block; padding: 10px 24px; color: var(--hc-dark); 
         text-decoration: none; font-size: 15px; transition: 0.2s;
-        border-left: 4px solid transparent;
+        border-left: 4px solid transparent; font-family: 'Poppins', sans-serif;
     }
     .nav-link { padding-left: 40px; }
     .nav-link:hover, .nav-link-single:hover { background-color: #f0f9fa; color: var(--hc-blue); }
@@ -91,52 +142,22 @@ const HC32_STYLES = `
 
     /* FOOTER STYLES */
     .site-footer {
-        background-color: #0f172a; /* Dark Slate Blue */
-        color: #fff; padding: 50px 20px 30px;
-        margin-top: auto; 
+        background-color: #0f172a; color: #fff; padding: 50px 20px 30px;
+        margin-top: auto; font-family: 'Poppins', sans-serif;
     }
-    
     .footer-content {
         max-width: 1100px; margin: 0 auto;
-        /* PERUBAHAN: Menggunakan Flexbox untuk layout lebih fleksibel & rapi */
-        display: flex;
-        flex-wrap: wrap; /* Agar responsif di layar kecil */
-        justify-content: space-between; /* Menyebar menu agar tidak ada space kosong di kanan */
-        gap: 30px;
+        display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;
         text-align: left;
     }
-    
-    /* Bagian Brand (Logo & Slogan) */
-    .footer-brand {
-        flex: 1 1 250px; /* Mengambil ruang lebih tapi fleksibel */
-        min-width: 200px;
-    }
-
-    /* PERUBAHAN LOGO: Diperkecil agar seimbang dengan slogan */
-    .footer-brand img { 
-        width: auto; 
-        height: 50px; /* Diperkecil dari 80px ke 50px */
-        border-radius: 0; 
-        margin-bottom: 10px; 
-        object-fit: contain;
-    }
-    
+    .footer-brand { flex: 1 1 250px; min-width: 200px; }
+    .footer-brand img { width: auto; height: 50px; border-radius: 0; margin-bottom: 10px; object-fit: contain; }
     .footer-slogan { 
-        font-family: 'Dancing Script', cursive;
-        font-size: 24px; 
-        color: #fff; 
-        margin-top: 5px; 
-        line-height: 1.2;
-        opacity: 0.9;
+        font-family: 'Dancing Script', cursive; font-size: 24px; 
+        color: #fff; margin-top: 5px; line-height: 1.2; opacity: 0.9;
         text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-    
-    /* Bagian Menu (Profil, Aktivitas, dll) */
-    .footer-col {
-        flex: 0 1 auto; /* Lebar menyesuaikan konten */
-        min-width: 120px; /* Lebar minimal agar tidak terlalu sempit */
-    }
-    
+    .footer-col { flex: 0 1 auto; min-width: 120px; }
     .footer-col h4 { 
         font-size: 11px; font-weight: 700; color: #94a3b8; 
         text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
@@ -147,41 +168,19 @@ const HC32_STYLES = `
         color: #fff; text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; 
     }
     .footer-col ul li a:hover { color: var(--hc-toska); padding-left: 5px; }
-
     .footer-bottom {
         max-width: 1100px; margin: 40px auto 0; padding-top: 20px;
         border-top: 1px solid #1e293b; text-align: center;
         font-size: 12px; color: #64748b;
     }
 
-    /* Layout Helper */
     body { display: flex; flex-direction: column; min-height: 100vh; }
-    main { margin-left: 0 !important; width: 100% !important; box-sizing: border-box; }
     
-    /* RESPONSIVE (MOBILE) */
     @media (max-width: 768px) {
         .app-header { padding: 0 16px; }
-        
-        /* Di HP kembali ke Grid 2 kolom agar rapi */
-        .footer-content { 
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px 20px;
-        }
-        
-        .footer-brand { 
-            grid-column: span 2; 
-            text-align: center; 
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 20px;
-            margin-bottom: 10px;
-        }
-        
-        .footer-col:last-child {
-            grid-column: span 2;
-            text-align: center;
-            margin-top: 10px;
-        }
+        .footer-content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+        .footer-brand { grid-column: span 2; text-align: center; border-bottom: 1px solid #1e293b; padding-bottom: 20px; margin-bottom: 10px; }
+        .footer-col:last-child { grid-column: span 2; text-align: center; margin-top: 10px; }
     }
 `;
 
@@ -191,7 +190,87 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // 2. Render Header
+    // 2. Setup Global Loader/Status HTML
+    if (!document.getElementById('hc32-global-overlay')) {
+        const overlayHTML = `
+            <div id="hc32-global-overlay">
+                <div class="hc-status-card" id="hc32-status-card">
+                    <div class="hc-status-icon-box" id="hc32-status-icon-box">
+                        <div class="hc-spinner" id="hc32-spinner"></div>
+                        <i id="hc32-status-icon" class=""></i>
+                    </div>
+                    <div id="hc32-status-title" class="hc-status-title">Memuat...</div>
+                    <div id="hc32-status-desc" class="hc-status-desc"></div>
+                    <button id="hc32-status-btn" class="hc-status-btn">Oke</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', overlayHTML);
+        
+        // Bind Close Button
+        document.getElementById('hc32-status-btn').addEventListener('click', () => {
+            window.hideHC32Status();
+        });
+    }
+
+    // 3. Expose Status Functions to Window
+    const overlay = document.getElementById('hc32-global-overlay');
+    const card = document.getElementById('hc32-status-card');
+    const iconBox = document.getElementById('hc32-status-icon-box');
+    const icon = document.getElementById('hc32-status-icon');
+    const spinner = document.getElementById('hc32-spinner');
+    const titleEl = document.getElementById('hc32-status-title');
+    const descEl = document.getElementById('hc32-status-desc');
+    const btn = document.getElementById('hc32-status-btn');
+
+    /**
+     * Tampilkan Status Global
+     * @param {string} type - 'loading', 'success', 'error'
+     * @param {string} title - Judul status
+     * @param {string} message - Pesan deskripsi
+     */
+    window.showHC32Status = (type, title, message) => {
+        // Reset Classes
+        card.classList.remove('state-loading', 'state-success', 'state-error');
+        overlay.style.display = 'flex';
+        
+        // Trigger reflow for animation
+        void overlay.offsetWidth; 
+        overlay.classList.add('active');
+
+        titleEl.textContent = title;
+        descEl.textContent = message || '';
+
+        if (type === 'loading') {
+            card.classList.add('state-loading');
+            spinner.style.display = 'block';
+            icon.className = ''; // No icon
+            btn.style.display = 'none'; // No close button for loading
+        } else if (type === 'success') {
+            card.classList.add('state-success');
+            spinner.style.display = 'none';
+            icon.className = 'ri-check-line';
+            btn.style.display = 'block';
+        } else if (type === 'error') {
+            card.classList.add('state-error');
+            spinner.style.display = 'none';
+            icon.className = 'ri-close-line';
+            btn.style.display = 'block';
+        }
+    };
+
+    window.hideHC32Status = () => {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    };
+
+    // Backward Compatibility for simple loader calls
+    window.showHC32Loader = (text) => window.showHC32Status('loading', 'Mohon Tunggu', text);
+    window.hideHC32Loader = window.hideHC32Status;
+
+    // 4. Render Header
     let headerEl = document.querySelector('header.app-header');
     if (!headerEl) {
         headerEl = document.createElement('header');
@@ -207,10 +286,10 @@ function initHC32Navigation(activePageId) {
         </button>
     `;
 
-    // 3. Render Sidebar
-    const overlayEl = document.createElement('div');
-    overlayEl.className = 'sidebar-overlay';
-    overlayEl.id = 'hc32-sidebar-overlay';
+    // 5. Render Sidebar
+    const sideOverlay = document.createElement('div');
+    sideOverlay.className = 'sidebar-overlay';
+    sideOverlay.id = 'hc32-sidebar-overlay';
 
     const sidebarEl = document.createElement('aside');
     sidebarEl.className = 'sidebar';
@@ -236,10 +315,10 @@ function initHC32Navigation(activePageId) {
         <div class="sidebar-content">${menuItemsHTML}</div>
     `;
 
-    document.body.appendChild(overlayEl);
+    document.body.appendChild(sideOverlay);
     document.body.appendChild(sidebarEl);
 
-    // 4. Render Footer
+    // 6. Render Footer
     let footerEl = document.querySelector('footer.site-footer');
     if (!footerEl) {
         footerEl = document.createElement('footer');
@@ -277,7 +356,7 @@ function initHC32Navigation(activePageId) {
               <h4>KEANGGOTAAN</h4>
               <ul>
                   <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/anggota">Daftar Anggota</a></li>
-                  <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/presensi">Presensi</a></li>
+                  <li><a href="presensi.html">Presensi</a></li>
                   <li><a href="pendaftaran.html">Pendaftaran</a></li>
               </ul>
           </div>
@@ -294,23 +373,23 @@ function initHC32Navigation(activePageId) {
           <p style="margin: 0;">© 2025 History Club SMAN 32 Jakarta.</p>
           <p style="margin: 4px 0 0 0; opacity: 0.8;">
               Dibuat dan dikembangkan dengan penuh bangga oleh 
-              <a href="https://instagram.com/vitezegi" target="_blank" style="color: #ecec17; text-decoration: none; font-weight: 500;">@vitezegi</a>
+              <a href="https://www.instagram.com/mickovoitto" target="_blank" style="color: #ecec17; text-decoration: none; font-weight: 500;">@mickovoitto</a>
           </p>
       </div>
     `;
 
-    // 5. Event Listeners
+    // 7. Event Listeners
     const btnMenu = document.getElementById('hc32-btn-menu');
-    const btnClose = document.getElementById('hc32-btn-close');
-    const overlay = document.getElementById('hc32-sidebar-overlay');
-    const sidebar = document.getElementById('hc32-sidebar');
+    const btnMenuClose = document.getElementById('hc32-btn-close');
+    const overlayDiv = document.getElementById('hc32-sidebar-overlay');
+    const sidebarDiv = document.getElementById('hc32-sidebar');
 
     function toggleSidebar() {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+        sidebarDiv.classList.toggle('active');
+        overlayDiv.classList.toggle('active');
     }
 
     if(btnMenu) btnMenu.addEventListener('click', toggleSidebar);
-    if(btnClose) btnClose.addEventListener('click', toggleSidebar);
-    if(overlay) overlay.addEventListener('click', toggleSidebar);
+    if(btnMenuClose) btnMenuClose.addEventListener('click', toggleSidebar);
+    if(overlayDiv) overlayDiv.addEventListener('click', toggleSidebar);
 }
