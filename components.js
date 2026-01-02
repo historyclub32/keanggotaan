@@ -120,7 +120,7 @@ const HC32_STYLES = `
     .footer-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; text-align: left; }
     .footer-brand { flex: 1 1 250px; min-width: 200px; }
     
-    /* Logo Footer Baru */
+    /* Logo Footer */
     .footer-brand img.f-logo { width: auto; height: 60px; margin-bottom: 15px; }
     .footer-brand img.f-slogan { width: 180px; height: auto; display: block; opacity: 0.9; }
     
@@ -147,7 +147,7 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // BUILD LOADER HTML (Spinner Baru dengan Link Thumbnail Stabil)
+    // BUILD LOADER HTML
     if (!document.getElementById('hc32-global-overlay')) {
         const overlayHTML = `
             <div id="hc32-global-overlay">
@@ -213,7 +213,7 @@ function initHC32Navigation(activePageId) {
         setTimeout(() => overlay.style.display = 'none', 300);
     };
 
-    // HEADER (Link Thumbnail untuk Logo)
+    // HEADER
     let headerEl = document.querySelector('header.app-header');
     if (!headerEl) {
         headerEl = document.createElement('header');
@@ -251,7 +251,7 @@ function initHC32Navigation(activePageId) {
     document.body.appendChild(sideOverlay);
     document.body.appendChild(sidebarEl);
 
-    // FOOTER (Link Thumbnail Stabil)
+    // FOOTER
     let footerEl = document.querySelector('footer.site-footer');
     if (!footerEl) {
         footerEl = document.createElement('footer');
