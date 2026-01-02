@@ -43,111 +43,36 @@
     /* Buttons */
     button[type="submit"] { width: 100%; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: #fff; border: none; padding: 16px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: 0.2s; }
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
-    button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+    /* Disabled state for Submit Button (Locked by CAPTCHA) */
+    button[type="submit"]:disabled { 
+        background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; 
+        color: #64748b;
+    }
 
     /* === UI FOTO UTAMA === */
-    .photo-area { 
-        border: 2px dashed var(--hc-toska); border-radius: 16px; 
-        padding: 24px; text-align: center; background: #f0f9fa; position: relative; 
-    }
-    
-    #foto-preview-container { 
-        width: 150px; height: 150px; margin: 0 auto 16px; 
-        border-radius: 50%; overflow: hidden; 
-        border: 4px solid #fff; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        background: #e2e8f0; display: none; /* Hidden by default */
-        position: relative;
-    }
+    .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
+    #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; position: relative; }
     #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* Tombol Aktifkan Kamera (Halaman Depan) */
-    .btn-main-camera {
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        background: white; border: 1px solid var(--hc-blue); color: var(--hc-blue);
-        padding: 12px 24px; border-radius: 50px;
-        font-weight: 600; font-size: 14px; cursor: pointer;
-        transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
+    .btn-main-camera { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: white; border: 1px solid var(--hc-blue); color: var(--hc-blue); padding: 12px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .btn-main-camera:hover { background: var(--hc-blue); color: white; }
     
-    .btn-delete-photo {
-        background: #fee2e2; color: #ef4444; border: none; margin-top: 10px;
-        padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
-        cursor: pointer; display: none; /* Hidden default */
-    }
+    .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
 
-    /* === WINDOWED CAMERA MODAL (Style Baru) === */
+    /* === WINDOWED CAMERA MODAL === */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2500; display: none; align-items: center; justify-content: center; padding: 20px; }
-    
-    .cam-window-box {
-        width: 100%; max-width: 600px; 
-        background: #fff; border-radius: 12px; 
-        overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        display: flex; flex-direction: column;
-    }
-
-    .cam-header {
-        padding: 15px 20px; border-bottom: 1px solid #eee;
-        font-weight: 700; color: #2e2e2e; display: flex; align-items: center; gap: 8px;
-    }
-
-    .cam-view-wrapper {
-        position: relative; width: 100%; height: 0;
-        padding-bottom: 75%; /* 4:3 Aspect Ratio */
-        background: #000; overflow: hidden;
-    }
-    #cam-video {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        object-fit: cover; transform: scaleX(-1); /* Mirror effect depan */
-    }
-
-    /* Tombol Overlay Jepret & Switch */
-    .cam-overlay-controls {
-        position: absolute; bottom: 20px; left: 0; right: 0;
-        display: flex; justify-content: center; align-items: center;
-        gap: 20px; z-index: 10;
-    }
-    
-    /* Tombol Shutter (Jepret) */
-    .btn-shutter {
-        background: var(--hc-blue); color: white;
-        border: 4px solid rgba(255,255,255,0.5);
-        padding: 10px 24px; border-radius: 30px;
-        font-weight: 600; font-size: 14px; cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: transform 0.1s;
-    }
+    .cam-window-box { width: 100%; max-width: 600px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+    .cam-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 700; color: #2e2e2e; display: flex; align-items: center; gap: 8px; }
+    .cam-view-wrapper { position: relative; width: 100%; height: 0; padding-bottom: 75%; background: #000; overflow: hidden; }
+    #cam-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .cam-overlay-controls { position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 20px; z-index: 10; }
+    .btn-shutter { background: var(--hc-blue); color: white; border: 4px solid rgba(255,255,255,0.5); padding: 10px 24px; border-radius: 30px; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.1s; }
     .btn-shutter:active { transform: scale(0.95); }
-
-    /* Tombol Switch (Mobile Only) */
-    .btn-switch {
-        width: 40px; height: 40px; border-radius: 50%;
-        background: rgba(0,0,0,0.6); color: white; border: none;
-        display: none; /* JS will show on mobile */
-        align-items: center; justify-content: center; font-size: 20px;
-        cursor: pointer;
-    }
-
-    /* Footer Tombol (Bawah Video) */
-    .cam-footer {
-        padding: 15px; display: flex; gap: 10px; background: #fff;
-        border-top: 1px solid #eee;
-    }
-    
-    .btn-cam-action {
-        flex: 1; padding: 12px; border-radius: 8px; border: none;
-        font-weight: 600; font-size: 14px; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-red-action { background: #dc2626; color: white; } /* Tutup Kamera */
-    
-    /* Tombol Pilih File (Kuning) */
-    .btn-yellow-action { 
-        background: var(--hc-yellow); 
-        color: var(--hc-dark); 
-        transition: background 0.2s;
-    }
+    .btn-switch { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; }
+    .cam-footer { padding: 15px; display: flex; gap: 10px; background: #fff; border-top: 1px solid #eee; }
+    .btn-cam-action { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-red-action { background: #dc2626; color: white; }
+    .btn-yellow-action { background: var(--hc-yellow); color: var(--hc-dark); transition: background 0.2s; }
     .btn-yellow-action:hover { background: #d4d40d; }
 
     /* Crop Modal */
@@ -157,12 +82,47 @@
     .btn-modal.cancel { background: #334155; color: white; }
     .btn-modal.confirm { background: var(--hc-blue); color: white; }
 
-    /* Signature */
-    .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; }
+    /* === SIGNATURE (WITH UNDO) === */
+    .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
     canvas#sig-canvas { width: 100%; height: 100%; display: block; }
-    .sig-clear-btn { position: absolute; top: 10px; right: 10px; z-index: 10; padding: 5px 10px; font-size: 12px; background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; }
+    
+    .sig-tools { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 5px; }
+    .sig-btn { 
+        padding: 5px 10px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; 
+        display: flex; align-items: center; gap: 4px;
+    }
+    .sig-btn-clear { background: #fee2e2; color: #ef4444; }
+    .sig-btn-undo { background: #e0f2fe; color: #0284c7; }
 
-    /* Status Modal & Loader */
+    /* === CAPTCHA / VERIFIKASI (BARU) === */
+    .captcha-container {
+        margin-top: 30px; margin-bottom: 20px;
+        background: #fff; border: 1px solid #cbd5e1; border-radius: 12px;
+        padding: 20px; text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .captcha-header { font-weight: 700; color: var(--hc-dark); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .captcha-question { font-size: 16px; margin-bottom: 15px; color: #334155; }
+    .captcha-flag-icon { font-size: 48px; display: block; margin: 10px 0; }
+    
+    .captcha-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .captcha-btn {
+        padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+        background: #f8fafc; color: #334155; font-weight: 500; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .captcha-btn:hover { background: #e2e8f0; }
+    .captcha-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
+    .captcha-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
+    
+    .verified-badge { 
+        display: none; background: #dcfce7; color: #166534; padding: 10px; 
+        border-radius: 8px; font-weight: 600; margin-top: 10px; 
+    }
+
+    @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
+
+    /* Status Modal Styles */
     .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
     .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
     .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
@@ -179,7 +139,6 @@
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
         .card { padding: 20px; }
-        .footer-content { grid-template-columns: 1fr; gap: 30px; text-align: center; }
     }
   </style>
 </head>
@@ -269,12 +228,33 @@
                       <label>Tanda Tangan Digital *</label>
                       <div class="sig-wrapper">
                           <canvas id="sig-canvas"></canvas>
-                          <button type="button" class="sig-clear-btn" id="sig-clear">Ulangi</button>
+                          <div class="sig-tools">
+                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo">
+                                  <i class="ri-arrow-go-back-line"></i> Undo
+                              </button>
+                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Hapus">
+                                  <i class="ri-delete-bin-line"></i> Ulangi
+                              </button>
+                          </div>
                       </div>
                       <p class="note">Goreskan tanda tangan pada kotak di atas.</p>
                   </div>
 
-                  <button type="submit" id="btn-submit">Kirim Data</button>
+                  <div class="captcha-container" id="captcha-area">
+                      <div class="captcha-header">
+                          <i class="ri-shield-check-fill" style="color:var(--hc-blue)"></i>
+                          Verifikasi Keamanan
+                      </div>
+                      <div id="captcha-question-box">
+                          <div class="captcha-question" id="captcha-q-text">Loading...</div>
+                          <div class="captcha-options" id="captcha-options"></div>
+                      </div>
+                      <div class="verified-badge" id="verified-badge">
+                          <i class="ri-check-double-line"></i> Terverifikasi: Anda bukan robot!
+                      </div>
+                  </div>
+
+                  <button type="submit" id="btn-submit" disabled>Kirim Data (Verifikasi Dulu)</button>
               </form>
           </div>
       </div>
@@ -293,11 +273,7 @@
                   <button class="btn-switch" id="btn-cam-switch" title="Ganti Kamera">
                       <i class="ri-camera-switch-line"></i>
                   </button>
-                  
-                  <button class="btn-shutter" id="btn-cam-capture">
-                      Ambil Foto
-                  </button>
-                  
+                  <button class="btn-shutter" id="btn-cam-capture">Ambil Foto</button>
                   <div style="width:40px; display:none;" id="spacer-mobile"></div>
               </div>
           </div>
@@ -354,9 +330,77 @@
     }
     document.getElementById('status-btn').onclick = () => statusModal.style.display = 'none';
 
-    // ==== CAMERA LOGIC ====
+    // ==== ANTI-BOT CAPTCHA LOGIC ====
+    const captchaQuestions = [
+        { q: "Tahun berapa Indonesia merdeka?", a: ["1945", "1998", "1928", "2020"], correct: "1945" },
+        { q: "Apa warna bendera Indonesia?", a: ["Merah Putih", "Merah Biru", "Putih Merah", "Kuning Hijau"], correct: "Merah Putih" },
+        { q: "Siapa proklamator kemerdekaan Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi", "Pangeran Diponegoro"], correct: "Soekarno-Hatta" },
+        { q: "Lambang negara Indonesia adalah...", a: ["Garuda", "Harimau", "Banteng", "Komodo"], correct: "Garuda" },
+        { q: "🇯🇵 Bendera negara mana ini?", a: ["Jepang", "Korea", "China", "Vietnam"], correct: "Jepang" },
+        { q: "🇬🇧 Bendera negara mana ini?", a: ["Inggris", "Amerika", "Australia", "Perancis"], correct: "Inggris" },
+        { q: "🇸🇦 Bendera negara mana ini?", a: ["Arab Saudi", "Turki", "Mesir", "Iran"], correct: "Arab Saudi" },
+        { q: "Candi Borobudur terletak di provinsi...", a: ["Jawa Tengah", "Jawa Barat", "Bali", "Sumatera Utara"], correct: "Jawa Tengah" }
+    ];
+
+    let isVerified = false;
+
+    function initCaptcha() {
+        const qData = captchaQuestions[Math.floor(Math.random() * captchaQuestions.length)];
+        const qTextEl = document.getElementById('captcha-q-text');
+        const optsEl = document.getElementById('captcha-options');
+        
+        qTextEl.textContent = qData.q;
+        // Jika soal bendera (emoji), perbesar
+        if (qData.q.includes("Bendera")) {
+            const flag = qData.q.split(" ")[0];
+            qTextEl.innerHTML = `<span class="captcha-flag-icon">${flag}</span> Bendera negara mana ini?`;
+        }
+
+        optsEl.innerHTML = '';
+        
+        // Acak urutan jawaban
+        const shuffledOptions = [...qData.a].sort(() => Math.random() - 0.5);
+
+        shuffledOptions.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = 'captcha-btn';
+            btn.textContent = opt;
+            btn.onclick = () => checkAnswer(btn, opt, qData.correct);
+            optsEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(btnEl, selected, correct) {
+        if (isVerified) return; // Sudah verified, ignore
+
+        if (selected === correct) {
+            // BENAR
+            btnEl.classList.add('correct');
+            isVerified = true;
+            document.getElementById('captcha-question-box').style.display = 'none';
+            document.getElementById('verified-badge').style.display = 'block';
+            
+            // Enable Submit Button
+            const submitBtn = document.getElementById('btn-submit');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Kirim Data';
+            submitBtn.style.background = 'linear-gradient(135deg, var(--hc-blue), var(--hc-toska))';
+            submitBtn.style.color = 'white';
+            submitBtn.style.cursor = 'pointer';
+        } else {
+            // SALAH
+            btnEl.classList.add('wrong');
+            setTimeout(() => {
+                btnEl.classList.remove('wrong');
+                // Ganti soal jika salah
+                initCaptcha();
+            }, 500);
+        }
+    }
+
+    // ==== CAMERA LOGIC (Standard) ====
     let stream = null;
-    let currentFacingMode = 'user'; // Depan default
+    let currentFacingMode = 'user'; 
     let cropper = null;
 
     const camPopup = document.getElementById('cam-popup');
@@ -364,14 +408,12 @@
     const cropModal = document.getElementById('crop-modal');
     const cropperImg = document.getElementById('cropper-img');
     
-    // UI Elements
     const btnOpenCam = document.getElementById('btn-open-camera-ui');
     const btnDeletePhoto = document.getElementById('btn-hapus-foto');
     const previewContainer = document.getElementById('foto-preview-container');
     const previewImg = document.getElementById('foto-preview-img');
     const hiddenBase64 = document.getElementById('fd-foto-base64');
 
-    // 1. Buka Kamera
     btnOpenCam.addEventListener('click', () => openCameraStream());
 
     async function openCameraStream() {
@@ -380,9 +422,8 @@
             const constraints = { video: { facingMode: currentFacingMode }, audio: false };
             stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
-            camPopup.style.display = 'flex'; // Flex untuk centering
+            camPopup.style.display = 'flex'; 
             
-            // Tampilkan tombol switch kamera hanya jika di mobile/punya >1 kamera
             const devices = await navigator.mediaDevices.enumerateDevices();
             const inputs = devices.filter(d => d.kind === 'videoinput');
             if(inputs.length > 1) {
@@ -409,30 +450,24 @@
     
     document.getElementById('btn-cam-switch').addEventListener('click', () => {
         currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
-        // Mirror effect logic: if environment (belakang), remove scaleX(-1)
         video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)';
         openCameraStream();
     });
 
-    // 2. Jepret -> Crop
     document.getElementById('btn-cam-capture').addEventListener('click', () => {
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
-        
-        // Handle Mirroring saat Capture
         if(currentFacingMode === 'user') {
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
         }
         ctx.drawImage(video, 0, 0);
-        
         stopCameraStream();
         startCropper(canvas.toDataURL('image/jpeg'));
     });
 
-    // 3. Upload File -> Crop
     document.getElementById('btn-cam-upload').addEventListener('click', () => {
         document.getElementById('inp-file-foto').click();
     });
@@ -448,7 +483,6 @@
         }
     });
 
-    // ==== CROPPER LOGIC ====
     function startCropper(imageSrc) {
         cropperImg.src = imageSrc;
         cropModal.style.display = 'flex';
@@ -464,28 +498,19 @@
     document.getElementById('btn-crop-save').addEventListener('click', () => {
         if(!cropper) return;
         const canvas = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
-        
-        // Kompresi jika > 1MB
         canvas.toBlob((blob) => {
             const quality = (blob.size > 1000000) ? 0.6 : 0.9;
             const finalData = canvas.toDataURL('image/jpeg', quality);
-            
-            // Tampilkan Preview
             hiddenBase64.value = finalData;
             previewImg.src = finalData;
             previewContainer.style.display = 'block';
-            
-            // Ubah teks tombol utama MENJADI "Ulangi Foto"
             btnOpenCam.innerHTML = '<i class="ri-camera-fill"></i> Ulangi Foto';
             btnDeletePhoto.style.display = 'block';
-            
             cropModal.style.display = 'none';
             if(cropper) cropper.destroy();
-            
         }, 'image/jpeg');
     });
 
-    // Hapus Foto
     btnDeletePhoto.addEventListener('click', () => {
         hiddenBase64.value = '';
         previewImg.src = '';
@@ -518,9 +543,10 @@
         else document.getElementById('group-jabatan').classList.remove('hidden');
     });
 
-    // ==== SIGNATURE ====
+    // ==== SIGNATURE LOGIC WITH UNDO ====
     const sigCanvas = document.getElementById('sig-canvas');
     let signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
+    
     function resizeSig() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         sigCanvas.width = sigCanvas.offsetWidth * ratio;
@@ -529,17 +555,35 @@
         signaturePad.clear();
     }
     window.addEventListener('resize', resizeSig);
+    
+    // Clear
     document.getElementById('sig-clear').addEventListener('click', () => signaturePad.clear());
+    
+    // Undo
+    document.getElementById('sig-undo').addEventListener('click', () => {
+        const data = signaturePad.toData();
+        if (data) {
+            data.pop(); // Hapus langkah terakhir
+            signaturePad.fromData(data);
+        }
+    });
 
     // ==== SUBMIT ====
     document.addEventListener('DOMContentLoaded', () => {
         populateDropdowns();
         resizeSig();
+        initCaptcha(); // Load soal pertama
     });
 
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Final Security Check
+        if (!isVerified) { 
+            alert("Harap selesaikan verifikasi keamanan terlebih dahulu."); 
+            return; 
+        }
+
         if(signaturePad.isEmpty()) { showStatus('error', 'Tanda Tangan', 'Wajib diisi.'); return; }
         if(!hiddenBase64.value) { showStatus('error', 'Foto Profil', 'Wajib upload foto.'); return; }
 
@@ -582,16 +626,30 @@
             if(res.status === 'ok') {
                 showStatus('success', 'Berhasil', 'Pendaftaran Anda diterima.');
                 e.target.reset(); signaturePad.clear(); btnDeletePhoto.click();
+                
+                // Reset Captcha untuk submission berikutnya
+                isVerified = false;
+                document.getElementById('captcha-question-box').style.display = 'block';
+                document.getElementById('verified-badge').style.display = 'none';
+                btn.disabled = true;
+                btn.textContent = 'Kirim Data (Verifikasi Dulu)';
+                btn.style.background = '#cbd5e1';
+                btn.style.color = '#64748b';
+                btn.style.cursor = 'not-allowed';
+                initCaptcha();
+
             } else if(res.status === 'already') {
                 showStatus('error', 'Gagal', 'Nomor identitas sudah terdaftar.');
+                btn.disabled = false; // Kembalikan tombol jika error logika
             } else {
                 showStatus('error', 'Error', res.message);
+                btn.disabled = false;
             }
         } catch(err) {
             showStatus('error', 'Koneksi', err.message);
+            btn.disabled = false;
         } finally {
             hideLoader();
-            btn.disabled = false;
         }
     });
   </script>
