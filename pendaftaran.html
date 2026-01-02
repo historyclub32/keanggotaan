@@ -43,11 +43,7 @@
     /* Buttons */
     button[type="submit"] { width: 100%; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: #fff; border: none; padding: 16px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: 0.2s; }
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
-    /* Disabled state for Submit Button (Locked by CAPTCHA) */
-    button[type="submit"]:disabled { 
-        background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; 
-        color: #64748b;
-    }
+    button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; color: #64748b; }
 
     /* === UI FOTO UTAMA === */
     .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
@@ -94,31 +90,78 @@
     .sig-btn-clear { background: #fee2e2; color: #ef4444; }
     .sig-btn-undo { background: #e0f2fe; color: #0284c7; }
 
-    /* === CAPTCHA / VERIFIKASI (BARU) === */
-    .captcha-container {
-        margin-top: 30px; margin-bottom: 20px;
-        background: #fff; border: 1px solid #cbd5e1; border-radius: 12px;
-        padding: 20px; text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    /* =========================================
+       NEW SECURITY CHECK STYLES (5 MODELS)
+       ========================================= */
+    .captcha-card {
+        margin: 30px 0 20px;
+        background: #fff; border-radius: 12px;
+        border: 1px solid #cbd5e1; overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    .captcha-header { font-weight: 700; color: var(--hc-dark); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .captcha-question { font-size: 16px; margin-bottom: 15px; color: #334155; }
-    .captcha-flag-icon { font-size: 48px; display: block; margin: 10px 0; }
+    .captcha-header {
+        background: linear-gradient(to right, #f8fafc, #fff);
+        padding: 12px 20px; border-bottom: 1px solid #e2e8f0;
+        font-weight: 700; color: var(--hc-dark); font-size: 14px;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .captcha-body { padding: 20px; text-align: center; }
     
-    .captcha-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .captcha-btn {
+    /* 1. PUZZLE SLIDER */
+    .puzzle-area { position: relative; width: 100%; height: 150px; background: linear-gradient(135deg, #a5b4fc, #c084fc); border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+    .puzzle-hole { width: 40px; height: 40px; background: rgba(0,0,0,0.5); position: absolute; top: 55px; border-radius: 4px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+    .puzzle-piece { 
+        width: 40px; height: 40px; background: #fff; position: absolute; top: 55px; left: 10px; 
+        border-radius: 4px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); border: 2px solid white;
+        background: linear-gradient(135deg, #818cf8, #a855f7); /* Matches bg */
+        cursor: grab;
+    }
+    .puzzle-slider { width: 100%; cursor: pointer; margin-top: 10px; }
+
+    /* 2. ICON GRID */
+    .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+    .icon-btn {
+        aspect-ratio: 1; border-radius: 8px; border: 2px solid #e2e8f0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; cursor: pointer; color: #64748b; background: #f8fafc;
+        transition: all 0.2s; position: relative;
+    }
+    .icon-btn.selected { border-color: var(--hc-blue); background: #eff6ff; color: var(--hc-blue); }
+    .icon-btn.selected::after {
+        content: '✓'; position: absolute; top: 2px; right: 2px;
+        font-size: 10px; background: var(--hc-blue); color: white;
+        width: 14px; height: 14px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    }
+
+    /* 3. TEXT CAPTCHA */
+    .text-captcha-box {
+        background: url('https://img.freepik.com/free-photo/abstract-paint-background_1048-6484.jpg'); /* Abstract BG */
+        background-size: cover; padding: 20px; border-radius: 8px; margin-bottom: 15px; position: relative;
+    }
+    canvas#text-canvas { display: block; margin: 0 auto; border-radius: 6px; }
+    .captcha-input-group { display: flex; gap: 8px; }
+    .captcha-input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; }
+    .captcha-submit { background: #db2777; color: white; border: none; padding: 0 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+
+    /* 4 & 5. QUIZ (History/Flags) */
+    .quiz-question { font-size: 16px; margin-bottom: 15px; color: #334155; }
+    .flag-icon { font-size: 48px; display: block; margin: 10px 0; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quiz-btn {
         padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;
         background: #f8fafc; color: #334155; font-weight: 500; cursor: pointer;
         transition: all 0.2s;
     }
-    .captcha-btn:hover { background: #e2e8f0; }
-    .captcha-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
-    .captcha-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
-    
-    .verified-badge { 
-        display: none; background: #dcfce7; color: #166534; padding: 10px; 
-        border-radius: 8px; font-weight: 600; margin-top: 10px; 
+    .quiz-btn:hover { background: #e2e8f0; }
+    .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
+    .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
+
+    /* Verified Badge */
+    .verified-state { 
+        display: none; flex-direction: column; align-items: center; padding: 20px; color: var(--hc-green); 
     }
+    .verified-icon { font-size: 40px; margin-bottom: 5px; }
+    .verified-text { font-weight: 700; font-size: 16px; }
 
     @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
 
@@ -229,10 +272,10 @@
                       <div class="sig-wrapper">
                           <canvas id="sig-canvas"></canvas>
                           <div class="sig-tools">
-                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo">
+                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo per garis">
                                   <i class="ri-arrow-go-back-line"></i> Undo
                               </button>
-                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Hapus">
+                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Hapus semua">
                                   <i class="ri-delete-bin-line"></i> Ulangi
                               </button>
                           </div>
@@ -240,21 +283,53 @@
                       <p class="note">Goreskan tanda tangan pada kotak di atas.</p>
                   </div>
 
-                  <div class="captcha-container" id="captcha-area">
+                  <div class="captcha-card" id="captcha-area">
                       <div class="captcha-header">
-                          <i class="ri-shield-check-fill" style="color:var(--hc-blue)"></i>
-                          Verifikasi Keamanan
+                          <span><i class="ri-shield-check-fill"></i> Security Check</span>
+                          <i class="ri-refresh-line" style="cursor:pointer;" id="captcha-reload" title="Ganti Metode"></i>
                       </div>
-                      <div id="captcha-question-box">
-                          <div class="captcha-question" id="captcha-q-text">Loading...</div>
-                          <div class="captcha-options" id="captcha-options"></div>
-                      </div>
-                      <div class="verified-badge" id="verified-badge">
-                          <i class="ri-check-double-line"></i> Terverifikasi: Anda bukan robot!
+                      <div class="captcha-body">
+                          
+                          <div id="mode-puzzle" style="display:none;">
+                              <p class="quiz-question">Geser slider agar potongan pas!</p>
+                              <div class="puzzle-area">
+                                  <div class="puzzle-hole" id="puzzle-target"></div>
+                                  <div class="puzzle-piece" id="puzzle-piece"></div>
+                              </div>
+                              <input type="range" min="0" max="100" value="0" class="puzzle-slider" id="puzzle-input">
+                          </div>
+
+                          <div id="mode-grid" style="display:none;">
+                              <p class="quiz-question" id="grid-instruction">Pilih semua ikon HEWAN</p>
+                              <div class="icon-grid" id="grid-container"></div>
+                              <button type="button" class="status-btn" style="margin-top:15px;" id="grid-verify">Verifikasi</button>
+                          </div>
+
+                          <div id="mode-text" style="display:none;">
+                              <p class="quiz-question">Ketik kode di bawah ini:</p>
+                              <div class="text-captcha-box">
+                                  <canvas id="text-canvas" width="200" height="60"></canvas>
+                              </div>
+                              <div class="captcha-input-group">
+                                  <input type="text" class="captcha-input" id="text-input" placeholder="Ketik kode...">
+                                  <button type="button" class="captcha-submit" id="text-verify">Cek</button>
+                              </div>
+                          </div>
+
+                          <div id="mode-quiz" style="display:none;">
+                              <p class="quiz-question" id="quiz-question-text">Loading...</p>
+                              <div class="quiz-options" id="quiz-options"></div>
+                          </div>
+
+                          <div id="verified-state" class="verified-state">
+                              <i class="ri-checkbox-circle-fill verified-icon"></i>
+                              <span class="verified-text">Terverifikasi</span>
+                          </div>
+
                       </div>
                   </div>
 
-                  <button type="submit" id="btn-submit" disabled>Kirim Data (Verifikasi Dulu)</button>
+                  <button type="submit" id="btn-submit" disabled>Kirim Data (Selesaikan Security Check)</button>
               </form>
           </div>
       </div>
@@ -330,75 +405,198 @@
     }
     document.getElementById('status-btn').onclick = () => statusModal.style.display = 'none';
 
-    // ==== ANTI-BOT CAPTCHA LOGIC ====
-    const captchaQuestions = [
-        { q: "Tahun berapa Indonesia merdeka?", a: ["1945", "1998", "1928", "2020"], correct: "1945" },
-        { q: "Apa warna bendera Indonesia?", a: ["Merah Putih", "Merah Biru", "Putih Merah", "Kuning Hijau"], correct: "Merah Putih" },
-        { q: "Siapa proklamator kemerdekaan Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi", "Pangeran Diponegoro"], correct: "Soekarno-Hatta" },
-        { q: "Lambang negara Indonesia adalah...", a: ["Garuda", "Harimau", "Banteng", "Komodo"], correct: "Garuda" },
-        { q: "🇯🇵 Bendera negara mana ini?", a: ["Jepang", "Korea", "China", "Vietnam"], correct: "Jepang" },
-        { q: "🇬🇧 Bendera negara mana ini?", a: ["Inggris", "Amerika", "Australia", "Perancis"], correct: "Inggris" },
-        { q: "🇸🇦 Bendera negara mana ini?", a: ["Arab Saudi", "Turki", "Mesir", "Iran"], correct: "Arab Saudi" },
-        { q: "Candi Borobudur terletak di provinsi...", a: ["Jawa Tengah", "Jawa Barat", "Bali", "Sumatera Utara"], correct: "Jawa Tengah" }
+    /* =========================================
+       LOGIKA SECURITY CHECK (5 MODELS)
+       ========================================= */
+    let isVerified = false;
+    let puzzleTarget = 0;
+    let textCode = "";
+
+    function resetCaptcha() {
+        isVerified = false;
+        document.getElementById('verified-state').style.display = 'none';
+        
+        // Disable Submit
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true;
+        btn.textContent = 'Kirim Data (Selesaikan Security Check)';
+        btn.style.background = '#cbd5e1';
+        btn.style.color = '#64748b';
+        btn.style.cursor = 'not-allowed';
+
+        // Randomly pick 1 of 4 visible modes (Text, Puzzle, Grid, Quiz)
+        // Note: Quiz handles both History and Flags internally
+        const modes = ['mode-puzzle', 'mode-grid', 'mode-text', 'mode-quiz'];
+        const selected = modes[Math.floor(Math.random() * modes.length)];
+        
+        modes.forEach(m => document.getElementById(m).style.display = 'none');
+        document.getElementById(selected).style.display = 'block';
+
+        if (selected === 'mode-puzzle') initPuzzle();
+        else if (selected === 'mode-grid') initGrid();
+        else if (selected === 'mode-text') initTextCaptcha();
+        else initQuiz();
+    }
+
+    function verifySuccess() {
+        isVerified = true;
+        ['mode-puzzle', 'mode-grid', 'mode-text', 'mode-quiz'].forEach(m => document.getElementById(m).style.display = 'none');
+        document.getElementById('verified-state').style.display = 'flex';
+        
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = false;
+        btn.textContent = 'Kirim Data';
+        btn.style.background = 'linear-gradient(135deg, var(--hc-blue), var(--hc-toska))';
+        btn.style.color = 'white';
+        btn.style.cursor = 'pointer';
+    }
+
+    document.getElementById('captcha-reload').onclick = resetCaptcha;
+
+    // --- 1. PUZZLE SLIDER LOGIC ---
+    function initPuzzle() {
+        const slider = document.getElementById('puzzle-input');
+        const piece = document.getElementById('puzzle-piece');
+        const target = document.getElementById('puzzle-target');
+        
+        // Random Target Position (10% - 80%)
+        puzzleTarget = Math.floor(Math.random() * 70) + 10;
+        target.style.left = puzzleTarget + '%';
+        piece.style.left = '0%';
+        slider.value = 0;
+
+        slider.oninput = function() {
+            piece.style.left = this.value + '%';
+        };
+
+        slider.onchange = function() {
+            const diff = Math.abs(parseInt(this.value) - puzzleTarget);
+            if (diff < 5) verifySuccess(); // Toleransi 5%
+            else {
+                alert("Posisi kurang pas, coba lagi!");
+                slider.value = 0; piece.style.left = '0%';
+            }
+        };
+    }
+
+    // --- 2. ICON GRID LOGIC ---
+    function initGrid() {
+        const container = document.getElementById('grid-container');
+        container.innerHTML = '';
+        
+        const icons = [
+            { id: 'h1', icon: 'ri-bear-smile-line', type: 'hewan' },
+            { id: 'h2', icon: 'ri-bird-line', type: 'hewan' },
+            { id: 'h3', icon: 'ri-bug-line', type: 'hewan' },
+            { id: 'b1', icon: 'ri-car-line', type: 'benda' },
+            { id: 'b2', icon: 'ri-book-line', type: 'benda' },
+            { id: 'b3', icon: 'ri-cup-line', type: 'benda' }
+        ];
+        
+        // Acak 6 item dari pool (3 benar, 3 salah)
+        // Sederhana: Tampilkan semua 6 tapi acak urutan
+        icons.sort(() => Math.random() - 0.5);
+        
+        icons.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'icon-btn';
+            div.innerHTML = `<i class="${item.icon}"></i>`;
+            div.dataset.type = item.type;
+            div.onclick = function() { this.classList.toggle('selected'); };
+            container.appendChild(div);
+        });
+
+        document.getElementById('grid-verify').onclick = () => {
+            const selected = document.querySelectorAll('.icon-btn.selected');
+            const allCorrect = Array.from(selected).every(el => el.dataset.type === 'hewan');
+            const countCorrect = Array.from(selected).filter(el => el.dataset.type === 'hewan').length;
+            
+            // Harus pilih minimal 1 dan semua pilihan harus benar
+            if (selected.length > 0 && allCorrect && countCorrect >= 1) verifySuccess();
+            else {
+                alert("Jawaban salah! Pilih ikon hewan saja.");
+                document.querySelectorAll('.icon-btn').forEach(el => el.classList.remove('selected'));
+            }
+        };
+    }
+
+    // --- 3. TEXT CAPTCHA LOGIC ---
+    function initTextCaptcha() {
+        const canvas = document.getElementById('text-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0,0,200,60);
+        
+        // Random Text
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        textCode = "";
+        for(let i=0; i<5; i++) textCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        
+        // Draw Text
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "center";
+        ctx.fillText(textCode, 100, 40);
+        
+        // Add Noise Lines
+        for(let i=0; i<5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random()*200, Math.random()*60);
+            ctx.lineTo(Math.random()*200, Math.random()*60);
+            ctx.strokeStyle = "rgba(255,255,255,0.5)";
+            ctx.stroke();
+        }
+        
+        document.getElementById('text-input').value = '';
+        
+        document.getElementById('text-verify').onclick = () => {
+            if(document.getElementById('text-input').value.toUpperCase() === textCode) verifySuccess();
+            else { alert("Kode salah!"); initTextCaptcha(); }
+        };
+    }
+
+    // --- 4 & 5. QUIZ LOGIC (MIXED) ---
+    const quizData = [
+        // History
+        { q: "Tahun berapa Indonesia merdeka?", a: ["1945", "1998", "1928", "2020"], c: "1945" },
+        { q: "Siapa proklamator Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi", "Diponegoro"], c: "Soekarno-Hatta" },
+        // Flags
+        { q: "🇯🇵 Bendera negara mana ini?", a: ["Jepang", "Korea", "China", "Vietnam"], c: "Jepang" },
+        { q: "🇬🇧 Bendera negara mana ini?", a: ["Inggris", "Amerika", "Australia", "Perancis"], c: "Inggris" },
+        { q: "Palestine terletak di benua...", a: ["Asia", "Eropa", "Afrika", "Amerika"], c: "Asia" }
     ];
 
-    let isVerified = false;
-
-    function initCaptcha() {
-        const qData = captchaQuestions[Math.floor(Math.random() * captchaQuestions.length)];
-        const qTextEl = document.getElementById('captcha-q-text');
-        const optsEl = document.getElementById('captcha-options');
+    function initQuiz() {
+        const qData = quizData[Math.floor(Math.random() * quizData.length)];
+        const qTextEl = document.getElementById('quiz-question-text');
+        const optsEl = document.getElementById('quiz-options');
         
         qTextEl.textContent = qData.q;
-        // Jika soal bendera (emoji), perbesar
         if (qData.q.includes("Bendera")) {
             const flag = qData.q.split(" ")[0];
-            qTextEl.innerHTML = `<span class="captcha-flag-icon">${flag}</span> Bendera negara mana ini?`;
+            qTextEl.innerHTML = `<span class="flag-icon">${flag}</span> Bendera negara mana ini?`;
         }
 
         optsEl.innerHTML = '';
-        
-        // Acak urutan jawaban
         const shuffledOptions = [...qData.a].sort(() => Math.random() - 0.5);
 
         shuffledOptions.forEach(opt => {
             const btn = document.createElement('div');
-            btn.className = 'captcha-btn';
+            btn.className = 'quiz-btn';
             btn.textContent = opt;
-            btn.onclick = () => checkAnswer(btn, opt, qData.correct);
+            btn.onclick = () => {
+                if (opt === qData.c) {
+                    btn.classList.add('correct');
+                    setTimeout(verifySuccess, 500);
+                } else {
+                    btn.classList.add('wrong');
+                    setTimeout(() => { btn.classList.remove('wrong'); initQuiz(); }, 500);
+                }
+            };
             optsEl.appendChild(btn);
         });
     }
 
-    function checkAnswer(btnEl, selected, correct) {
-        if (isVerified) return; // Sudah verified, ignore
-
-        if (selected === correct) {
-            // BENAR
-            btnEl.classList.add('correct');
-            isVerified = true;
-            document.getElementById('captcha-question-box').style.display = 'none';
-            document.getElementById('verified-badge').style.display = 'block';
-            
-            // Enable Submit Button
-            const submitBtn = document.getElementById('btn-submit');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Kirim Data';
-            submitBtn.style.background = 'linear-gradient(135deg, var(--hc-blue), var(--hc-toska))';
-            submitBtn.style.color = 'white';
-            submitBtn.style.cursor = 'pointer';
-        } else {
-            // SALAH
-            btnEl.classList.add('wrong');
-            setTimeout(() => {
-                btnEl.classList.remove('wrong');
-                // Ganti soal jika salah
-                initCaptcha();
-            }, 500);
-        }
-    }
-
-    // ==== CAMERA LOGIC (Standard) ====
+    // ==== CAMERA LOGIC ====
     let stream = null;
     let currentFacingMode = 'user'; 
     let cropper = null;
@@ -543,7 +741,7 @@
         else document.getElementById('group-jabatan').classList.remove('hidden');
     });
 
-    // ==== SIGNATURE LOGIC WITH UNDO ====
+    // ==== SIGNATURE (WITH UNDO) ====
     const sigCanvas = document.getElementById('sig-canvas');
     let signaturePad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
     
@@ -556,14 +754,13 @@
     }
     window.addEventListener('resize', resizeSig);
     
-    // Clear
     document.getElementById('sig-clear').addEventListener('click', () => signaturePad.clear());
     
-    // Undo
+    // Fitur Undo (Menghapus goresan terakhir)
     document.getElementById('sig-undo').addEventListener('click', () => {
         const data = signaturePad.toData();
-        if (data) {
-            data.pop(); // Hapus langkah terakhir
+        if (data && data.length > 0) {
+            data.pop(); // Hapus stroke terakhir
             signaturePad.fromData(data);
         }
     });
@@ -572,18 +769,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         populateDropdowns();
         resizeSig();
-        initCaptcha(); // Load soal pertama
+        resetCaptcha(); // Start with random security check
     });
 
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Final Security Check
-        if (!isVerified) { 
-            alert("Harap selesaikan verifikasi keamanan terlebih dahulu."); 
-            return; 
-        }
-
+        if (!isVerified) { alert("Harap selesaikan Security Check terlebih dahulu."); return; }
         if(signaturePad.isEmpty()) { showStatus('error', 'Tanda Tangan', 'Wajib diisi.'); return; }
         if(!hiddenBase64.value) { showStatus('error', 'Foto Profil', 'Wajib upload foto.'); return; }
 
@@ -626,30 +818,17 @@
             if(res.status === 'ok') {
                 showStatus('success', 'Berhasil', 'Pendaftaran Anda diterima.');
                 e.target.reset(); signaturePad.clear(); btnDeletePhoto.click();
-                
-                // Reset Captcha untuk submission berikutnya
-                isVerified = false;
-                document.getElementById('captcha-question-box').style.display = 'block';
-                document.getElementById('verified-badge').style.display = 'none';
-                btn.disabled = true;
-                btn.textContent = 'Kirim Data (Verifikasi Dulu)';
-                btn.style.background = '#cbd5e1';
-                btn.style.color = '#64748b';
-                btn.style.cursor = 'not-allowed';
-                initCaptcha();
-
+                resetCaptcha(); // Reset for next submission
             } else if(res.status === 'already') {
                 showStatus('error', 'Gagal', 'Nomor identitas sudah terdaftar.');
-                btn.disabled = false; // Kembalikan tombol jika error logika
             } else {
                 showStatus('error', 'Error', res.message);
-                btn.disabled = false;
             }
         } catch(err) {
             showStatus('error', 'Koneksi', err.message);
-            btn.disabled = false;
         } finally {
             hideLoader();
+            btn.disabled = false;
         }
     });
   </script>
