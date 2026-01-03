@@ -70,7 +70,7 @@
     .btn-main-camera:hover { background: var(--hc-blue); color: white; }
     .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
 
-    /* === NEW CAMERA MODAL UI (Sesuai Lampiran) === */
+    /* === CAMERA MODAL UI (Fixed Colors) === */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
     
     .cam-box-modern {
@@ -79,7 +79,6 @@
         overflow: hidden;
     }
     
-    /* Area Video Full */
     .cam-video-area { 
         flex: 1; position: relative; width: 100%; overflow: hidden; 
         display: flex; align-items: center; justify-content: center;
@@ -87,13 +86,12 @@
     }
     #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-    /* Top Bar (Tombol X Merah) */
-    .cam-top-bar {
-        position: absolute; top: 20px; right: 20px; z-index: 20;
-    }
+    /* Top Bar (Close) */
+    .cam-top-bar { position: absolute; top: 20px; right: 20px; z-index: 20; }
+    /* TOMBOL X MERAH */
     .btn-close-cam {
-        width: 40px; height: 40px; border-radius: 50%;
-        background-color: var(--hc-red); color: white;
+        width: 44px; height: 44px; border-radius: 50%;
+        background-color: #d30e14; color: white;
         border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
@@ -101,22 +99,22 @@
     /* Bottom Control Bar */
     .cam-controls {
         height: 140px; background: rgba(0,0,0,0.8);
-        display: flex; align-items: center; justify-content: space-around;
-        padding: 0 20px; padding-bottom: 20px;
+        display: flex; align-items: center; justify-content: space-between; /* Space between items */
+        padding: 0 40px; padding-bottom: 20px;
         position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
         border-top-left-radius: 20px; border-top-right-radius: 20px;
         backdrop-filter: blur(10px);
     }
 
-    /* Tombol Upload (Kuning) */
+    /* TOMBOL UPLOAD KUNING */
     .btn-upload-cam {
         width: 50px; height: 50px; border-radius: 50%;
-        background-color: var(--hc-yellow); color: var(--hc-dark);
+        background-color: #ecec17; color: #2e2e2e; /* Dark icon for contrast */
         border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3);
     }
 
-    /* Tombol Shutter (Putih) */
+    /* TOMBOL SHUTTER PUTIH */
     .btn-shutter-cam {
         width: 70px; height: 70px; border-radius: 50%;
         background-color: white; border: 4px solid rgba(255,255,255,0.3);
@@ -128,10 +126,10 @@
         border: 2px solid #2e2e2e;
     }
 
-    /* Tombol Switch (Biru) */
+    /* TOMBOL SWITCH BIRU */
     .btn-switch-cam {
         width: 50px; height: 50px; border-radius: 50%;
-        background-color: var(--hc-blue); color: white;
+        background-color: #1a4787; color: white;
         border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4);
     }
@@ -159,7 +157,6 @@
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .refresh-btn { cursor: pointer; padding: 5px 10px; border-radius: 4px; font-size: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; display: none; align-items: center; gap: 5px; }
-    .refresh-btn:hover { background: #fecaca; }
     .captcha-body { padding: 20px; text-align: center; }
     .captcha-error { color: #dc2626; font-size: 13px; font-weight: 600; margin-top: 10px; background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fee2e2; display: none; animation: shake 0.3s; }
     .verified-state { display: none; flex-direction: column; align-items: center; padding: 20px; color: var(--hc-green); }
@@ -191,14 +188,11 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
-    /* Button Verifikasi */
-    .status-btn { 
-        width: 100%; padding: 12px; border: none; border-radius: 10px; 
-        background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
-        color: white; font-weight: 600; margin-top: 15px; cursor: pointer; 
-        box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s;
-    }
+    .status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s; }
     .status-btn:active { transform: translateY(2px); }
+
+    /* Modal OK Button */
+    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
 
     /* Status Modal Styles */
     .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
@@ -206,15 +200,12 @@
     .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .status-icon-circle.success { border: 4px solid var(--hc-green); }
     .status-icon-circle.error { border: 4px solid var(--hc-red); }
-    
-    /* Tombol Oke Modal */
-    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
 
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
         .card { padding: 20px; }
-        .cam-box-modern { height: 100vh; max-width: 100%; border-radius: 0; }
-        .cam-controls { padding-bottom: 40px; }
+        .cam-box-modern { max-width: 100%; height: 100%; border-radius: 0; }
+        .cam-controls { padding-bottom: 30px; }
     }
   </style>
 </head>
@@ -386,17 +377,14 @@
 
   <div id="cam-popup" class="modal-overlay">
       <div class="cam-window-box cam-box-modern">
-          
           <div class="cam-top-bar">
               <button class="btn-close-cam" id="btn-cam-cancel" title="Tutup">
                   <i class="ri-close-line"></i>
               </button>
           </div>
-
           <div class="cam-video-area">
               <video id="cam-video" autoplay playsinline muted></video>
           </div>
-
           <div class="cam-controls">
               <button class="btn-upload-cam" id="btn-cam-upload" title="Pilih File">
                   <i class="ri-image-add-line"></i>
@@ -689,7 +677,13 @@
 
     function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
     document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
-    document.getElementById('btn-cam-switch').addEventListener('click', () => { currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; document.getElementById('btn-open-camera-ui').click(); });
+    
+    // Switch Camera Logic
+    document.getElementById('btn-cam-switch').addEventListener('click', () => { 
+        currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
+        video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
+        document.getElementById('btn-open-camera-ui').click(); 
+    });
     
     document.getElementById('btn-cam-capture').addEventListener('click', () => {
         const cvs = document.createElement('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
@@ -752,9 +746,42 @@
 
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
-        if(!isVerified) { showCaptchaError("Selesaikan Security Check."); return; }
-        if(sigPad.isEmpty()) { showStatus('error', 'Tanda Tangan', 'Wajib diisi.'); return; }
-        if(!hiddenBase64.value) { showStatus('error', 'Foto', 'Wajib upload foto.'); return; }
+        
+        // AI Validation: Check All Errors
+        let errors = [];
+        if (!document.getElementById('fd-nis').value.trim()) errors.push("NIS/Identitas");
+        if (!document.getElementById('fd-nama').value.trim()) errors.push("Nama Lengkap");
+        if (!document.getElementById('fd-email').value.trim()) errors.push("Email");
+        if (!document.getElementById('fd-tgllahir').value) errors.push("Tanggal Lahir");
+        
+        // Type Specific Checks
+        const tipe = tipeSel.value;
+        if (tipe === 'siswa' && !document.getElementById('fd-kelas').value) errors.push("Kelas");
+        if ((tipe === 'guru' || tipe === 'lain') && !document.getElementById('fd-jabatan').value.trim()) errors.push("Jabatan");
+        if (tipe === 'alumni' && !document.getElementById('fd-thn-lulus').value.trim()) errors.push("Tahun Lulus");
+
+        if (!hiddenBase64.value) errors.push("Foto Profil");
+        if (sigPad.isEmpty()) errors.push("Tanda Tangan");
+
+        // SMART ERROR HANDLING
+        if (errors.length > 0) {
+            let title = "Data Belum Lengkap";
+            let msg = "";
+            
+            if (errors.length === 1) {
+                title = errors[0];
+                msg = "Wajib diisi.";
+            } else if (errors.length > 4) {
+                msg = "Mohon lengkapi formulir pendaftaran dengan benar.";
+            } else {
+                msg = "Mohon lengkapi: " + errors.join(", ");
+            }
+            
+            showStatus('error', title, msg);
+            return;
+        }
+
+        if (!isVerified) { showCaptchaError("Selesaikan Security Check."); return; }
 
         window.showHC32Status('loading', 'Mengirim Data...', 'Mohon tunggu sebentar.');
         const btn = document.getElementById('btn-submit'); btn.disabled = true;
@@ -767,10 +794,6 @@
             const dataTglLahir = document.getElementById('fd-tgllahir').value;
             const dataJabatan = document.getElementById('fd-jabatan').value.trim();
             const dataThnLulus = document.getElementById('fd-thn-lulus').value.trim();
-
-            if (!dataEmail || !dataTglLahir) throw new Error("Email & Tanggal Lahir wajib diisi.");
-            if ((tipe === 'guru' || tipe === 'non-32') && !dataJabatan) throw new Error("Jabatan wajib diisi.");
-            if (tipe === 'alumni' && !dataThnLulus) throw new Error("Tahun Lulus wajib diisi.");
 
             let pl = { nis:'', nisn:'', nip:'' };
             if(tipe==='siswa-aktif') pl.nis = rawId; else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } else if(tipe==='alumni') pl.nis = rawId; else { if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; if(!pl.nis) pl.nis = rawId.slice(-7); }
