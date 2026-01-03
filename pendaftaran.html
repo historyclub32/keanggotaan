@@ -62,7 +62,7 @@
     .help-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--hc-blue); color: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: 0.2s; }
     .help-btn:hover { opacity: 0.9; }
 
-    /* UI FOTO - MAIN FORM */
+    /* UI FOTO */
     .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
     #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; position: relative; }
     #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
@@ -70,56 +70,77 @@
     .btn-main-camera:hover { background: var(--hc-blue); color: white; }
     .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
 
-    /* --- UI KAMERA BARU (POPUP) --- */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2500; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .cam-window-box { width: 100%; max-width: 600px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+    /* === NEW CAMERA MODAL UI (Sesuai Lampiran) === */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
     
-    .cam-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 700; color: #2e2e2e; display: flex; align-items: center; gap: 8px; }
-    
-    .cam-view-wrapper { position: relative; width: 100%; height: 0; padding-bottom: 125%; /* Taller for mobile */ background: #000; overflow: hidden; }
-    #cam-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-    
-    /* OVERLAY CONTROLS (SWITCH & SHUTTER) */
-    .cam-overlay-controls { 
-        position: absolute; bottom: 30px; left: 0; right: 0; 
-        display: flex; justify-content: center; align-items: center; 
-        gap: 40px; z-index: 10; 
+    .cam-box-modern {
+        width: 100%; max-width: 500px; height: 100%; max-height: 100vh;
+        background: #000; display: flex; flex-direction: column; position: relative;
+        overflow: hidden;
     }
     
-    /* TOMBOL JEPET (PUTIH) */
-    .btn-shutter { 
-        width: 72px; height: 72px; border-radius: 50%;
-        background: #ffffff; border: 4px solid rgba(200,200,200,0.5);
-        color: var(--hc-blue); font-size: 28px;
+    /* Area Video Full */
+    .cam-video-area { 
+        flex: 1; position: relative; width: 100%; overflow: hidden; 
         display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        transition: transform 0.1s;
+        background: #000;
     }
-    .btn-shutter:active { transform: scale(0.9); }
-    
-    /* TOMBOL SWITCH (BIRU) */
-    .btn-switch { 
-        width: 48px; height: 48px; border-radius: 50%; 
-        background: #1a4787; /* HC Blue */
-        color: white; border: 2px solid rgba(255,255,255,0.2);
-        display: flex; align-items: center; justify-content: center; 
-        font-size: 24px; cursor: pointer; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
+    /* Top Bar (Tombol X Merah) */
+    .cam-top-bar {
+        position: absolute; top: 20px; right: 20px; z-index: 20;
     }
-    
-    /* FOOTER BUTTONS (X MERAH & UPLOAD KUNING) */
-    .cam-footer { padding: 15px; display: flex; gap: 10px; background: #fff; border-top: 1px solid #eee; }
-    
-    .btn-cam-action { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    
-    /* Tombol X Merah (#d30e14) */
-    .btn-red-action { background: #d30e14; color: white; }
-    
-    /* Tombol Pilih File Kuning (#ecec17) */
-    .btn-yellow-action { background: #ecec17; color: #2e2e2e; }
+    .btn-close-cam {
+        width: 40px; height: 40px; border-radius: 50%;
+        background-color: var(--hc-red); color: white;
+        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Bottom Control Bar */
+    .cam-controls {
+        height: 140px; background: rgba(0,0,0,0.8);
+        display: flex; align-items: center; justify-content: space-around;
+        padding: 0 20px; padding-bottom: 20px;
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+        border-top-left-radius: 20px; border-top-right-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Tombol Upload (Kuning) */
+    .btn-upload-cam {
+        width: 50px; height: 50px; border-radius: 50%;
+        background-color: var(--hc-yellow); color: var(--hc-dark);
+        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3);
+    }
+
+    /* Tombol Shutter (Putih) */
+    .btn-shutter-cam {
+        width: 70px; height: 70px; border-radius: 50%;
+        background-color: white; border: 4px solid rgba(255,255,255,0.3);
+        cursor: pointer; position: relative; transition: transform 0.1s;
+    }
+    .btn-shutter-cam:active { transform: scale(0.9); }
+    .btn-shutter-cam::after {
+        content: ''; position: absolute; inset: 2px; border-radius: 50%;
+        border: 2px solid #2e2e2e;
+    }
+
+    /* Tombol Switch (Biru) */
+    .btn-switch-cam {
+        width: 50px; height: 50px; border-radius: 50%;
+        background-color: var(--hc-blue); color: white;
+        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4);
+    }
 
     /* Crop Modal */
-    #crop-modal .modal-box { background: #1e293b; color: white; }
+    #crop-modal .modal-box { 
+        background: #1e293b; color: white; width: 90%; max-width: 400px;
+        border-radius: 16px; padding: 20px; 
+    }
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
     .btn-modal.cancel { background: #334155; color: white; }
@@ -138,6 +159,7 @@
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .refresh-btn { cursor: pointer; padding: 5px 10px; border-radius: 4px; font-size: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; display: none; align-items: center; gap: 5px; }
+    .refresh-btn:hover { background: #fecaca; }
     .captcha-body { padding: 20px; text-align: center; }
     .captcha-error { color: #dc2626; font-size: 13px; font-weight: 600; margin-top: 10px; background: #fef2f2; padding: 10px; border-radius: 8px; border: 1px solid #fee2e2; display: none; animation: shake 0.3s; }
     .verified-state { display: none; flex-direction: column; align-items: center; padding: 20px; color: var(--hc-green); }
@@ -146,9 +168,9 @@
     @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
 
     /* Security Models */
-    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
+    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
     .puzzle-hole { width: 48px; height: 48px; background: rgba(0,0,0,0.5); box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: absolute; border-radius: 6px; border: 1px solid rgba(255,255,255,0.4); }
-    .puzzle-piece { width: 48px; height: 48px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
+    .puzzle-piece { width: 48px; height: 48px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
     .puzzle-slider { width: 100%; cursor: pointer; margin-top: 10px; accent-color: var(--hc-blue); }
     
     .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
@@ -169,7 +191,7 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
-    /* BUTTON VERIFIKASI GRID */
+    /* Button Verifikasi */
     .status-btn { 
         width: 100%; padding: 12px; border: none; border-radius: 10px; 
         background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
@@ -178,20 +200,21 @@
     }
     .status-btn:active { transform: translateY(2px); }
 
-    /* Modal OK Button */
-    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
-
     /* Status Modal Styles */
     .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
     .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
     .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .status-icon-circle.success { border: 4px solid var(--hc-green); }
     .status-icon-circle.error { border: 4px solid var(--hc-red); }
+    
+    /* Tombol Oke Modal */
+    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
 
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
         .card { padding: 20px; }
-        .cam-view-wrapper { padding-bottom: 133%; /* 4:3 Portrait aspect ratio for mobile */ }
+        .cam-box-modern { height: 100vh; max-width: 100%; border-radius: 0; }
+        .cam-controls { padding-bottom: 40px; }
     }
   </style>
 </head>
@@ -283,10 +306,10 @@
                       <div class="sig-wrapper">
                           <canvas id="sig-canvas"></canvas>
                           <div class="sig-tools">
-                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo per garis">
+                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo">
                                   <i class="ri-arrow-go-back-line"></i> Undo
                               </button>
-                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Hapus semua">
+                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Ulangi">
                                   <i class="ri-delete-bin-line"></i> Ulangi
                               </button>
                           </div>
@@ -362,30 +385,29 @@
   </div>
 
   <div id="cam-popup" class="modal-overlay">
-      <div class="cam-window-box">
-          <div class="cam-header">
-              <i class="ri-camera-lens-line"></i> Ambil Foto
-          </div>
-          <div class="cam-view-wrapper">
-              <video id="cam-video" autoplay playsinline muted></video>
-              <div class="cam-overlay-controls">
-                  <button class="btn-switch" id="btn-cam-switch" title="Ganti Kamera">
-                      <i class="ri-camera-switch-line"></i>
-                  </button>
-                  <button class="btn-shutter" id="btn-cam-capture">
-                     <i class="ri-camera-3-fill"></i>
-                  </button>
-                  <div style="width:40px;"></div>
-              </div>
-          </div>
-          <div class="cam-footer">
-              <button class="btn-cam-action btn-red-action" id="btn-cam-cancel">
-                  <i class="ri-close-line"></i> Tutup
+      <div class="cam-window-box cam-box-modern">
+          
+          <div class="cam-top-bar">
+              <button class="btn-close-cam" id="btn-cam-cancel" title="Tutup">
+                  <i class="ri-close-line"></i>
               </button>
-              <button class="btn-cam-action btn-yellow-action" id="btn-cam-upload">
-                  <i class="ri-folder-open-line"></i> Pilih File
+          </div>
+
+          <div class="cam-video-area">
+              <video id="cam-video" autoplay playsinline muted></video>
+          </div>
+
+          <div class="cam-controls">
+              <button class="btn-upload-cam" id="btn-cam-upload" title="Pilih File">
+                  <i class="ri-image-add-line"></i>
               </button>
               <input type="file" id="inp-file-foto" accept="image/*" hidden>
+
+              <button class="btn-shutter-cam" id="btn-cam-capture"></button>
+
+              <button class="btn-switch-cam" id="btn-cam-switch" title="Ganti Kamera">
+                  <i class="ri-camera-switch-line"></i>
+              </button>
           </div>
       </div>
   </div>
@@ -421,7 +443,6 @@
             '<i class="ri-check-line" style="font-size:40px; color:var(--hc-green)"></i>' : 
             '<i class="ri-close-line" style="font-size:40px; color:var(--hc-red)"></i>';
     }
-    // Fixed: Tombol Oke menutup modal
     document.getElementById('modal-ok-btn').onclick = () => statusModal.style.display = 'none';
 
     // ==== LOGIKA UTAMA ====
@@ -615,11 +636,11 @@
     }
 
     const quizData = [
-        { q: "Kapan Indonesia merdeka?", a: ["17 Agustus 1945", "20 Mei 1908", "28 Oktober 1928"], c: "17 Agustus 1945" },
-        { q: "Siapa proklamator Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi"], c: "Soekarno-Hatta" },
-        { q: "Ibukota Indonesia?", a: ["Jakarta", "Bandung", "Surabaya"], c: "Jakarta" },
-        { q: "Lambang negara Indonesia?", a: ["Garuda", "Harimau", "Banteng"], c: "Garuda" },
-        { q: "Sumpah Pemuda diperingati setiap?", a: ["28 Oktober", "10 November", "17 Agustus"], c: "28 Oktober" }
+        { q: "Kapan Indonesia merdeka?", a: ["17 Agustus 1945", "20 Mei 1908", "28 Oktober 1928", "10 November 1945"], c: "17 Agustus 1945" },
+        { q: "Siapa proklamator Indonesia?", a: ["Soekarno-Hatta", "Suharto", "Jokowi", "Diponegoro"], c: "Soekarno-Hatta" },
+        { q: "Ibukota Indonesia?", a: ["Jakarta", "Bandung", "Surabaya", "Medan"], c: "Jakarta" }, 
+        { q: "Lambang negara Indonesia?", a: ["Garuda", "Harimau", "Banteng", "Elang"], c: "Garuda" }, 
+        { q: "Sumpah Pemuda diperingati setiap?", a: ["28 Oktober", "10 November", "17 Agustus", "1 Juni"], c: "28 Oktober" } 
     ];
 
     function initQuiz() {
@@ -627,10 +648,22 @@
         document.getElementById('quiz-question-text').textContent = qData.q;
         const optsEl = document.getElementById('quiz-options');
         optsEl.innerHTML = '';
+        
+        // Buat Array Jawaban (Benar + 3 Salah Acak dari soal lain jika perlu, tapi disini dataset sudah punya opsi)
+        // Di dataset saya sudah siapkan 'a' sebagai array pilihan jawaban. 
+        // Jadi kita tinggal shuffle array 'a' tersebut.
+        
         const shuffled = [...qData.a].sort(() => 0.5 - Math.random());
+        
         shuffled.forEach(opt => {
             const btn = document.createElement('div'); btn.className = 'quiz-btn'; btn.textContent = opt;
-            btn.onclick = () => { if (opt === qData.c) { btn.classList.add('correct'); setTimeout(verifySuccess, 500); } else { btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); } };
+            btn.onclick = () => { 
+                if (opt === qData.c) { 
+                    btn.classList.add('correct'); setTimeout(verifySuccess, 500); 
+                } else { 
+                    btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); 
+                } 
+            };
             optsEl.appendChild(btn);
         });
     }
@@ -672,8 +705,7 @@
             const file = e.target.files[0];
             // 1.1 MB Limit
             if(file.size > 1.1*1024*1024) { 
-                // Panggil Global Status
-                showStatus('error','File Besar','Maksimal 1.1 MB'); 
+                showStatus('error', 'File Besar', 'Maksimal ukuran foto adalah 1.1 MB.');
                 document.getElementById('inp-file-foto').value = ''; 
                 return; 
             }
@@ -721,8 +753,8 @@
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
         if(!isVerified) { showCaptchaError("Selesaikan Security Check."); return; }
-        if(sigPad.isEmpty()) { window.showHC32Status('error','Tanda Tangan','Wajib diisi.'); return; }
-        if(!hiddenBase64.value) { window.showHC32Status('error','Foto','Wajib upload foto.'); return; }
+        if(sigPad.isEmpty()) { showStatus('error', 'Tanda Tangan', 'Wajib diisi.'); return; }
+        if(!hiddenBase64.value) { showStatus('error', 'Foto', 'Wajib upload foto.'); return; }
 
         window.showHC32Status('loading', 'Mengirim Data...', 'Mohon tunggu sebentar.');
         const btn = document.getElementById('btn-submit'); btn.disabled = true;
