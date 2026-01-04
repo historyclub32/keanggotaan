@@ -39,7 +39,7 @@
     input:focus, select:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
     input:disabled, select:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
     
-    /* VALIDASI REAL-TIME (BORDER MERAH) */
+    /* ERROR STATE (RED BORDER) */
     .input-error {
         border-color: var(--hc-red) !important;
         box-shadow: 0 0 0 3px rgba(211, 14, 20, 0.1) !important;
@@ -61,7 +61,7 @@
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
     button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; color: #64748b; }
 
-    /* INFO CARD (PANDUAN) */
+    /* INFO CARD BAR (PANDUAN) */
     .info-card {
         margin-top: 20px; background: #fff; border-radius: 16px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;
@@ -99,7 +99,7 @@
     .help-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--hc-blue); color: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: 0.2s; }
     .help-btn:hover { opacity: 0.9; }
 
-    /* UI FOTO & Modal */
+    /* UI FOTO & Modal (Sama seperti sebelumnya) */
     .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
     #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; position: relative; }
     #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
@@ -120,7 +120,7 @@
     .btn-shutter-cam::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 2px solid #2e2e2e; }
     .btn-switch-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #1a4787; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4); }
 
-    /* Signature & Security */
+    /* Signature */
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
     canvas#sig-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
     .sig-tools { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 8px; }
@@ -129,6 +129,7 @@
     .sig-btn-undo { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
     .sig-btn-clear { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
 
+    /* Security Check & Models */
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .refresh-btn { cursor: pointer; padding: 5px 10px; border-radius: 4px; font-size: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; display: none; align-items: center; gap: 5px; }
@@ -137,8 +138,8 @@
     .verified-state { display: none; flex-direction: column; align-items: center; padding: 20px; color: var(--hc-green); }
     .verified-icon { font-size: 40px; margin-bottom: 5px; }
     .verified-text { font-weight: 700; font-size: 16px; }
-
-    /* Security Models CSS */
+    .status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s; }
+    
     .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
     .puzzle-hole { width: 48px; height: 48px; background: rgba(0,0,0,0.5); box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: absolute; border-radius: 6px; border: 1px solid rgba(255,255,255,0.4); }
     .puzzle-piece { width: 48px; height: 48px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
@@ -158,7 +159,6 @@
     .quiz-btn:hover { background: #e2e8f0; }
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
-    .status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s; }
 
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
@@ -235,12 +235,15 @@
                                   <option value="+81">🇯🇵 +81</option>
                                   <option value="+82">🇰🇷 +82</option>
                                   <option value="+86">🇨🇳 +86</option>
-                                  <option value="+91">🇮🇳 +91</option>
                                   <option value="+61">🇦🇺 +61</option>
+                                  <option value="+91">🇮🇳 +91</option>
                                   <option value="+49">🇩🇪 +49</option>
                                   <option value="+33">🇫🇷 +33</option>
+                                  <option value="+34">🇪🇸 +34</option>
                                   <option value="+7">🇷🇺 +7</option>
-                                  <option value="+31">🇳🇱 +31</option>
+                                  <option value="+55">🇧🇷 +55</option>
+                                  <option value="+20">🇪🇬 +20</option>
+                                  <option value="+90">🇹🇷 +90</option>
                                   <option value="+966">🇸🇦 +966</option>
                               </select>
                               <input id="fd-nohp" type="tel" placeholder="812xxx" required>
@@ -427,14 +430,12 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('pendaftaran'));
 
-    // Status Modal (Tidak digunakan lokal, semua via window.showHC32Status dari components.js)
-    
     // Toggle Info Card
     function toggleInfo() {
         document.getElementById('info-card').classList.toggle('open');
     }
 
-    // ==== LOGIKA UTAMA & VALIDASI AI ====
+    // ==== LOGIKA UTAMA & VALIDASI ====
     const tipeSel = document.getElementById('fd-tipe');
     const kelasSel = document.getElementById('fd-kelas');
     const angkatanSel = document.getElementById('fd-angkatan');
@@ -453,7 +454,7 @@
         [2026, 2027, 2028].forEach(yr => angkatanSel.add(new Option(yr, yr)));
     }
 
-    // Helper: Validasi Field (Border Merah)
+    // Helper: Validasi Field
     function validateField(el, isValid) {
         if (!isValid) el.classList.add('input-error');
         else el.classList.remove('input-error');
@@ -465,7 +466,7 @@
         validateField(this, this.value.length >= 5);
     });
 
-    // Listener Email (Regex Format AI)
+    // Listener Email (Regex Format)
     emailInput.addEventListener('input', function() {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         validateField(this, regex.test(this.value));
@@ -503,7 +504,7 @@
         } 
         else { 
             grpJab.classList.remove('hidden');
-            setIDConstraint(18, 5, 'NIK/Identitas (Max 18 Digit)'); // Min 5 for others
+            setIDConstraint(18, 5, 'NIK/Identitas (Max 18 Digit)');
         }
     }
 
@@ -774,7 +775,6 @@
         if (!nis.value.trim() || nis.value.length < minID) { errors.push("No. Identitas"); validateField(nis, false); }
         if (!document.getElementById('fd-nama').value.trim()) errors.push("Nama Lengkap");
         
-        // Email Regex (AI Logic)
         const email = document.getElementById('fd-email');
         const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!regexEmail.test(email.value)) { errors.push("Email"); validateField(email, false); }
@@ -784,7 +784,6 @@
         const hp = document.getElementById('fd-nohp');
         if (hp.value.length < 5) { errors.push("No HP"); validateField(hp, false); }
         
-        // Type Specific Checks
         const tipe = tipeSel.value;
         if (tipe === 'siswa' && !document.getElementById('fd-kelas').value) errors.push("Kelas");
         if ((tipe === 'guru' || tipe === 'lain') && !document.getElementById('fd-jabatan').value.trim()) errors.push("Jabatan");
