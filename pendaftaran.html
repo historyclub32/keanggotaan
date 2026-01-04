@@ -39,6 +39,11 @@
     input:focus, select:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
     input:disabled, select:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
     
+    /* NEW: Phone Group Style */
+    .phone-group { display: flex; gap: 8px; }
+    .phone-group select { width: 90px; flex-shrink: 0; }
+    .phone-group input { flex-grow: 1; }
+
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .hidden { display: none !important; }
     .note { font-size: 12px; color: #64748b; margin-top: 6px; }
@@ -48,9 +53,32 @@
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
     button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; color: #64748b; }
 
+    /* INFO CARD BAR (PANDUAN) */
+    .info-card {
+        margin-top: 20px; background: #fff; border-radius: 16px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;
+        border-left: 4px solid var(--hc-yellow);
+        transition: all 0.3s ease;
+    }
+    .info-header {
+        padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+        cursor: pointer; background: #fff;
+    }
+    .info-header:hover { background: #fcfcfc; }
+    .info-title { font-weight: 600; font-size: 14px; color: var(--hc-dark); display: flex; align-items: center; gap: 8px; }
+    .info-body {
+        padding: 0 20px 20px; display: none; font-size: 13px; color: #64748b; line-height: 1.6;
+        border-top: 1px solid #f1f5f9;
+    }
+    .info-body ul { padding-left: 20px; margin: 10px 0 0; }
+    .info-body li { margin-bottom: 6px; }
+    .info-icon { transition: transform 0.3s; }
+    .info-card.open .info-body { display: block; }
+    .info-card.open .info-icon { transform: rotate(180deg); }
+
     /* HELP CARD */
     .help-card {
-        margin-top: 32px; margin-bottom: 10px; background: #fff; border-radius: 16px;
+        margin-top: 20px; margin-bottom: 10px; background: #fff; border-radius: 16px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 16px 20px;
         display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 12px;
         border-left: 4px solid var(--hc-blue);
@@ -72,66 +100,17 @@
 
     /* Modal Camera UI (Fixed Colors) */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
-    
-    .cam-box-modern {
-        width: 100%; max-width: 500px; height: 100%; max-height: 100vh;
-        background: #000; display: flex; flex-direction: column; position: relative;
-        overflow: hidden;
-    }
-    
-    .cam-video-area { 
-        flex: 1; position: relative; width: 100%; overflow: hidden; 
-        display: flex; align-items: center; justify-content: center;
-        background: #000;
-    }
+    .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .cam-video-area { flex: 1; position: relative; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; }
     #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-
-    /* Top Bar (Close Button) */
     .cam-top-bar { position: absolute; top: 20px; right: 20px; z-index: 20; }
-    .btn-close-cam {
-        width: 44px; height: 44px; border-radius: 50%;
-        background-color: #d30e14; color: white; /* MERAH */
-        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    /* Bottom Control Bar */
-    .cam-controls {
-        height: 140px; background: rgba(0,0,0,0.8);
-        display: flex; align-items: center; justify-content: space-between; 
-        padding: 0 40px; padding-bottom: 20px;
-        position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
-        border-top-left-radius: 20px; border-top-right-radius: 20px;
-        backdrop-filter: blur(10px);
-    }
-
-    /* UPLOAD - KUNING */
-    .btn-upload-cam {
-        width: 50px; height: 50px; border-radius: 50%;
-        background-color: #ecec17; color: #2e2e2e;
-        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3);
-    }
-
-    /* SHUTTER - PUTIH */
-    .btn-shutter-cam {
-        width: 70px; height: 70px; border-radius: 50%;
-        background-color: white; border: 4px solid rgba(255,255,255,0.3);
-        cursor: pointer; position: relative; transition: transform 0.1s;
-    }
+    .btn-close-cam { width: 44px; height: 44px; border-radius: 50%; background-color: #d30e14; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .cam-controls { height: 140px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; padding-bottom: 20px; position: absolute; bottom: 0; left: 0; right: 0; z-index: 20; border-top-left-radius: 20px; border-top-right-radius: 20px; backdrop-filter: blur(10px); }
+    .btn-upload-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #ecec17; color: #2e2e2e; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3); }
+    .btn-shutter-cam { width: 70px; height: 70px; border-radius: 50%; background-color: white; border: 4px solid rgba(255,255,255,0.3); cursor: pointer; position: relative; transition: transform 0.1s; }
     .btn-shutter-cam:active { transform: scale(0.9); }
-    .btn-shutter-cam::after {
-        content: ''; position: absolute; inset: 2px; border-radius: 50%;
-        border: 2px solid #2e2e2e;
-    }
-
-    /* SWITCH - BIRU */
-    .btn-switch-cam {
-        width: 50px; height: 50px; border-radius: 50%;
-        background-color: #1a4787; color: white;
-        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4);
-    }
+    .btn-shutter-cam::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 2px solid #2e2e2e; }
+    .btn-switch-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #1a4787; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4); }
 
     /* Crop Modal */
     #crop-modal .modal-box { background: #1e293b; color: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; }
@@ -162,9 +141,9 @@
     @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
 
     /* Security Models */
-    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
+    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
     .puzzle-hole { width: 48px; height: 48px; background: rgba(0,0,0,0.5); box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: absolute; border-radius: 6px; border: 1px solid rgba(255,255,255,0.4); }
-    .puzzle-piece { width: 48px; height: 48px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
+    .puzzle-piece { width: 48px; height: 48px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
     .puzzle-slider { width: 100%; cursor: pointer; margin-top: 10px; accent-color: var(--hc-blue); }
     
     .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
@@ -185,13 +164,7 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
-    /* Button Verifikasi */
-    .status-btn { 
-        width: 100%; padding: 12px; border: none; border-radius: 10px; 
-        background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
-        color: white; font-weight: 600; margin-top: 15px; cursor: pointer; 
-        box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s;
-    }
+    .status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s; }
     .status-btn:active { transform: translateY(2px); }
 
     /* Modal OK Button */
@@ -268,11 +241,25 @@
                   </div>
 
                   <div class="two-col row">
-                      <div><label>No HP (WA) <span class="req-star">*</span></label><input id="fd-nohp" type="tel" required></div>
+                      <div>
+                          <label>No HP (WA) <span class="req-star">*</span></label>
+                          <div class="phone-group">
+                              <select id="fd-phone-code">
+                                  <option value="+62">+62</option>
+                                  <option value="+1">+1</option>
+                                  <option value="+60">+60</option>
+                                  <option value="+65">+65</option>
+                                  <option value="+81">+81</option>
+                                  <option value="+44">+44</option>
+                                  <option value="+49">+49</option>
+                              </select>
+                              <input id="fd-nohp" type="tel" placeholder="812xxx" required>
+                          </div>
+                      </div>
                       <div><label>Tanggal Lahir <span class="req-star">*</span></label><input id="fd-tgllahir" type="date" required></div>
                   </div>
                   
-                  <div class="row"><label>Email <span class="req-star">*</span></label><input id="fd-email" type="email" required></div>
+                  <div class="row"><label>Email <span class="req-star">*</span></label><input id="fd-email" type="email" placeholder="contoh@email.com" required></div>
 
                   <div class="row" style="margin-top:30px">
                       <label>Foto Profil (Wajib, Max 1 MB) <span class="req-star">*</span></label>
@@ -364,6 +351,25 @@
               </form>
           </div>
 
+          <div class="info-card" id="info-card">
+              <div class="info-header" onclick="toggleInfo()">
+                  <div class="info-title">
+                      <i class="ri-information-line" style="color:var(--hc-blue);font-size:18px;"></i>
+                      Panduan Pengisian
+                  </div>
+                  <i class="ri-arrow-down-s-line info-icon"></i>
+              </div>
+              <div class="info-body">
+                  <ul>
+                      <li><b>NIS/Identitas:</b> Masukkan Nomor Induk Siswa (Siswa) atau NIP/Identitas Lain (Umum).</li>
+                      <li><b>No HP:</b> Pilih kode negara dan masukkan nomor (angka saja).</li>
+                      <li><b>Email:</b> Gunakan email aktif format nama@domain.com.</li>
+                      <li><b>Foto Profil:</b> Wajib format kotak (1:1), wajah terlihat jelas, maks 1 MB.</li>
+                      <li><b>Tanda Tangan:</b> Goreskan tanda tangan pada kotak yang tersedia.</li>
+                  </ul>
+              </div>
+          </div>
+
           <div class="help-card">
               <div style="flex:1;">
                   <p class="help-title">Butuh Bantuan?</p>
@@ -422,7 +428,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('pendaftaran'));
 
-    // Status Modal (FIXED LOGIC)
+    // Status Modal
     const statusModal = document.getElementById('status-modal');
     const statusIconContainer = document.getElementById('status-icon-container');
     function showStatus(type, title, msg) {
@@ -436,11 +442,17 @@
     }
     document.getElementById('modal-ok-btn').onclick = () => statusModal.style.display = 'none';
 
+    // Toggle Info Card
+    function toggleInfo() {
+        document.getElementById('info-card').classList.toggle('open');
+    }
+
     // ==== LOGIKA UTAMA ====
     const tipeSel = document.getElementById('fd-tipe');
     const kelasSel = document.getElementById('fd-kelas');
     const angkatanSel = document.getElementById('fd-angkatan');
     const nisInput = document.getElementById('fd-nis');
+    const hpInput = document.getElementById('fd-nohp'); // Phone Input
     
     // Group Elements
     const grpSiswa = document.getElementById('group-siswa');
@@ -487,7 +499,9 @@
         nisInput.placeholder = placeholder;
     }
 
+    // Input Listeners (HANYA ANGKA)
     nisInput.addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
+    hpInput.addEventListener('input', function() { this.value = this.value.replace(/\D/g, ''); });
 
     kelasSel.addEventListener('change', function() {
         const val = this.value; 
@@ -640,10 +654,6 @@
         const optsEl = document.getElementById('quiz-options');
         optsEl.innerHTML = '';
         
-        // Buat Array Jawaban (Benar + 3 Salah Acak dari soal lain jika perlu, tapi disini dataset sudah punya opsi)
-        // Di dataset saya sudah siapkan 'a' sebagai array pilihan jawaban. 
-        // Jadi kita tinggal shuffle array 'a' tersebut.
-        
         const shuffled = [...qData.a].sort(() => 0.5 - Math.random());
         
         shuffled.forEach(opt => {
@@ -670,7 +680,6 @@
         try { if(stream) stopCam(); 
         stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
         video.srcObject = stream; camPopup.style.display = 'flex'; 
-        // Logic switch button di mobile
         const devices = await navigator.mediaDevices.enumerateDevices();
         const inputs = devices.filter(d => d.kind === 'videoinput');
         if(inputs.length > 1) document.getElementById('btn-cam-switch').style.display = 'flex';
@@ -681,7 +690,6 @@
     function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
     document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
     
-    // Switch Camera Logic
     document.getElementById('btn-cam-switch').addEventListener('click', () => { 
         currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
         video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
@@ -696,11 +704,9 @@
 
     document.getElementById('btn-cam-upload').addEventListener('click', () => document.getElementById('inp-file-foto').click());
     
-    // FIXED: TOMBOL OKE POPUP FILE BESAR
     document.getElementById('inp-file-foto').addEventListener('change', (e) => {
         if(e.target.files[0]) {
             const file = e.target.files[0];
-            // 1.1 MB Limit
             if(file.size > 1.1*1024*1024) { 
                 showStatus('error', 'File Besar', 'Maksimal ukuran foto adalah 1.1 MB.');
                 document.getElementById('inp-file-foto').value = ''; 
@@ -754,8 +760,15 @@
         let errors = [];
         if (!document.getElementById('fd-nis').value.trim()) errors.push("NIS/Identitas");
         if (!document.getElementById('fd-nama').value.trim()) errors.push("Nama Lengkap");
-        if (!document.getElementById('fd-email').value.trim()) errors.push("Email");
+        
+        // Email Validation Regex
+        const emailVal = document.getElementById('fd-email').value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailVal) errors.push("Email");
+        else if (!emailRegex.test(emailVal)) errors.push("Format Email Salah");
+
         if (!document.getElementById('fd-tgllahir').value) errors.push("Tanggal Lahir");
+        if (!document.getElementById('fd-nohp').value.trim()) errors.push("No HP");
         
         // Type Specific Checks
         const tipe = tipeSel.value;
@@ -790,13 +803,17 @@
         const btn = document.getElementById('btn-submit'); btn.disabled = true;
 
         try {
-            // Data Prep & Submit Logic
             const rawId = document.getElementById('fd-nis').value.trim().replace(/\D+/g, '');
             const tipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : tipeSel.value === 'lain' ? 'non-32' : tipeSel.value;
             const dataEmail = document.getElementById('fd-email').value.trim();
             const dataTglLahir = document.getElementById('fd-tgllahir').value;
             const dataJabatan = document.getElementById('fd-jabatan').value.trim();
             const dataThnLulus = document.getElementById('fd-thn-lulus').value.trim();
+            
+            // Combine Country Code + Phone Number
+            const countryCode = document.getElementById('fd-phone-code').value;
+            const rawPhone = document.getElementById('fd-nohp').value.trim();
+            const fullPhone = countryCode + rawPhone;
 
             let pl = { nis:'', nisn:'', nip:'' };
             if(tipe==='siswa-aktif') pl.nis = rawId; else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } else if(tipe==='alumni') pl.nis = rawId; else { if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; if(!pl.nis) pl.nis = rawId.slice(-7); }
@@ -805,7 +822,7 @@
                 ...pl, nama: document.getElementById('fd-nama').value.trim(), tipe: tipe,
                 kelas: tipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
                 angkatan: tipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
-                nohp: document.getElementById('fd-nohp').value.trim(), email: dataEmail,
+                nohp: fullPhone, email: dataEmail,
                 fotoBase64: hiddenBase64.value, jabatan: dataJabatan, tahunLulus: dataThnLulus,
                 tanggalLahir: dataTglLahir, tandaTangan: sigPad.toDataURL('image/png')
             };
