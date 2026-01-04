@@ -58,7 +58,7 @@ const HC32_STYLES = `
     }
     .hc-spinner-logo {
         position: absolute; inset: 0; margin: auto;
-        width: 50px; height: 50px; object-fit: contain;
+        width: 45px; height: 45px; object-fit: contain;
         border-radius: 50%;
     }
 
@@ -147,7 +147,7 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // BUILD LOADER HTML (Spinner Baru dengan URL Logo Yang Benar)
+    // BUILD LOADER HTML (Spinner Baru dengan Logo ID Baru)
     if (!document.getElementById('hc32-global-overlay')) {
         const overlayHTML = `
             <div id="hc32-global-overlay">
