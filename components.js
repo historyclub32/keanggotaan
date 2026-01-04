@@ -30,7 +30,7 @@ const HC32_STYLES = `
         --hc-yellow: #ecec17; --border: #cbd5e1; --card: #ffffff;
     }
     
-    /* === GLOBAL OVERLAY (Loader & Status) === */
+    /* GLOBAL OVERLAY (Loader & Status) */
     #hc32-global-overlay {
         position: fixed; inset: 0; background: rgba(255, 255, 255, 0.95);
         display: none; flex-direction: column; align-items: center; justify-content: center;
@@ -40,12 +40,14 @@ const HC32_STYLES = `
     .hc-status-card {
         background: white; padding: 30px; border-radius: 24px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.15); text-align: center;
-        max-width: 320px; width: 85%; transform: scale(0.9); opacity: 0;
+        max-width: 320px; width: 90%; transform: scale(0.9); opacity: 0;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     #hc32-global-overlay.active .hc-status-card { transform: scale(1); opacity: 1; }
 
-    /* SPINNER (Logo inside Ring) */
+    /* === ANIMASI SPINNER & STATUS (UNIVERSAL) === */
+    
+    /* 1. Spinner Box (Logo di Tengah) */
     .hc-spinner-box {
         position: relative; width: 80px; height: 80px; margin: 0 auto 20px;
     }
@@ -62,28 +64,35 @@ const HC32_STYLES = `
         border-radius: 50%;
     }
 
-    /* STATUS ICONS (Success/Error) */
+    /* 2. Icon Box (Ceklis/Silang) */
     .hc-status-icon-box {
         width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 40px; display: none; 
+        font-size: 40px; display: none; /* Hidden by default */
     }
     
+    /* Warna & Animasi Status */
     .state-success .hc-status-icon-box { display: flex; background: #dcfce7; color: var(--hc-green); border: 4px solid #bbf7d0; animation: popIn 0.4s; }
     .state-error .hc-status-icon-box { display: flex; background: #fee2e2; color: var(--hc-red); border: 4px solid #fecaca; animation: shake 0.4s; }
     
-    /* Text Styles */
+    /* Teks Keterangan */
     .hc-status-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: var(--hc-dark); margin-bottom: 8px; }
-    .hc-status-desc { font-family: 'Poppins', sans-serif; font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+    .hc-status-desc { font-family: 'Poppins', sans-serif; font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 20px; }
     
-    /* TOMBOL OKE (Berubah Warna saat ditekan) */
+    /* TOMBOL OKE (Efek Tekan/Active) */
     .hc-status-btn {
         width: 100%; padding: 14px; border: none; border-radius: 12px;
         background: var(--hc-blue); color: white; font-weight: 600; font-family: 'Poppins', sans-serif;
-        cursor: pointer; transition: all 0.2s; display: none; box-shadow: 0 4px 12px rgba(26, 71, 135, 0.2);
+        cursor: pointer; transition: all 0.1s ease-in-out; 
+        display: none; /* Hidden saat loading */
+        box-shadow: 0 4px 12px rgba(26, 71, 135, 0.2);
     }
-    .hc-status-btn:hover { background: #153c73; }
-    .hc-status-btn:active { background: var(--hc-toska); transform: scale(0.98); }
+    .hc-status-btn:hover { background: var(--hc-toska); }
+    .hc-status-btn:active { 
+        background: #0f6c74; /* Toska Gelap */
+        transform: scale(0.96); 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
 
     @keyframes hcspin { to { transform: rotate(360deg); } }
     @keyframes popIn { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
@@ -121,18 +130,14 @@ const HC32_STYLES = `
     .site-footer { background-color: #0f172a; color: #fff; padding: 50px 20px 30px; margin-top: auto; font-family: 'Poppins', sans-serif; }
     .footer-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; text-align: left; }
     .footer-brand { flex: 1 1 250px; min-width: 200px; }
-    
-    /* Logo Footer */
     .footer-brand img.f-logo { width: auto; height: 60px; margin-bottom: 15px; }
     .footer-brand img.f-slogan { width: 180px; height: auto; display: block; opacity: 0.9; }
-    
     .footer-col { flex: 0 1 auto; min-width: 120px; }
     .footer-col h4 { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
     .footer-col ul { list-style: none; padding: 0; margin: 0; }
     .footer-col ul li { margin-bottom: 10px; }
     .footer-col ul li a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 500; transition: 0.2s; }
     .footer-col ul li a:hover { color: var(--hc-toska); padding-left: 5px; }
-    
     .footer-bottom { max-width: 1100px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b; }
 
     body { display: flex; flex-direction: column; min-height: 100vh; }
@@ -149,7 +154,7 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // === BUILD GLOBAL LOADER HTML ===
+    // BUILD LOADER HTML
     if (!document.getElementById('hc32-global-overlay')) {
         const overlayHTML = `
             <div id="hc32-global-overlay">
@@ -169,10 +174,12 @@ function initHC32Navigation(activePageId) {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', overlayHTML);
+        
+        // EVENT LISTENER TOMBOL OKE (PASTI BERFUNGSI)
         document.getElementById('hc32-status-btn').addEventListener('click', window.hideHC32Status);
     }
 
-    // === EXPOSE FUNCTIONS ===
+    // EXPOSE FUNCTIONS
     const overlay = document.getElementById('hc32-global-overlay');
     const card = document.getElementById('hc32-status-card');
     const spinnerBox = document.getElementById('hc32-spinner-box');
