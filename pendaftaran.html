@@ -70,75 +70,45 @@
     .btn-main-camera:hover { background: var(--hc-blue); color: white; }
     .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
 
-    /* === CAMERA MODAL UI (Fixed Colors) === */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
+    /* Modal Camera */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2500; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .cam-window-box { width: 100%; max-width: 600px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+    .cam-header { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 700; color: #2e2e2e; display: flex; align-items: center; gap: 8px; }
+    .cam-view-wrapper { position: relative; width: 100%; height: 0; padding-bottom: 75%; background: #000; overflow: hidden; }
+    #cam-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    .cam-overlay-controls { position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 40px; z-index: 10; }
     
-    .cam-box-modern {
-        width: 100%; max-width: 500px; height: 100%; max-height: 100vh;
-        background: #000; display: flex; flex-direction: column; position: relative;
-        overflow: hidden;
-    }
-    
-    .cam-video-area { 
-        flex: 1; position: relative; width: 100%; overflow: hidden; 
-        display: flex; align-items: center; justify-content: center;
-        background: #000;
-    }
-    #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-
-    /* Top Bar (Close) */
-    .cam-top-bar { position: absolute; top: 20px; right: 20px; z-index: 20; }
-    /* TOMBOL X MERAH */
+    /* Tombol X Merah */
     .btn-close-cam {
         width: 44px; height: 44px; border-radius: 50%;
         background-color: #d30e14; color: white;
         border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
         cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
+    .cam-top-bar { position: absolute; top: 20px; right: 20px; z-index: 20; }
 
-    /* Bottom Control Bar */
-    .cam-controls {
+    /* Tombol Shutter Putih */
+    .btn-shutter-cam { width: 70px; height: 70px; border-radius: 50%; background-color: white; border: 4px solid rgba(255,255,255,0.3); cursor: pointer; position: relative; transition: transform 0.1s; }
+    .btn-shutter-cam:active { transform: scale(0.95); }
+    .btn-shutter-cam::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 2px solid #2e2e2e; }
+    
+    /* Tombol Switch Biru */
+    .btn-switch-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #1a4787; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4); }
+
+    /* Tombol Upload Kuning */
+    .btn-upload-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #ecec17; color: #2e2e2e; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3); }
+
+    .cam-footer { 
         height: 140px; background: rgba(0,0,0,0.8);
-        display: flex; align-items: center; justify-content: space-between; /* Space between items */
+        display: flex; align-items: center; justify-content: space-between; 
         padding: 0 40px; padding-bottom: 20px;
         position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
         border-top-left-radius: 20px; border-top-right-radius: 20px;
         backdrop-filter: blur(10px);
     }
 
-    /* TOMBOL UPLOAD KUNING */
-    .btn-upload-cam {
-        width: 50px; height: 50px; border-radius: 50%;
-        background-color: #ecec17; color: #2e2e2e; /* Dark icon for contrast */
-        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(236, 236, 23, 0.3);
-    }
-
-    /* TOMBOL SHUTTER PUTIH */
-    .btn-shutter-cam {
-        width: 70px; height: 70px; border-radius: 50%;
-        background-color: white; border: 4px solid rgba(255,255,255,0.3);
-        cursor: pointer; position: relative; transition: transform 0.1s;
-    }
-    .btn-shutter-cam:active { transform: scale(0.9); }
-    .btn-shutter-cam::after {
-        content: ''; position: absolute; inset: 2px; border-radius: 50%;
-        border: 2px solid #2e2e2e;
-    }
-
-    /* TOMBOL SWITCH BIRU */
-    .btn-switch-cam {
-        width: 50px; height: 50px; border-radius: 50%;
-        background-color: #1a4787; color: white;
-        border: none; font-size: 24px; display: flex; align-items: center; justify-content: center;
-        cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4);
-    }
-
     /* Crop Modal */
-    #crop-modal .modal-box { 
-        background: #1e293b; color: white; width: 90%; max-width: 400px;
-        border-radius: 16px; padding: 20px; 
-    }
+    #crop-modal .modal-box { background: #1e293b; color: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; }
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
     .btn-modal.cancel { background: #334155; color: white; }
@@ -165,9 +135,9 @@
     @keyframes shake { 0%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
 
     /* Security Models */
-    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
+    .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
     .puzzle-hole { width: 48px; height: 48px; background: rgba(0,0,0,0.5); box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: absolute; border-radius: 6px; border: 1px solid rgba(255,255,255,0.4); }
-    .puzzle-piece { width: 48px; height: 48px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
+    .puzzle-piece { width: 48px; height: 48px; background: url('https://lh3.googleusercontent.com/d/1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
     .puzzle-slider { width: 100%; cursor: pointer; margin-top: 10px; accent-color: var(--hc-blue); }
     
     .icon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
@@ -297,10 +267,10 @@
                       <div class="sig-wrapper">
                           <canvas id="sig-canvas"></canvas>
                           <div class="sig-tools">
-                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo">
+                              <button type="button" class="sig-btn sig-btn-undo" id="sig-undo" title="Undo per garis">
                                   <i class="ri-arrow-go-back-line"></i> Undo
                               </button>
-                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Ulangi">
+                              <button type="button" class="sig-btn sig-btn-clear" id="sig-clear" title="Hapus semua">
                                   <i class="ri-delete-bin-line"></i> Ulangi
                               </button>
                           </div>
@@ -431,6 +401,7 @@
             '<i class="ri-check-line" style="font-size:40px; color:var(--hc-green)"></i>' : 
             '<i class="ri-close-line" style="font-size:40px; color:var(--hc-red)"></i>';
     }
+    // FIX TOMBOL OKE POPUP FILE BESAR
     document.getElementById('modal-ok-btn').onclick = () => statusModal.style.display = 'none';
 
     // ==== LOGIKA UTAMA ====
@@ -439,7 +410,6 @@
     const angkatanSel = document.getElementById('fd-angkatan');
     const nisInput = document.getElementById('fd-nis');
     
-    // Group Elements
     const grpSiswa = document.getElementById('group-siswa');
     const grpJab = document.getElementById('group-jabatan');
     const grpLulus = document.getElementById('group-lulus');
@@ -664,14 +634,21 @@
     const previewContainer = document.getElementById('foto-preview-container');
 
     document.getElementById('btn-open-camera-ui').addEventListener('click', async () => {
-        try { if(stream) stopCam(); 
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
-        video.srcObject = stream; camPopup.style.display = 'flex'; 
-        // Logic switch button di mobile
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const inputs = devices.filter(d => d.kind === 'videoinput');
-        if(inputs.length > 1) document.getElementById('btn-cam-switch').style.display = 'flex';
-        else document.getElementById('btn-cam-switch').style.display = 'none';
+        try { 
+            if(stream) stopCam(); 
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
+            video.srcObject = stream; 
+            camPopup.style.display = 'flex'; 
+            
+            // Cek Devices
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const inputs = devices.filter(d => d.kind === 'videoinput');
+            if(inputs.length > 1) {
+                document.getElementById('btn-cam-switch').style.display = 'flex';
+            } else {
+                document.getElementById('btn-cam-switch').style.display = 'none';
+            }
+
         } catch(e) { alert("Gagal akses kamera."); }
     });
 
