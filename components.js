@@ -154,45 +154,31 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // BUILD LOADER HTML
-    if (!document.getElementById('hc32-global-overlay')) {
-        const overlayHTML = `
-            <div id="hc32-global-overlay">
-                <div class="hc-status-card" id="hc32-status-card">
-                    <div class="hc-spinner-box" id="hc32-spinner-box">
-                        <div class="hc-spinner-ring"></div>
-                        <img src="https://drive.google.com/thumbnail?id=16VXxbcOF9h5zAzYEo2faAzmgqqhtHLlH&sz=w200" class="hc-spinner-logo" alt="HC">
-                    </div>
-                    <div class="hc-status-icon-box" id="hc32-status-icon-box">
-                        <i id="hc32-status-icon"></i>
-                    </div>
-                    
-                    <div id="hc32-status-title" class="hc-status-title">Memuat...</div>
-                    <div id="hc32-status-desc" class="hc-status-desc"></div>
-                    <button id="hc32-status-btn" class="hc-status-btn">Oke</button>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', overlayHTML);
-        
-        // EVENT LISTENER TOMBOL OKE (PASTI BERFUNGSI)
-        document.getElementById('hc32-status-btn').addEventListener('click', window.hideHC32Status);
-    }
-
-    // EXPOSE FUNCTIONS
-    const overlay = document.getElementById('hc32-global-overlay');
-    const card = document.getElementById('hc32-status-card');
-    const spinnerBox = document.getElementById('hc32-spinner-box');
-    const iconBox = document.getElementById('hc32-status-icon-box');
-    const icon = document.getElementById('hc32-status-icon');
-    const titleEl = document.getElementById('hc32-status-title');
-    const descEl = document.getElementById('hc32-status-desc');
-    const btn = document.getElementById('hc32-status-btn');
+    // 1. DEFINE FUNCTIONS FIRST
+    window.hideHC32Status = () => {
+        const overlay = document.getElementById('hc32-global-overlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            setTimeout(() => overlay.style.display = 'none', 300);
+        }
+    };
 
     window.showHC32Status = (type, title, message) => {
+        const overlay = document.getElementById('hc32-global-overlay');
+        const card = document.getElementById('hc32-status-card');
+        const spinnerBox = document.getElementById('hc32-spinner-box');
+        const iconBox = document.getElementById('hc32-status-icon-box');
+        const icon = document.getElementById('hc32-status-icon');
+        const titleEl = document.getElementById('hc32-status-title');
+        const descEl = document.getElementById('hc32-status-desc');
+        const btn = document.getElementById('hc32-status-btn');
+
+        if (!overlay) return;
+
+        // Reset state
         card.classList.remove('state-success', 'state-error');
         overlay.style.display = 'flex';
-        void overlay.offsetWidth; 
+        void overlay.offsetWidth; // Trigger reflow
         overlay.classList.add('active');
 
         titleEl.textContent = title;
@@ -217,10 +203,30 @@ function initHC32Navigation(activePageId) {
         }
     };
 
-    window.hideHC32Status = () => {
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-    };
+    // 2. INJECT HTML
+    if (!document.getElementById('hc32-global-overlay')) {
+        const overlayHTML = `
+            <div id="hc32-global-overlay">
+                <div class="hc-status-card" id="hc32-status-card">
+                    <div class="hc-spinner-box" id="hc32-spinner-box">
+                        <div class="hc-spinner-ring"></div>
+                        <img src="https://drive.google.com/thumbnail?id=16VXxbcOF9h5zAzYEo2faAzmgqqhtHLlH&sz=w200" class="hc-spinner-logo" alt="HC">
+                    </div>
+                    <div class="hc-status-icon-box" id="hc32-status-icon-box">
+                        <i id="hc32-status-icon"></i>
+                    </div>
+                    
+                    <div id="hc32-status-title" class="hc-status-title">Memuat...</div>
+                    <div id="hc32-status-desc" class="hc-status-desc"></div>
+                    <button id="hc32-status-btn" class="hc-status-btn">Oke</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', overlayHTML);
+        
+        // 3. BIND EVENT LISTENER (PASTI AMAN KARENA FUNGSI SUDAH ADA)
+        document.getElementById('hc32-status-btn').onclick = window.hideHC32Status;
+    }
 
     // HEADER
     let headerEl = document.querySelector('header.app-header');
