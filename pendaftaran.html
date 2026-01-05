@@ -65,7 +65,7 @@
     .info-card {
         margin-top: 20px; background: #fff; border-radius: 16px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;
-        border-left: 4px solid var(--hc-yellow);
+        border-left: 4px solid var(--hc-toska);
         transition: all 0.3s ease;
     }
     .info-header {
@@ -125,7 +125,7 @@
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
     .btn-modal.cancel { background: var(--hc-red); color: white; }
-    .btn-modal.confirm { background: var(--hc-blue); color: white; }
+    .btn-modal.confirm { background: var(--hc-toska); color: white; }
 
     /* Signature */
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
@@ -211,15 +211,15 @@
                   </div>
                   <div class="row">
                       <label>Nama Lengkap <span class="req-star">*</span></label>
-                      <input id="fd-nama" placeholder="Sesuai Absen" required />
+                      <input id="fd-nama" placeholder="Contoh: Napoleon Bonaparte" required />
                   </div>
                   <div class="row">
                       <label>Tipe Keanggotaan <span class="req-star">*</span></label>
                       <select id="fd-tipe">
-                          <option value="siswa">Siswa Aktif SMAN 32</option>
+                          <option value="siswa">Siswa Aktif</option>
                           <option value="guru">Guru/Tendik</option>
                           <option value="alumni">Alumni</option>
-                          <option value="lain">Lainnya (Non-32)</option>
+                          <option value="lain">Lainnya</option>
                       </select>
                   </div>
 
@@ -232,17 +232,17 @@
                   
                   <div id="group-jabatan" class="row hidden">
                       <label>Jabatan <span class="req-star">*</span></label>
-                      <input id="fd-jabatan" placeholder="Contoh: Pembina / Tamu" />
+                      <input id="fd-jabatan" placeholder="Contoh: Guru Sejarah atau Guru PPL" />
                   </div>
                   
                   <div id="group-lulus" class="row hidden">
                       <label id="label-lulus">Tahun Lulus</label>
-                      <input id="fd-thn-lulus" type="number" placeholder="YYYY" />
+                      <input id="fd-thn-lulus" type="number" placeholder="Contoh: 2018" />
                   </div>
 
                   <div class="two-col row">
                       <div>
-                          <label>No HP (WA) <span class="req-star">*</span></label>
+                          <label>No. HP (WA) <span class="req-star">*</span></label>
                           <div class="phone-group">
                               <select id="fd-phone-code">
                                   <option value="+62">🇮🇩 +62</option>
@@ -390,6 +390,7 @@
                       </li>
                       <li><b>No. HP:</b> Pilih kode negara dan masukkan nomor telepon anda (angka saja).</li>
                       <li><b>Email:</b> Gunakan email aktif anda.</li>
+                      <li><b>Tanggal Lahir</b> Isi tanggal lahir sesuai yang tercantum pada KTP atau Kartu Keluarga (KK).</li>
                       <li><b>Foto Profil:</b> Wajah wajib terlihat jelas dengan maksimal ukuran file adalah 1 MB.</li>
                       <li><b>Jabatan:</b> Isi jabatan atau peran Anda sesuai dengan status keanggotaan.</li>
                       <li><b>Tahun Lulus:</b> Wajib diisi oleh alumni, sesuai tahun kelulusan dari SMAN 32 Jakarta.</li>
@@ -518,22 +519,22 @@
         
         if (v === 'siswa') {
             grpSiswa.classList.remove('hidden');
-            setIDConstraint(7, 7, 'NIS (7 Digit)');
+            setIDConstraint(7, 7, 'NIS');
         } 
         else if (v === 'guru') {
             grpJab.classList.remove('hidden');
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus'; 
-            setIDConstraint(18, 18, 'NIP (18 Digit)');
+            setIDConstraint(18, 18, 'NIP');
         } 
         else if (v === 'alumni') {
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
-            setIDConstraint(6, 6, 'Nomor Alumni (6 Digit)');
+            setIDConstraint(6, 6, 'NIS atau No. Anggota Perpus 32');
         } 
         else { 
             grpJab.classList.remove('hidden');
-            setIDConstraint(18, 5, 'NIK/Identitas (Max 18 Digit)');
+            setIDConstraint(18, 5, 'NISN/NIP/No. Anggota Perpus 32');
         }
     }
 
@@ -811,7 +812,7 @@
         if (!document.getElementById('fd-tgllahir').value) errors.push("Tanggal Lahir");
         
         const hp = document.getElementById('fd-nohp');
-        if (hp.value.length < 5) { errors.push("No HP"); validateField(hp, false); }
+        if (hp.value.length < 5) { errors.push("No. HP"); validateField(hp, false); }
         
         const tipe = tipeSel.value;
         if (tipe === 'siswa' && !document.getElementById('fd-kelas').value) errors.push("Kelas");
