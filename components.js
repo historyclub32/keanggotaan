@@ -17,6 +17,7 @@ const HC32_MENU = [
     { type: 'link', text: 'Anggota', href: 'https://sites.google.com/view/historyclub32/keanggotaan/anggota', id: 'anggota' },
     { type: 'link', text: 'Presensi', href: 'presensi.html', id: 'presensi' },
     { type: 'link', text: 'Pendaftaran', href: 'pendaftaran.html', id: 'pendaftaran' }
+    { type: 'link', text: 'Lacak', href: 'track.html', id: 'track' }
 ];
 
 // === CSS GABUNGAN ===
@@ -303,6 +304,7 @@ function initHC32Navigation(activePageId) {
                   <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/anggota">Daftar Anggota</a></li>
                   <li><a href="presensi.html">Presensi</a></li>
                   <li><a href="pendaftaran.html">Pendaftaran</a></li>
+                  <li><a href="track.html">Lacak</a></li>
               </ul>
           </div>
           <div class="footer-col">
