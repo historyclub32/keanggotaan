@@ -455,109 +455,216 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => initHC32Navigation('pendaftaran'));
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Inisialisasi Navigasi & Komponen
+        initHC32Navigation('pendaftaran');
+        
+        // 2. Inisialisasi Variabel Elemen
+        const tipeSel = document.getElementById('fd-tipe');
+        const kelasSel = document.getElementById('fd-kelas');
+        const angkatanSel = document.getElementById('fd-angkatan');
+        const nisInput = document.getElementById('fd-nis');
+        const hpInput = document.getElementById('fd-nohp'); 
+        const emailInput = document.getElementById('fd-email');
+        const labelId = document.getElementById('label-id'); // Label No. Identitas
+        
+        const grpSiswa = document.getElementById('group-siswa');
+        const grpJab = document.getElementById('group-jabatan');
+        const grpLulus = document.getElementById('group-lulus');
+        const lblLulus = document.getElementById('label-lulus');
 
+        // 3. Fungsi Dropdown (Tahun/Kelas)
+        function populateDropdowns() {
+            const tingkat = ['X', 'XI', 'XII'];
+            tingkat.forEach(t => { for(let i=1; i<=8; i++) kelasSel.add(new Option(`${t}-${i}`, `${t}-${i}`)); });
+            [2026, 2027, 2028].forEach(yr => angkatanSel.add(new Option(yr, yr)));
+        }
+
+        // 4. Helper Set Constraint (Limit & Placeholder)
+        function setIDConstraint(maxLen, minLen, placeholderText) {
+            nisInput.value = ''; // Reset nilai agar tidak konflik
+            nisInput.maxLength = maxLen;
+            nisInput.setAttribute('minlength', minLen);
+            nisInput.placeholder = placeholderText;
+            nisInput.classList.remove('input-error');
+        }
+
+        // 5. Logika Ganti Tipe Keanggotaan (PERBAIKAN UTAMA DISINI)
+        function handleTypeChange() {
+            const v = tipeSel.value;
+            
+            // Reset Tampilan Group
+            grpSiswa.classList.add('hidden');
+            grpJab.classList.add('hidden');
+            grpLulus.classList.add('hidden');
+            
+            if (v === 'siswa') {
+                grpSiswa.classList.remove('hidden');
+                labelId.innerHTML = 'No. Identitas (NIS) <span class="req-star">*</span>';
+                // Siswa Wajib 7 Digit
+                setIDConstraint(7, 7, 'Contoh: 2324101 (7 Digit)');
+            } 
+            else if (v === 'guru') {
+                grpJab.classList.remove('hidden');
+                grpLulus.classList.remove('hidden');
+                lblLulus.innerHTML = 'Tahun Lulus'; 
+                labelId.innerHTML = 'No. Identitas (NIP/NUPTK) <span class="req-star">*</span>';
+                // Guru Wajib 18 Digit (NIP) atau fleksibel buat NUPTK
+                setIDConstraint(18, 16, 'NIP (18 Digit) atau NUPTK');
+            } 
+            else if (v === 'alumni') {
+                grpLulus.classList.remove('hidden');
+                lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
+                labelId.innerHTML = 'No. Identitas <span class="req-star">*</span>';
+                // Alumni: Fleksibel (Bisa 6 digit Perpus, bisa 7 digit NIS, bisa 10 digit NISN)
+                // Kita set Max 12 agar aman, Min 6 agar No Perpus masuk.
+                setIDConstraint(12, 6, 'NIS (7 Digit) atau No. Perpus (6 Digit)');
+            } 
+            else { // Lainnya
+                grpJab.classList.remove('hidden');
+                labelId.innerHTML = 'No. Identitas (KTP/Lainnya) <span class="req-star">*</span>';
+                setIDConstraint(18, 5, 'Nomor Identitas (Min 5 Digit)');
+            }
+        }
+
+        // 6. Validasi Input Real-time
+        function validateField(el, isValid) {
+            if (!isValid) el.classList.add('input-error');
+            else el.classList.remove('input-error');
+        }
+
+        hpInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, ''); 
+            validateField(this, this.value.length >= 5);
+        });
+
+        emailInput.addEventListener('input', function() {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            validateField(this, regex.test(this.value));
+        });
+
+        nisInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            const min = this.getAttribute('minlength');
+            if(min) validateField(this, this.value.length >= min);
+        });
+
+        // 7. Event Listeners
+        kelasSel.addEventListener('change', function() {
+            const val = this.value; 
+            if(!val) return;
+            const prefix = val.split('-')[0]; 
+            let targetYear = '';
+            if (prefix === 'X') targetYear = '2028';
+            else if (prefix === 'XI') targetYear = '2027';
+            else if (prefix === 'XII') targetYear = '2026';
+            if (targetYear) { angkatanSel.value = targetYear; angkatanSel.disabled = true; }
+        });
+
+        tipeSel.addEventListener('change', handleTypeChange);
+
+        // 8. Inisialisasi Awal
+        populateDropdowns();
+        handleTypeChange(); // Panggil sekali saat load agar placeholder benar
+        resizeSig();
+        resetCaptcha();
+    });
+
+    // ==== FUNGSI PENDUKUNG (DI LUAR DOMContentLoaded AGAR GLOBAL) ====
+    
     // Toggle Info Card
     function toggleInfo() {
         document.getElementById('info-card').classList.toggle('open');
     }
 
-    // Backup Status Modal (Just in case components.js fails)
+    // Backup Close Modal
     document.getElementById('modal-ok-btn').onclick = () => document.getElementById('status-modal').style.display = 'none';
 
-    // ==== LOGIKA UTAMA & VALIDASI ====
-    const tipeSel = document.getElementById('fd-tipe');
-    const kelasSel = document.getElementById('fd-kelas');
-    const angkatanSel = document.getElementById('fd-angkatan');
-    const nisInput = document.getElementById('fd-nis');
-    const hpInput = document.getElementById('fd-nohp'); 
-    const emailInput = document.getElementById('fd-email');
+    // Camera & Upload Logic
+    let stream = null; let currentFacingMode = 'user'; let cropper = null;
+    const camPopup = document.getElementById('cam-popup'); 
+    const video = document.getElementById('cam-video');
+    const cropModal = document.getElementById('crop-modal'); 
+    const cropperImg = document.getElementById('cropper-img');
+    const hiddenBase64 = document.getElementById('fd-foto-base64'); 
+    const previewImg = document.getElementById('foto-preview-img');
+    const previewContainer = document.getElementById('foto-preview-container');
+
+    document.getElementById('btn-open-camera-ui').addEventListener('click', async () => {
+        try { if(stream) stopCam(); 
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
+        video.srcObject = stream; camPopup.style.display = 'flex'; 
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const inputs = devices.filter(d => d.kind === 'videoinput');
+        if(inputs.length > 1) document.getElementById('btn-cam-switch').style.display = 'flex';
+        else document.getElementById('btn-cam-switch').style.display = 'none';
+        } catch(e) { alert("Gagal akses kamera."); }
+    });
+
+    function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
+    document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
     
-    const grpSiswa = document.getElementById('group-siswa');
-    const grpJab = document.getElementById('group-jabatan');
-    const grpLulus = document.getElementById('group-lulus');
-    const lblLulus = document.getElementById('label-lulus');
-
-    function populateDropdowns() {
-        const tingkat = ['X', 'XI', 'XII'];
-        tingkat.forEach(t => { for(let i=1; i<=8; i++) kelasSel.add(new Option(`${t}-${i}`, `${t}-${i}`)); });
-        [2026, 2027, 2028].forEach(yr => angkatanSel.add(new Option(yr, yr)));
-    }
-
-    // Helper: Validasi Field
-    function validateField(el, isValid) {
-        if (!isValid) el.classList.add('input-error');
-        else el.classList.remove('input-error');
-    }
-
-    // Listener No HP (Hanya Angka & Validasi Panjang)
-    hpInput.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, ''); 
-        validateField(this, this.value.length >= 5);
+    document.getElementById('btn-cam-switch').addEventListener('click', () => { 
+        currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
+        video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
+        document.getElementById('btn-open-camera-ui').click(); 
+    });
+    
+    document.getElementById('btn-cam-capture').addEventListener('click', () => {
+        const cvs = document.createElement('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
+        const ctx = cvs.getContext('2d'); if(currentFacingMode === 'user') { ctx.translate(cvs.width, 0); ctx.scale(-1, 1); }
+        ctx.drawImage(video, 0, 0); stopCam(); startCropper(cvs.toDataURL('image/jpeg'));
     });
 
-    // Listener Email (Regex Format)
-    emailInput.addEventListener('input', function() {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        validateField(this, regex.test(this.value));
-    });
-
-    // Listener ID (Hanya Angka & Validasi Sesuai Tipe)
-    nisInput.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '');
-        const min = this.getAttribute('minlength');
-        if(min) validateField(this, this.value.length >= min);
-    });
-
-    function handleTypeChange() {
-        const v = tipeSel.value;
-        grpSiswa.classList.add('hidden');
-        grpJab.classList.add('hidden');
-        grpLulus.classList.add('hidden');
-        nisInput.value = '';
-        nisInput.classList.remove('input-error'); // Reset error
-        
-        if (v === 'siswa') {
-            grpSiswa.classList.remove('hidden');
-            setIDConstraint(7, 7, 'NIS');
-        } 
-        else if (v === 'guru') {
-            grpJab.classList.remove('hidden');
-            grpLulus.classList.remove('hidden');
-            lblLulus.innerHTML = 'Tahun Lulus'; 
-            setIDConstraint(18, 18, 'NIP');
-        } 
-        else if (v === 'alumni') {
-            grpLulus.classList.remove('hidden');
-            lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
-            setIDConstraint(6, 6, 'NIS atau No. Anggota Perpus 32');
-        } 
-        else { 
-            grpJab.classList.remove('hidden');
-            setIDConstraint(18, 5, 'NISN/NIP/No. Anggota Perpus 32');
+    document.getElementById('btn-cam-upload').addEventListener('click', () => document.getElementById('inp-file-foto').click());
+    
+    document.getElementById('inp-file-foto').addEventListener('change', (e) => {
+        if(e.target.files[0]) {
+            const file = e.target.files[0];
+            if(file.size > 1.0*1024*1024) { 
+                window.showHC32Status('error', 'File Besar', 'Maksimal ukuran foto adalah 1 MB.');
+                document.getElementById('inp-file-foto').value = ''; 
+                return; 
+            }
+            const r = new FileReader(); r.onload = (evt) => { stopCam(); startCropper(evt.target.result); }; r.readAsDataURL(file);
         }
-    }
-
-    function setIDConstraint(maxLen, minLen, placeholder) {
-        nisInput.maxLength = maxLen;
-        nisInput.setAttribute('minlength', minLen);
-        nisInput.placeholder = placeholder;
-    }
-
-    kelasSel.addEventListener('change', function() {
-        const val = this.value; 
-        if(!val) return;
-        const prefix = val.split('-')[0]; 
-        let targetYear = '';
-        if (prefix === 'X') targetYear = '2028';
-        else if (prefix === 'XI') targetYear = '2027';
-        else if (prefix === 'XII') targetYear = '2026';
-        if (targetYear) { angkatanSel.value = targetYear; angkatanSel.disabled = true; }
     });
 
-    tipeSel.addEventListener('change', handleTypeChange);
+    function startCropper(src) {
+        cropperImg.src = src; cropModal.style.display = 'flex';
+        if(cropper) cropper.destroy(); cropper = new Cropper(cropperImg, { aspectRatio: 1, viewMode: 1 });
+    }
+    document.getElementById('btn-crop-cancel').addEventListener('click', () => { cropModal.style.display = 'none'; if(cropper) cropper.destroy(); });
+    document.getElementById('btn-crop-save').addEventListener('click', () => {
+        if(!cropper) return;
+        const cvs = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
+        cvs.toBlob((blob) => {
+            const url = cvs.toDataURL('image/jpeg', 0.7); hiddenBase64.value = url;
+            previewImg.src = url; previewContainer.style.display = 'block';
+            document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Ulangi Foto';
+            document.querySelector('.btn-delete-photo').style.display = 'block';
+            cropModal.style.display = 'none'; if(cropper) cropper.destroy();
+        }, 'image/jpeg', 0.7);
+    });
+    
+    document.querySelector('.btn-delete-photo').addEventListener('click', function() {
+        hiddenBase64.value = ''; previewImg.src = ''; previewContainer.style.display = 'none';
+        this.style.display = 'none'; document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Aktifkan Kamera';
+    });
 
-    // ==== SECURITY CHECK VARS ====
+    // Signature Logic
+    const sigCanvas = document.getElementById('sig-canvas');
+    let sigPad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
+    function resizeSig() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        sigCanvas.width = sigCanvas.offsetWidth * ratio; sigCanvas.height = sigCanvas.offsetHeight * ratio;
+        sigCanvas.getContext("2d").scale(ratio, ratio); sigPad.clear();
+    }
+    window.addEventListener('resize', resizeSig);
+    document.getElementById('sig-clear').addEventListener('click', () => sigPad.clear());
+    document.getElementById('sig-undo').addEventListener('click', () => { const d = sigPad.toData(); if(d) { d.pop(); sigPad.fromData(d); } });
+
+    // Captcha Variables & Functions
     let isVerified = false;
     let puzzleTarget = 0;
     let textCode = "";
@@ -568,7 +675,6 @@
         el.style.display = 'block';
         document.getElementById('captcha-reload').style.display = 'flex';
     }
-
     function hideCaptchaError() { document.getElementById('captcha-error-msg').style.display = 'none'; }
 
     function resetCaptcha() {
@@ -604,10 +710,9 @@
         btn.style.background = 'linear-gradient(135deg, var(--hc-blue), var(--hc-toska))';
         btn.style.color = 'white'; btn.style.cursor = 'pointer';
     }
-
     document.getElementById('captcha-reload').onclick = resetCaptcha;
 
-    // AI MODELS (PUZZLE, GRID, TEXT, QUIZ)
+    // --- Captcha Models (Puzzle, Grid, Text, Quiz) ---
     function initPuzzle() {
         const slider = document.getElementById('puzzle-input');
         const piece = document.getElementById('puzzle-piece');
@@ -694,110 +799,21 @@
         document.getElementById('quiz-question-text').textContent = qData.q;
         const optsEl = document.getElementById('quiz-options');
         optsEl.innerHTML = '';
-        
         const shuffled = [...qData.a].sort(() => 0.5 - Math.random());
-        
         shuffled.forEach(opt => {
             const btn = document.createElement('div'); btn.className = 'quiz-btn'; btn.textContent = opt;
             btn.onclick = () => { 
-                if (opt === qData.c) { 
-                    btn.classList.add('correct'); setTimeout(verifySuccess, 500); 
-                } else { 
-                    btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); 
-                } 
+                if (opt === qData.c) { btn.classList.add('correct'); setTimeout(verifySuccess, 500); } 
+                else { btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); } 
             };
             optsEl.appendChild(btn);
         });
     }
 
-    // ==== CAMERA & UPLOAD ====
-    let stream = null; let currentFacingMode = 'user'; let cropper = null;
-    const camPopup = document.getElementById('cam-popup'); const video = document.getElementById('cam-video');
-    const cropModal = document.getElementById('crop-modal'); const cropperImg = document.getElementById('cropper-img');
-    const hiddenBase64 = document.getElementById('fd-foto-base64'); const previewImg = document.getElementById('foto-preview-img');
-    const previewContainer = document.getElementById('foto-preview-container');
-
-    document.getElementById('btn-open-camera-ui').addEventListener('click', async () => {
-        try { if(stream) stopCam(); 
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
-        video.srcObject = stream; camPopup.style.display = 'flex'; 
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const inputs = devices.filter(d => d.kind === 'videoinput');
-        if(inputs.length > 1) document.getElementById('btn-cam-switch').style.display = 'flex';
-        else document.getElementById('btn-cam-switch').style.display = 'none';
-        } catch(e) { alert("Gagal akses kamera."); }
-    });
-
-    function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
-    document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
-    
-    document.getElementById('btn-cam-switch').addEventListener('click', () => { 
-        currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
-        video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
-        document.getElementById('btn-open-camera-ui').click(); 
-    });
-    
-    document.getElementById('btn-cam-capture').addEventListener('click', () => {
-        const cvs = document.createElement('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
-        const ctx = cvs.getContext('2d'); if(currentFacingMode === 'user') { ctx.translate(cvs.width, 0); ctx.scale(-1, 1); }
-        ctx.drawImage(video, 0, 0); stopCam(); startCropper(cvs.toDataURL('image/jpeg'));
-    });
-
-    document.getElementById('btn-cam-upload').addEventListener('click', () => document.getElementById('inp-file-foto').click());
-    
-    document.getElementById('inp-file-foto').addEventListener('change', (e) => {
-        if(e.target.files[0]) {
-            const file = e.target.files[0];
-            if(file.size > 1.0*1024*1024) { 
-                window.showHC32Status('error', 'File Besar', 'Maksimal ukuran foto adalah 1 MB.');
-                document.getElementById('inp-file-foto').value = ''; 
-                return; 
-            }
-            const r = new FileReader(); r.onload = (evt) => { stopCam(); startCropper(evt.target.result); }; r.readAsDataURL(file);
-        }
-    });
-
-    function startCropper(src) {
-        cropperImg.src = src; cropModal.style.display = 'flex';
-        if(cropper) cropper.destroy(); cropper = new Cropper(cropperImg, { aspectRatio: 1, viewMode: 1 });
-    }
-    document.getElementById('btn-crop-cancel').addEventListener('click', () => { cropModal.style.display = 'none'; if(cropper) cropper.destroy(); });
-    document.getElementById('btn-crop-save').addEventListener('click', () => {
-        if(!cropper) return;
-        const cvs = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
-        cvs.toBlob((blob) => {
-            const url = cvs.toDataURL('image/jpeg', 0.7); hiddenBase64.value = url;
-            previewImg.src = url; previewContainer.style.display = 'block';
-            document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Ulangi Foto';
-            document.querySelector('.btn-delete-photo').style.display = 'block';
-            cropModal.style.display = 'none'; if(cropper) cropper.destroy();
-        }, 'image/jpeg', 0.7);
-    });
-    
-    document.querySelector('.btn-delete-photo').addEventListener('click', function() {
-        hiddenBase64.value = ''; previewImg.src = ''; previewContainer.style.display = 'none';
-        this.style.display = 'none'; document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Aktifkan Kamera';
-    });
-
-    // ==== SIGNATURE ====
-    const sigCanvas = document.getElementById('sig-canvas');
-    let sigPad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
-    function resizeSig() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-        sigCanvas.width = sigCanvas.offsetWidth * ratio; sigCanvas.height = sigCanvas.offsetHeight * ratio;
-        sigCanvas.getContext("2d").scale(ratio, ratio); sigPad.clear();
-    }
-    window.addEventListener('resize', resizeSig);
-    document.getElementById('sig-clear').addEventListener('click', () => sigPad.clear());
-    document.getElementById('sig-undo').addEventListener('click', () => { const d = sigPad.toData(); if(d) { d.pop(); sigPad.fromData(d); } });
-
-    // ==== SUBMIT ====
-    document.addEventListener('DOMContentLoaded', () => { populateDropdowns(); handleTypeChange(); resizeSig(); resetCaptcha(); });
-
+    // Submit Logic
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // AI Validation: Check All Errors
         let errors = [];
         const nis = document.getElementById('fd-nis');
         const minID = nis.getAttribute('minlength') || 0;
@@ -814,7 +830,7 @@
         const hp = document.getElementById('fd-nohp');
         if (hp.value.length < 5) { errors.push("No. HP"); validateField(hp, false); }
         
-        const tipe = tipeSel.value;
+        const tipe = document.getElementById('fd-tipe').value;
         if (tipe === 'siswa' && !document.getElementById('fd-kelas').value) errors.push("Kelas");
         if ((tipe === 'guru' || tipe === 'lain') && !document.getElementById('fd-jabatan').value.trim()) errors.push("Jabatan");
         if (tipe === 'alumni' && !document.getElementById('fd-thn-lulus').value.trim()) errors.push("Tahun Lulus");
@@ -822,7 +838,6 @@
         if (!hiddenBase64.value) errors.push("Foto Profil");
         if (sigPad.isEmpty()) errors.push("Tanda Tangan");
 
-        // SMART ERROR HANDLING
         if (errors.length > 0) {
             let title = "Data Belum Lengkap";
             let msg = "";
@@ -840,22 +855,22 @@
 
         try {
             const rawId = nis.value.trim().replace(/\D+/g, '');
-            const tipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : tipeSel.value === 'lain' ? 'non-32' : tipeSel.value;
             const dataEmail = email.value.trim();
             const dataTglLahir = document.getElementById('fd-tgllahir').value;
             const dataJabatan = document.getElementById('fd-jabatan').value.trim();
             const dataThnLulus = document.getElementById('fd-thn-lulus').value.trim();
-            
-            // Combine Country Code + Phone
             const fullPhone = document.getElementById('fd-phone-code').value + hp.value.trim();
 
             let pl = { nis:'', nisn:'', nip:'' };
-            if(tipe==='siswa-aktif') pl.nis = rawId; else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } else if(tipe==='alumni') pl.nis = rawId; else { if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; if(!pl.nis) pl.nis = rawId.slice(-7); }
+            if(tipe==='siswa') pl.nis = rawId; 
+            else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } 
+            else if(tipe==='alumni') pl.nis = rawId; 
+            else { if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; if(!pl.nis) pl.nis = rawId.slice(-7); }
 
             const data = {
                 ...pl, nama: document.getElementById('fd-nama').value.trim(), tipe: tipe,
-                kelas: tipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
-                angkatan: tipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
+                kelas: tipe === 'siswa' ? document.getElementById('fd-kelas').value : '',
+                angkatan: tipe === 'siswa' ? document.getElementById('fd-angkatan').value : '',
                 nohp: fullPhone, email: dataEmail,
                 fotoBase64: hiddenBase64.value, jabatan: dataJabatan, tahunLulus: dataThnLulus,
                 tanggalLahir: dataTglLahir, tandaTangan: sigPad.toDataURL('image/png')
@@ -866,24 +881,15 @@
                 window.showHC32Status('success', 'Berhasil!', 'Pendaftaran diterima.');
                 e.target.reset(); sigPad.clear(); document.querySelector('.btn-delete-photo').click(); resetCaptcha();
             } else if(res.status === 'already') {
-                // LOGIKA DETEKSI DUPLIKAT SPESIFIK
                 let msgRaw = (res.message || "").toLowerCase();
                 let duplicates = [];
                 if (msgRaw.includes('identitas') || msgRaw.includes('nis') || msgRaw.includes('nip')) duplicates.push("No. Identitas");
                 if (msgRaw.includes('nama')) duplicates.push("Nama Lengkap");
-                if (msgRaw.includes('hp') || msgRaw.includes('wa') || msgRaw.includes('telepon')) duplicates.push("No. HP (WA)");
+                if (msgRaw.includes('hp') || msgRaw.includes('wa')) duplicates.push("No. HP (WA)");
                 if (msgRaw.includes('email')) duplicates.push("Email");
 
-                let finalTitle = "Data Terdaftar";
-                let finalMsg = "Data yang Anda masukkan sudah ada di sistem.";
-
-                if (duplicates.length > 0) {
-                    finalMsg = "Data berikut sudah terdaftar: <br><b>" + duplicates.join(", ") + "</b>";
-                } else if (msgRaw.length > 0) {
-                    finalMsg = res.message;
-                }
-
-                window.showHC32Status('error', finalTitle, finalMsg);
+                let finalMsg = duplicates.length > 0 ? "Data berikut sudah terdaftar: <br><b>" + duplicates.join(", ") + "</b>" : res.message;
+                window.showHC32Status('error', "Data Terdaftar", finalMsg);
             } else {
                 window.showHC32Status('error', 'Error', res.message);
             }
