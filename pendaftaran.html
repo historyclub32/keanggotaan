@@ -61,11 +61,11 @@
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
     button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; color: #64748b; }
 
-    /* INFO CARD BAR */
+    /* INFO CARD BAR (PANDUAN) */
     .info-card {
         margin-top: 20px; background: #fff; border-radius: 16px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden;
-        border-left: 4px solid var(--hc-toska);
+        border-left: 4px solid var(--hc-yellow);
         transition: all 0.3s ease;
     }
     .info-header {
@@ -80,7 +80,8 @@
     }
     .info-body ul { padding-left: 15px; margin: 10px 0 0; }
     .info-body li { margin-bottom: 8px; text-align: justify; }
-    .info-body b, .info-body strong { color: var(--hc-blue); font-weight: 700; }
+    /* FIX BOLD MOBILE */
+    .info-body b, .info-body strong { color: var(--hc-blue); font-weight: 700 !important; }
     .info-icon { transition: transform 0.3s; }
     .info-card.open .info-body { display: block; }
     .info-card.open .info-icon { transform: rotate(180deg); }
@@ -107,6 +108,7 @@
     .btn-main-camera:hover { background: var(--hc-blue); color: white; }
     .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
 
+    /* Modal Camera UI (Fixed Colors) */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
     .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
     .cam-video-area { flex: 1; position: relative; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #000; }
@@ -120,12 +122,12 @@
     .btn-shutter-cam::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 2px solid #2e2e2e; }
     .btn-switch-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #1a4787; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4); }
 
-    /* Crop Modal */
+    /* Crop Modal (FIX: Batal Merah, Simpan Biru) */
     #crop-modal .modal-box { background: #1e293b; color: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; }
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
-    .btn-modal.cancel { background: var(--hc-red); color: white; }
-    .btn-modal.confirm { background: var(--hc-toska); color: white; }
+    .btn-modal.cancel { background: #d30e14; color: white; } /* Merah */
+    .btn-modal.confirm { background: #1a4787; color: white; } /* Biru */
 
     /* Signature */
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
@@ -192,7 +194,7 @@
           <div id="status-icon-container" class="status-icon-circle success"></div>
           <h3 id="status-title" style="margin: 0 0 10px;"></h3>
           <p id="status-desc" style="margin: 0; color:#666;"></p>
-          <button id="modal-ok-btn" class="hc-status-btn" style="display:block">Oke</button>
+          <button id="modal-ok-btn" class="modal-ok-btn">Oke</button>
       </div>
   </div>
 
@@ -211,15 +213,15 @@
                   </div>
                   <div class="row">
                       <label>Nama Lengkap <span class="req-star">*</span></label>
-                      <input id="fd-nama" placeholder="Contoh: Napoleon Bonaparte" required />
+                      <input id="fd-nama" placeholder="Sesuai Absen" required />
                   </div>
                   <div class="row">
                       <label>Tipe Keanggotaan <span class="req-star">*</span></label>
                       <select id="fd-tipe">
-                          <option value="siswa">Siswa Aktif</option>
+                          <option value="siswa">Siswa Aktif SMAN 32</option>
                           <option value="guru">Guru/Tendik</option>
                           <option value="alumni">Alumni</option>
-                          <option value="lain">Lainnya</option>
+                          <option value="lain">Lainnya (Non-32)</option>
                       </select>
                   </div>
 
@@ -232,17 +234,17 @@
                   
                   <div id="group-jabatan" class="row hidden">
                       <label>Jabatan <span class="req-star">*</span></label>
-                      <input id="fd-jabatan" placeholder="Contoh: Guru Sejarah atau Guru PPL" />
+                      <input id="fd-jabatan" placeholder="Contoh: Pembina / Tamu" />
                   </div>
                   
                   <div id="group-lulus" class="row hidden">
                       <label id="label-lulus">Tahun Lulus</label>
-                      <input id="fd-thn-lulus" type="number" placeholder="Contoh: 2018" />
+                      <input id="fd-thn-lulus" type="number" placeholder="YYYY" />
                   </div>
 
                   <div class="two-col row">
                       <div>
-                          <label>No. HP (WA) <span class="req-star">*</span></label>
+                          <label>No HP (WA) <span class="req-star">*</span></label>
                           <div class="phone-group">
                               <select id="fd-phone-code">
                                   <option value="+62">🇮🇩 +62</option>
@@ -390,7 +392,6 @@
                       </li>
                       <li><b>No. HP:</b> Pilih kode negara dan masukkan nomor telepon anda (angka saja).</li>
                       <li><b>Email:</b> Gunakan email aktif anda.</li>
-                      <li><b>Tanggal Lahir</b> Isi tanggal lahir sesuai yang tercantum pada KTP atau Kartu Keluarga (KK).</li>
                       <li><b>Foto Profil:</b> Wajah wajib terlihat jelas dengan maksimal ukuran file adalah 1 MB.</li>
                       <li><b>Jabatan:</b> Isi jabatan atau peran Anda sesuai dengan status keanggotaan.</li>
                       <li><b>Tahun Lulus:</b> Wajib diisi oleh alumni, sesuai tahun kelulusan dari SMAN 32 Jakarta.</li>
@@ -509,7 +510,7 @@
         if(min) validateField(this, this.value.length >= min);
     });
 
-    // --- FUNGSI UTAMA PERUBAHAN TIPE ---
+    // --- FUNGSI UTAMA PERUBAHAN TIPE (FIXED) ---
     function handleTypeChange() {
         const v = tipeSel.value;
         
@@ -518,7 +519,7 @@
         grpJab.classList.add('hidden');
         grpLulus.classList.add('hidden');
         
-        // 2. Reset Input No. Identitas agar bersih
+        // 2. Reset Input No. Identitas agar bersih (PENTING)
         nisInput.value = '';
         nisInput.classList.remove('input-error'); 
         
@@ -538,8 +539,8 @@
         else if (v === 'alumni') {
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
-            // Alumni: Max 7 Digit (NIS / No. Perpus)
-            setIDConstraint(7, 4, 'NIS / No. Anggota Perpus (Max 7 Digit)');
+            // FIX: ALUMNI Max 7 Digit (Untuk NIS 7 Digit / No Perpus 6 Digit)
+            setIDConstraint(7, 6, 'NIS / No. Anggota Perpus (6-7 Digit)');
         } 
         else { 
             grpJab.classList.remove('hidden');
