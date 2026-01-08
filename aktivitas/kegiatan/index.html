@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
+
+    <script src="../../config.js"></script>
+    <script src="../../components.js"></script>
 
     <style>
         :root {
@@ -17,22 +21,22 @@
             --hc-green: #15a256;
             --hc-bg: #e7e9ea;
         }
-        @keyframes hcspin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
         body {
             font-family: 'Poppins', system-ui;
-            background-color: #f8fafc;
+            background-color: var(--hc-bg);
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         #hc32-posting-wrapper {
             max-width: 1100px;
             margin: 0 auto;
             padding: 24px 16px;
-            position: relative;
-            min-height: 50vh;
+            width: 100%;
+            box-sizing: border-box;
+            flex: 1;
         }
         .hc-page-title {
             text-align: center;
@@ -52,6 +56,8 @@
             text-align: center;
             padding: 20px;
         }
+        
+        /* Card Hasil Kegiatan */
         .hasil-kegiatan-card {
             background: white;
             border-radius: 12px;
@@ -75,48 +81,21 @@
         .icon-location-pin { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; }
         .hasil-kegiatan-card-deskripsi { font-size: 13px; color: #475569; font-style: italic; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 10px; }
         .hasil-kegiatan-card-isi { font-size: 13px; color: #475569; line-height: 1.6; }
-        
-        #hc32-loading-overlay {
-            position: fixed; /* Full Screen */
-            inset: 0;
-            background: rgba(248, 250, 252, 0.85);
-            backdrop-filter: blur(2px);
-            display: flex; 
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-        .hc-loader { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
-        .hc-loader-spinner { position: absolute; inset: 0; border-radius: 50%; border: 5px solid var(--hc-blue); border-top-color: var(--hc-toska); animation: hcspin 1s linear infinite; }
-        .hc-loader-logo { width: 44px; height: 44px; border-radius: 50%; }
-
-        #hc32-footer { background: var(--hc-dark); color: white; text-align: center; padding: 20px 10px; width: 100vw; position: relative; left: 50%; transform: translateX(-50%); margin-top: 80px; }
-        #hc32-footer .footer-sub { font-size: 12px; margin-top: 4px; color: #e7e9ea; opacity: 0.8; }
     </style>
 </head>
 <body>
+    
     <div id="hc32-posting-wrapper">
-        <div id="hc32-loading-overlay">
-            <div class="hc-loader">
-                <div class="hc-loader-spinner"></div>
-                <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" class="hc-loader-logo" alt="Logo HC">
-            </div>
-        </div>
         <h2 class="hc-page-title">Hasil Kegiatan & Dokumentasi</h2>
         <div id="posts-container">
-            <p class="posts-placeholder" id="posts-placeholder-text">Memuat...</p>
-        </div>
-    </div>
-    <div id="hc32-footer">
-        <div style="font-size: 13px;">© 2025 History Club SMAN 32 Jakarta. All rights reserved.</div>
-        <div class="footer-sub">
-            Dibuat dan dikembangkan oleh <span style="font-weight: 600; color: white;">@vitezegi</span>.
-        </div>
+            </div>
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
-        const LOADER = document.getElementById("hc32-loading-overlay");
+        // Init Components
+        document.addEventListener('DOMContentLoaded', () => initHC32Navigation('kegiatan'));
+
+        const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
         const postsContainer = document.getElementById("posts-container");
 
         function renderHasilKegiatanCard(p) {
@@ -142,8 +121,12 @@
         }
 
         async function loadHasilKegiatan() {
+            if(typeof window.showHC32Status === 'function') {
+                window.showHC32Status('loading', 'Memuat Kegiatan...', 'Mohon tunggu.');
+            }
+
             try {
-                const res = await fetch(WEB_APP_URL, {
+                const res = await fetch(API_URL, {
                     method: "POST",
                     body: JSON.stringify({ action: "getHasilKegiatanPublik" })
                 });
@@ -151,21 +134,24 @@
 
                 if (out.status !== "ok" || !out.data || out.data.length === 0) {
                     postsContainer.innerHTML = `<p class="posts-placeholder">Belum ada hasil kegiatan yang dipublikasikan.</p>`;
-                    return;
+                } else {
+                    postsContainer.innerHTML = ""; // Kosongkan
+                    out.data.forEach(p => {
+                        const d = document.createElement("div");
+                        d.className = "hasil-kegiatan-card";
+                        d.innerHTML = renderHasilKegiatanCard(p);
+                        postsContainer.appendChild(d);
+                    });
                 }
                 
-                postsContainer.innerHTML = ""; // Kosongkan
-                out.data.forEach(p => {
-                    const d = document.createElement("div");
-                    d.className = "hasil-kegiatan-card";
-                    d.innerHTML = renderHasilKegiatanCard(p);
-                    postsContainer.appendChild(d);
-                });
+                if(typeof window.hideHC32Status === 'function') window.hideHC32Status();
+
             } catch (err) {
                 console.error("Gagal memuat posting:", err);
                 postsContainer.innerHTML = `<p class="posts-placeholder" style="color:var(--hc-red);">Gagal memuat data. Periksa koneksi.</p>`;
-            } finally {
-                LOADER.style.display = 'none';
+                if(typeof window.showHC32Status === 'function') {
+                    window.showHC32Status('error', 'Gagal Memuat', 'Periksa koneksi internet Anda.');
+                }
             }
         }
         
