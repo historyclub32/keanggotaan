@@ -18,27 +18,18 @@
 
   <style>
     /* Style Spesifik Halaman Ini */
-    :root {
-       /* Fallback vars jika components.js belum load css */
-       --hc-blue: #1a4787;
-       --hc-bg: #e7e9ea;
-    }
-
     body {
-      background: var(--hc-bg);
+      background: #e7e9ea;
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
       display: flex;
       flex-direction: column;
-      /* Reset default margin dari tailwind jika ada konflik */
-      margin: 0; 
     }
 
-    /* Penyesuaian Main agar rapi dengan Header Components */
+    /* Penyesuaian Main agar tidak tertutup Header Components.js */
     main {
       flex-grow: 1;
-      padding-top: 20px; 
-      width: 100%;
+      padding-top: 20px; /* Jarak dari header */
     }
 
     .scanner-frame {
@@ -48,18 +39,29 @@
       background: #000;
       position: relative;
     }
+
+    .raw-error {
+      font-size: .65rem;
+      background: rgba(0,0,0,.05);
+      border-radius: .5rem;
+      padding: .35rem .55rem;
+      margin-top: .35rem;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body class="text-gray-800">
 
-  <main class="max-w-5xl mx-auto px-4 pb-10 w-full">
+  <main class="max-w-5xl mx-auto px-4 pb-20 w-full">
     
-    <div class="mb-6 mt-2 text-center md:text-left">
+    <div class="mb-6 mt-2">
       <h1 class="text-2xl font-bold text-slate-800">Presensi Kegiatan</h1>
       <p class="text-slate-500 text-sm">Silakan pindai kode QR atau barcode kartu anggota.</p>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-6">
+    <div class="relative">
+
+      <div class="grid lg:grid-cols-2 gap-6">
 
         <section class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
           <h2 class="text-xl font-bold text-slate-800 mb-1">Kamera Pemindai</h2>
@@ -82,8 +84,13 @@
           <button id="btn-toggle-camera"
             class="w-full bg-blue-800 text-white font-semibold py-2.5 rounded-xl hover:bg-opacity-90 transition flex items-center justify-center gap-2 mb-1">
             
-            <i id="icon-cam-start" class="ri-camera-line text-xl"></i>
-            <i id="icon-cam-stop" class="ri-stop-circle-line text-xl hidden"></i>
+            <svg id="icon-cam-start" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <svg id="icon-cam-stop" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+            </svg>
             <span id="btn-toggle-text">Mulai Pindai Barcode</span>
           </button>
           <p class="text-[0.7rem] text-gray-400 mt-1 text-center">Pastikan browser mengizinkan akses kamera.</p>
@@ -91,26 +98,26 @@
 
         <section class="flex flex-col gap-4">
 
-          <div class="bg-white border border-gray-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm">
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
-               <i class="ri-qr-scan-2-line text-xl"></i>
+          <div id="status-box" class="bg-white border border-gray-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm">
+            <div id="status-icon" class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 shrink-0">
+              <i class="ri-information-line text-xl"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p id="local-status-title" class="font-semibold text-sm text-slate-800 truncate">Menunggu presensi...</p>
-              <p id="local-status-msg" class="text-xs text-slate-500">Arahkan kamera ke barcode.</p>
+              <p id="status-title" class="font-semibold text-sm text-slate-800 truncate">Menunggu presensi...</p>
+              <p id="status-msg" class="text-xs text-slate-500">Data akan muncul di sini setelah dipindai.</p>
             </div>
           </div>
 
           <div class="bg-yellow-50 border border-yellow-200 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm">
-            <img src="https://drive.google.com/thumbnail?id=1kNumtFhyzrMmiwbQf_Xu7LWPhXMz2wHj&sz=w200" alt="Icon" class="w-9 h-9 object-contain opacity-80">
+            <img src="https://lh3.googleusercontent.com/d/1F42BAD5bDPLJBEYrjfGdv-7f7KtAVWIg" alt="NFC Logo" class="w-9 h-9">
             <div>
-              <p class="font-semibold text-yellow-900 text-sm">Info Presensi</p>
-              <p class="text-xs text-yellow-800 leading-tight">Gunakan kartu anggota untuk presensi lebih cepat.</p>
+              <p class="font-semibold text-yellow-900 text-sm">NFC Reader</p>
+              <p class="text-xs text-yellow-800 leading-tight">Coming soon – tempel kartu anggota untuk presensi.</p>
             </div>
           </div>
 
           <div class="bg-white rounded-2xl shadow-sm p-4 border border-gray-200">
-            <h3 class="font-semibold text-slate-800 mb-1">Input Manual</h3>
+            <h3 class="font-semibold text-slate-800 mb-1">Input manual</h3>
             <p class="text-xs text-gray-500 mb-3">Jika barcode rusak atau tidak terbaca.</p>
             <div class="flex flex-col sm:flex-row gap-3">
               <input id="manual-nis" type="text" inputmode="numeric"
@@ -123,7 +130,7 @@
             </div>
           </div>
 
-          <div id="result-box" class="hidden bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4 border border-gray-200 transition-all duration-300">
+          <div id="result-box" class="hidden bg-white rounded-2xl shadow-sm p-4 flex items-center gap-4 border border-gray-200">
             <div id="result-avatar" class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold text-xl border-4 border-blue-800 overflow-hidden bg-cover bg-center shrink-0">
             </div>
             <div class="flex-1 min-w-0">
@@ -131,61 +138,64 @@
               <p id="result-meta" class="text-sm text-gray-500">Pertemuan • Jam</p>
             </div>
           </div>
-
         </section>
+      </div>
     </div>
 
     <div class="mt-8 mb-6 bg-white rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-3 px-5 py-4 border-l-4 border-blue-800">
       <div>
         <p class="font-semibold text-slate-800 text-sm">Butuh Bantuan?</p>
-        <p class="text-xs text-gray-500">Hubungi Ketua HC <span class="font-semibold text-blue-800">@vitezegi</span> jika mengalami kendala.</p>
+        <p class="text-xs text-gray-500">Hubungi Ketua HC <span class="font-semibold text-blue-800">@vitezegi</span> jika mengalami kendala sistem.</p>
       </div>
       <a href="https://www.instagram.com/historyclub32jkt/" target="_blank"
          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-800 text-white text-sm hover:bg-opacity-90 transition-colors shrink-0">
-        <i class="ri-instagram-line"></i> Instagram HC 32
+        Instagram HC 32
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
       </a>
     </div>
-
   </main>
 
   <audio id="sound-success" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQCAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRgCAADg/+4A/QD6APEA8gDzAPIA7wDrAO8A7ADoAOEA6QDoAOIA5QDjAOIA4QDdANMA1gDSANAAzADMANAAywC/AK8ArACqAKgApQCjAKMAoQChAJ0AmgCcAJoAmACWAI8AkwCPAI0AjQCOAIwAigCHAIYAhQCBAIEAgAB/AH4AfAB5AHgAdQB1AHMAbwBtAGwAaQBoAGUAZgBhAGAAXQBcAFoAWQBXAFUAVABSAFIAUQBOAE0ASgBIAEYARgBFAEMAPwA+ADsAOgA5ADYANAAzADEALwAuACsAKgApACcAJgAjACIAHwAeAB0AGwAaABgAFgAUABEAEQAQAA8ADQAMAAoACAAFAAMAAgAAAP8A/gD5APcA8wD0APMA8gDwAO0A7gDrAOsA6ADlAOQA5QDiAN8A3ADaANkAzwDPA NAAywDJAMQAwgC/ALsAuAC1AmYClQKJAoMChQMCAv8B/wH9AfwB+gH6AfYB9AHvAfAB8gHxAfAB8AHvAe4B6wHrAesB6AHnAOYA5ADiAOEA4ADfAN0A2wDXANkA1gDSAM0AygDFAL4AtwCtAKoApwCkAI8AiwCAAHsAbQBhAFgASwA/ACsAHP8A9ADUAKEAagBGAB4A/gDOAIwAXgBAACsAHP8A9gDUAKMAagBHAB4A/gDPAMAAugC1AMQAswCxALEAsgCxAK8ArQCvAK8AsQCwALIAswCyALQAtQC1ALUAtAC1ALUAtQC1ALQAtAC0ALMAsgCyALMAsgCyALMAsgCyALIAswCyALMAswCyALMAtACzALMAsgCzALMAsgCzALMAswCzALMAtAC0ALQAtQC1ALUAtQC1ALUAtQC1ALUAtQC1ALQAtAC0ALMAsgCyALMAsgCyALMAsgCyALIAswCyALMAswCyALMAtACzALMAsgCzALMAsgCzALMAswCzALMAsgCzALIAswCyALMAsgCyALMAswCzALIAswCzALMAsgCyALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCyALMAswCyALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzAnalisa" type="audio/wav">
+    <source src="data:audio/wav;base64,UklGRiQCAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YRgCAADg/+4A/QD6APEA8gDzAPIA7wDrAO8A7ADoAOEA6QDoAOIA5QDjAOIA4QDdANMA1gDSANAAzADMANAAywC/AK8ArACqAKgApQCjAKMAoQChAJ0AmgCcAJoAmACWAI8AkwCPAI0AjQCOAIwAigCHAIYAhQCBAIEAgAB/AH4AfAB5AHgAdQB1AHMAbwBtAGwAaQBoAGUAZgBhAGAAXQBcAFoAWQBXAFUAVABSAFIAUQBOAE0ASgBIAEYARgBFAEMAPwA+ADsAOgA5ADYANAAzADEALwAuACsAKgApACcAJgAjACIAHwAeAB0AGwAaABgAFgAUABEAEQAQAA8ADQAMAAoACAAFAAMAAgAAAP8A/gD5APcA8wD0APMA8gDwAO0A7gDrAOsA6ADlAOQA5QDiAN8A3ADaANkAzwDPA NAAywDJAMQAwgC/ALsAuAC1AmYClQKJAoMChQMCAv8B/wH9AfwB+gH6AfYB9AHvAfAB8gHxAfAB8AHvAe4B6wHrAesB6AHnAOYA5ADiAOEA4ADfAN0A2wDXANkA1gDSAM0AygDFAL4AtwCtAKoApwCkAI8AiwCAAHsAbQBhAFgASwA/ACsAHP8A9ADUAKEAagBGAB4A/gDOAIwAXgBAACsAHP8A9gDUAKMAagBHAB4A/gDPAMAAugC1AMQAswCxALEAsgCxAK8ArQCvAK8AsQCwALIAswCyALQAtQC1ALUAtAC1ALUAtQC1ALQAtAC0ALMAsgCyALMAsgCyALMAsgCyALIAswCyALMAswCyALMAtACzALMAsgCzALMAsgCzALMAswCzALMAtAC0ALQAtQC1ALUAtQC1ALUAtQC1ALQAtAC0ALMAsgCyALMAsgCyALMAsgCyALIAswCyALMAswCyALMAtACzALMAsgCzALMAsgCzALMAswCzALMAsgCzALIAswCyALMAsgCyALMAswCzALIAswCzALMAsgCyALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCyALMAswCyALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALIAswCzALMAsgCzALIAswCzALIAswCzAnalisa`" type="audio/wav">
   </audio>
   <audio id="sound-error" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiwCAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YSAgAgAAMEBAgMDBw8XIycrMy8/S1NbX2Nna3N/h5Ofo6err7O/x9fb4+vv9/f8AAQECBg4KESQnKC0uLzM2Nzw9P0NHSUtOUFNVV1laW15gYWJjZGVmZ2lqa2xub3Bxc3R1dnd5ent9f4CBg4WHh4mKi4yNjo+QkZKTlJWXmJmbnJ2en6Gio6Slp6mqrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfa2drb3N3e3+Di4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3Bxc3R1dnd5ent9f4CBg4WHh4mKi4yNjo+QkZKTlJWXmJmbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsc=" type="audio/wav">
+    <source src="data:audio/wav;base64,UklGRiwCAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YSAgAgAAMEBAgMDBw8XIycrMy8/S1NbX2Nna3N/h5Ofo6err7O/x9fb4+vv9/f8AAQECBg4KESQnKC0uLzM2Nzw9P0NHSUtOUFNVV1laW15gYWJjZGVmZ2lqa2xub3Bxc3R1dnd5ent9f4CBg4WHh4mKi4yNjo+QkZKTlJWXmJmbnJ2en6Gio6Slp6mqrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfa2drb3N3e3+Di4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsc=" type="audio/wav">
   </audio>
 
   <script>
+    // Init Components
     document.addEventListener("DOMContentLoaded", () => {
-        // Inisialisasi Components (Header, Sidebar, Footer)
         if (typeof initHC32Navigation === 'function') {
-            initHC32Navigation('presensi');
+            initHC32Navigation('presensi'); 
         }
     });
 
-    // Gunakan URL dari config.js, atau fallback (untuk development)
-    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_CADANGAN_JIKA_CONFIG_GAGAL";
 
-    // DOM Elements
+    // Selector
+    const statusBox     = document.getElementById('status-box');
+    const statusIcon    = document.getElementById('status-icon');
+    const statusTitle   = document.getElementById('status-title');
+    const statusMsg     = document.getElementById('status-msg');
+
     const manualInput   = document.getElementById('manual-nis');
     const manualBtn     = document.getElementById('btn-send-manual');
+    
     const resultBox     = document.getElementById('result-box');
     const resultName    = document.getElementById('result-name');
     const resultMeta    = document.getElementById('result-meta');
     const resultAvatar  = document.getElementById('result-avatar');
-    
-    // Camera Elements
+
     const btnToggleCamera = document.getElementById('btn-toggle-camera');
     const btnToggleText   = document.getElementById('btn-toggle-text');
     const iconCamStart    = document.getElementById('icon-cam-start');
     const iconCamStop     = document.getElementById('icon-cam-stop');
-    const qrReaderDiv     = document.getElementById('qr-reader');
-    const qrPlaceholder   = document.getElementById('qr-placeholder');
-    const scanAnim        = document.getElementById('scan-anim');
-
-    // Local Status (Hanya text di card, bukan pop-up)
-    const localStatusTitle = document.getElementById('local-status-title');
-    const localStatusMsg   = document.getElementById('local-status-msg');
+    
+    const qrReaderDiv   = document.getElementById('qr-reader');
+    const qrPlaceholder = document.getElementById('qr-placeholder');
+    const scanAnim      = document.getElementById('scan-anim');
 
     const soundSuccess  = document.getElementById('sound-success');
     const soundError    = document.getElementById('sound-error');
@@ -195,48 +205,66 @@
     let lastScannedCode = "";
     let lastScanTime    = 0;
 
-    // --- Helper: Update Status Card (Bukan Modal) ---
-    function setLocalStatus(title, msg) {
-        localStatusTitle.textContent = title;
-        localStatusMsg.textContent = msg;
+    // --- FUNGSI UPDATE STATUS LOKAL (BOX KECIL) ---
+    // Ini tetap ada untuk update UI status box di bawah kamera
+    function updateLocalStatus(type, title, msg) {
+      if (type === 'loading') {
+        statusBox.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm";
+        statusIcon.className = "w-10 h-10 rounded-full bg-slate-400 flex items-center justify-center text-white shrink-0";
+        statusIcon.innerHTML = '<i class="ri-loader-4-line animate-spin text-xl"></i>';
+      } else if (type === 'success') {
+        statusBox.className = "bg-green-50 border border-green-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm";
+        statusIcon.className = "w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white shrink-0";
+        statusIcon.innerHTML = '<i class="ri-check-line text-xl"></i>';
+      } else if (type === 'error') {
+        statusBox.className = "bg-red-50 border border-red-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm";
+        statusIcon.className = "w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white shrink-0";
+        statusIcon.innerHTML = '<i class="ri-close-line text-xl"></i>';
+      } else {
+        // Info / Default
+        statusBox.className = "bg-white border border-gray-200 rounded-2xl p-4 flex gap-3 items-center shadow-sm";
+        statusIcon.className = "w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 shrink-0";
+        statusIcon.innerHTML = '<i class="ri-information-line text-xl"></i>';
+      }
+      statusTitle.textContent = title || '';
+      statusMsg.textContent   = msg   || '';
     }
 
-    // --- Helper: Update Result Card ---
     function showResult(data) {
-        resultBox.classList.remove('hidden');
-        resultName.textContent = data.nama || 'Anggota';
-        resultMeta.textContent = (data.pertemuan || '-') + ' • ' + (data.jam || '');
-        
-        resultAvatar.style.backgroundImage = 'none';
-        resultAvatar.textContent = '';
+      resultBox.classList.remove('hidden');
+      resultName.textContent = data.nama || 'Anggota';
+      resultMeta.textContent = (data.pertemuan || '-') + ' • ' + (data.jam || '');
+      
+      resultAvatar.style.backgroundImage = 'none';
+      resultAvatar.textContent = '';
 
-        if (data.foto) {
-            resultAvatar.style.backgroundImage = `url('${data.foto}')`;
-        } else {
-            const inisial = (data.nama || 'HC').substring(0, 2).toUpperCase();
-            resultAvatar.textContent = inisial;
-        }
+      if (data.foto) {
+        resultAvatar.style.backgroundImage = `url('${data.foto}')`;
+      } else {
+        const inisial = (data.nama || 'HC').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        resultAvatar.textContent = inisial;
+      }
     }
 
     /* ===== KIRIM PRESENSI ===== */
     async function sendPresensi(id, source) {
-      const cleanId = (id || '').replace(/[^0-9]/g, ''); // Ambil angka saja
-      
+      const cleanId = (id || '').replace(/[^0-9]/g, '');
       if (!cleanId) {
-        // Tampilkan Modal Error (Component.js)
-        if(typeof window.showHC32Status === 'function') {
+        // Gunakan Global Status untuk Error Input
+        if(typeof window.showHC32Status === 'function') 
             window.showHC32Status('error', 'Input Kosong', 'Masukkan nomor identitas yang valid.');
-        }
+        
+        updateLocalStatus('error', 'Input Kosong', 'Nomor identitas tidak boleh kosong.');
         soundError && soundError.play().catch(()=>{});
         return;
       }
 
-      // Tampilkan Modal Loading (Component.js)
-      if(typeof window.showHC32Status === 'function') {
-          window.showHC32Status('loading', 'Memeriksa Data...', `ID: ${cleanId}`);
-      }
+      // 1. Tampilkan Global Spinner
+      if(typeof window.showHC32Status === 'function') 
+         window.showHC32Status('loading', 'Memeriksa Presensi...', `ID: ${cleanId}`);
 
-      setLocalStatus('Mengirim...', `ID: ${cleanId}`);
+      // Update Local Status juga
+      updateLocalStatus('loading', 'Mengirim Data...', 'Mohon tunggu sebentar.');
 
       try {
         const res = await fetch(API_URL, {
@@ -246,52 +274,70 @@
         });
         const json = await res.json();
         handlePresensiResponse(json);
-      } catch (err) {
-        // Coba GET jika POST gagal (CORS fallback)
+      } catch (e1) {
+        // Fallback GET
         try {
-            const url = `${API_URL}?action=presensi&nis=${encodeURIComponent(cleanId)}`;
+            const url = API_URL + '?action=presensi&nis=' + encodeURIComponent(cleanId);
             const res = await fetch(url);
             const json = await res.json();
             handlePresensiResponse(json);
         } catch (e2) {
-            if(typeof window.showHC32Status === 'function') {
-                window.showHC32Status('error', 'Gagal Terhubung', 'Periksa koneksi internet Anda.');
-            }
-            setLocalStatus('Gagal Terhubung', 'Coba lagi nanti.');
+            // Error Handling Global
+            if(typeof window.showHC32Status === 'function') 
+               window.showHC32Status('error', 'Gagal Terhubung', 'Periksa koneksi internet Anda.');
+            
+            updateLocalStatus('error', 'Gagal Terhubung', e2.message);
             soundError && soundError.play().catch(()=>{});
+            scanAnim.classList.add('hidden');
         }
       }
     }
 
     function handlePresensiResponse(json) {
+      scanAnim.classList.add('hidden');
+
       if (!json || !json.status) {
-        if(typeof window.showHC32Status === 'function') window.showHC32Status('error', 'Error', 'Respon server tidak valid.');
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('error', 'Error', 'Respon server tidak valid.');
+        updateLocalStatus('error', 'Error', 'Respon tidak valid');
         soundError && soundError.play().catch(()=>{});
         return;
       }
 
       if (json.status === 'ok') {
-        if(typeof window.showHC32Status === 'function') window.showHC32Status('success', 'Berhasil!', `${json.nama}<br>${json.pertemuan || ''}`);
-        setLocalStatus('Berhasil', json.nama);
+        // SUKSES GLOBAL
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('success', 'Presensi Berhasil!', `${json.nama}`);
+        
+        updateLocalStatus('success', 'Berhasil', `${json.nama} terverifikasi.`);
         showResult(json);
         soundSuccess && soundSuccess.play().catch(()=>{});
-        manualInput.value = ''; // Reset input
-      } 
-      else if (json.status === 'duplicate') {
-        if(typeof window.showHC32Status === 'function') window.showHC32Status('error', 'Sudah Presensi', `Halo ${json.nama}, kamu sudah absen hari ini.`);
-        setLocalStatus('Ditolak', 'Sudah absen sebelumnya.');
-        showResult(json); // Tetap tampilkan data
+        manualInput.value = '';
+
+      } else if (json.status === 'duplicate') {
+        // DUPLIKAT GLOBAL
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('error', 'Sudah Presensi', 'Anda sudah melakukan presensi hari ini.');
+        
+        updateLocalStatus('error', 'Ditolak', 'Sudah presensi hari ini.');
+        showResult(json); // Tampilkan data lama
         soundError && soundError.play().catch(()=>{});
-      } 
-      else if (json.status === 'not-registered') {
-        if(typeof window.showHC32Status === 'function') window.showHC32Status('error', 'Tidak Terdaftar', `ID ${json.nis} tidak ditemukan.`);
-        setLocalStatus('Tidak Dikenal', `ID: ${json.nis}`);
+
+      } else if (json.status === 'not-registered') {
+        // TIDAK TERDAFTAR GLOBAL
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('error', 'Tidak Terdaftar', `ID ${json.nis} tidak ditemukan.`);
+        
+        updateLocalStatus('error', 'Tidak Ditemukan', `ID ${json.nis} belum terdaftar.`);
         resultBox.classList.add('hidden');
         soundError && soundError.play().catch(()=>{});
-      } 
-      else {
-        if(typeof window.showHC32Status === 'function') window.showHC32Status('error', 'Gagal', json.message || 'Terjadi kesalahan.');
-        setLocalStatus('Error', json.message);
+
+      } else {
+        // ERROR LAIN GLOBAL
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('error', 'Gagal', json.message || 'Terjadi kesalahan.');
+        
+        updateLocalStatus('error', 'Gagal', json.message);
         resultBox.classList.add('hidden');
         soundError && soundError.play().catch(()=>{});
       }
@@ -313,7 +359,7 @@
       try {
         await qrReader.stop();
       } catch (err) {
-        console.warn("Gagal stop kamera:", err);
+        console.warn("Gagal mematikan kamera:", err);
       } finally {
         cameraOn = false;
         qrPlaceholder.classList.remove('hidden');
@@ -324,7 +370,7 @@
         iconCamStart.classList.remove('hidden');
         iconCamStop.classList.add('hidden');
         
-        setLocalStatus('Kamera Mati', 'Klik tombol untuk memindai.');
+        updateLocalStatus('info', 'Kamera Mati', 'Klik tombol untuk memindai lagi.');
       }
     }
 
@@ -333,39 +379,49 @@
       try {
         qrPlaceholder.classList.add('hidden');
         qrReaderDiv.classList.remove('hidden');
-        setLocalStatus('Mengaktifkan...', 'Mohon izinkan kamera.');
+        updateLocalStatus('loading', 'Mengaktifkan Kamera...', 'Mohon izinkan akses.');
 
         if (!qrReader) {
-          qrReader = new Html5Qrcode("qr-reader");
+          qrReader = new Html5Qrcode("qr-reader", { 
+            verbose: false,
+            formatsToSupport: [
+              Html5QrcodeSupportedFormats.QR_CODE,
+              Html5QrcodeSupportedFormats.CODE_128,
+              Html5QrcodeSupportedFormats.CODE_39,
+              Html5QrcodeSupportedFormats.EAN_13,
+            ]
+          });
         }
         
-        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        const cameraConfig = { 
+          fps: 10, 
+          qrbox: (w,h) => {
+             const size = Math.min(w,h) * 0.7;
+             return { width: size, height: size };
+          },
+          aspectRatio: 1.0
+        };
         
         await qrReader.start(
           { facingMode: "environment" },
-          config,
+          cameraConfig,
           (decodedText) => { 
             const now = Date.now();
-            // Debounce 3 detik agar tidak spam scan yang sama
+            // Debounce 3 detik
             if (decodedText === lastScannedCode && (now - lastScanTime) < 3000) {
               return; 
             }
             lastScannedCode = decodedText;
             lastScanTime    = now;
-            scanAnim.classList.remove('hidden'); // Efek visual scan
-            
-            // Panggil fungsi kirim
+            scanAnim.classList.remove('hidden');
             sendPresensi(decodedText, 'scanner');
-            
-            // Hapus efek scan setelah 0.5s
-            setTimeout(() => scanAnim.classList.add('hidden'), 500);
           },
           (errorMessage) => {} 
         );
         
         cameraOn = true;
-        setLocalStatus('Memindai...', 'Arahkan kode ke kamera.');
-        scanAnim.classList.remove('hidden'); // Tampilkan garis scan statis
+        updateLocalStatus('info', 'Kamera Aktif', 'Arahkan barcode ke kotak.');
+        scanAnim.classList.remove('hidden');
 
         btnToggleText.textContent = 'Matikan Kamera';
         iconCamStart.classList.add('hidden');
@@ -373,12 +429,11 @@
 
       } catch (err) {
         console.error(err);
-        if(typeof window.showHC32Status === 'function') {
-            window.showHC32Status('error', 'Kamera Error', 'Gagal mengakses kamera. Pastikan izin diberikan.');
-        }
-        setLocalStatus('Error Kamera', 'Gagal akses kamera.');
+        updateLocalStatus('error', 'Kamera Error', 'Izin ditolak atau tidak ada kamera.');
         
-        // Reset UI
+        if(typeof window.showHC32Status === 'function') 
+           window.showHC32Status('error', 'Akses Ditolak', 'Mohon izinkan akses kamera di browser Anda.');
+
         qrPlaceholder.classList.remove('hidden');
         qrReaderDiv.classList.add('hidden');
         cameraOn = false;
