@@ -1,438 +1,379 @@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agenda - HC 32</title>
 
-<style>
-  :root {
-    --hc-blue: #1a4787;
-    --hc-toska: #0f8a94;
-    --hc-dark: #2e2e2e;
-    --hc-green: #15a256;
-    --hc-red: #d30e14;
-    --hc-bg: #e7e9ea;
-    --hc-text: #464646;
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
 
-    /* Warna Pudar untuk Kalender & List */
-    --color-selesai-bg: rgba(211, 14, 20, 0.08); /* Pink */
-    --color-terdekat-bg: rgba(21, 162, 86, 0.1); /* Hijau */
-    --color-datang-bg: rgba(26, 71, 135, 0.08); /* Biru */
-  }
+  <script src="../../config.js"></script>
+  <script src="../../components.js"></script>
 
-  /* Layout Full-Width (dari V7)
-    Font diganti ke Poppins agar konsisten
-  */
-  #agenda-hc32 {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    background-color: transparent; /* Menyatu dengan halaman */
-    position: relative;
-  }
-  
-  /* Wrapper konten (dari V7) */
-  .agenda-content-wrapper {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 20px; /* Padding untuk HP */
-  }
+  <style>
+    /* Gunakan variabel dari components.js (sudah di-load) */
+    /* Tambahan Style Khusus Halaman Agenda */
+    :root {
+      /* Re-declare untuk fallback jika components.js belum load css */
+      --hc-blue: #1a4787;
+      --hc-toska: #0f8a94;
+      --hc-dark: #2e2e2e;
+      --hc-green: #15a256;
+      --hc-red: #d30e14;
+      --hc-bg: #e7e9ea;
+      --hc-text: #464646;
 
+      --color-selesai-bg: rgba(211, 14, 20, 0.08);
+      --color-terdekat-bg: rgba(21, 162, 86, 0.1);
+      --color-datang-bg: rgba(26, 71, 135, 0.08);
+    }
 
-  /* Loading Overlay (dari V7) */
-  #agenda-loading-overlay {
-    position: absolute;
-    inset: 0;
-    min-height: 400px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(2px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-  .agenda-loader {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .agenda-loader-spinner {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 5px solid var(--hc-blue);
-    border-top-color: var(--hc-toska);
-    animation: spin 1s linear infinite;
-  }
-  .agenda-loader-logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--hc-bg);
+      margin: 0; 
+      padding: 0; 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+    }
 
-  /* Header Utama (dari V7) */
-  #agenda-hc32 h2 {
-    text-align: center;
-    margin: 24px 0 8px 0;
-    color: var(--hc-dark);
-    font-weight: 700;
-    font-size: 24px;
-  }
-  #agenda-hc32 .agenda-subtitle {
-    text-align: center;
-    color: var(--hc-text);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
+    #agenda-hc32 {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1; /* Agar footer terdorong ke bawah */
+    }
 
-  /* Kalender (dari V7) */
-  #agenda-calendar {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e2e8f0;
-    margin-bottom: 20px;
-  }
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .calendar-header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--hc-blue);
-    margin: 0;
-  }
-  .calendar-nav button {
-    background: #fff;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    color: var(--hc-text);
-    transition: all 0.2s ease;
-  }
-  .calendar-nav button:hover {
-    background-color: #f1f5f9;
-    border-color: var(--hc-blue);
-    color: var(--hc-blue);
-  }
-  .calendar-nav button:first-child { margin-right: 8px; }
+    #agenda-hc32 h2 {
+      text-align: center;
+      margin: 24px 0 8px 0;
+      color: var(--hc-dark);
+      font-weight: 700;
+      font-size: 24px;
+    }
+    .agenda-subtitle {
+      text-align: center;
+      color: var(--hc-text);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
 
-  /* Grid Kalender (dari V7) */
-  .calendar-grid-header,
-  .calendar-grid-body {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-  }
-  .calendar-grid-header div {
-    font-size: 12px;
-    font-weight: 600;
-    color: #94a3b8;
-    padding-bottom: 8px;
-  }
-  .calendar-cell {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--hc-text);
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    user-select: none;
-    border: 2px solid transparent;
-  }
-  .calendar-cell:not(.empty):hover {
-    background-color: #f1f5f9;
-  }
-  .calendar-cell.today {
-    border-color: var(--hc-bg);
-    font-weight: 700;
-  }
-  .calendar-cell.selected {
-    background-color: var(--hc-blue);
-    color: white;
-    font-weight: 700;
-  }
+    /* Kalender */
+    #agenda-calendar {
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .calendar-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--hc-blue);
+      margin: 0;
+    }
+    .calendar-nav button {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      color: var(--hc-text);
+      transition: all 0.2s ease;
+    }
+    .calendar-nav button:hover {
+      background-color: #f1f5f9;
+      border-color: var(--hc-blue);
+      color: var(--hc-blue);
+    }
+    .calendar-nav button:first-child { margin-right: 8px; }
 
-  /* Pewarnaan Sel Kalender (dari V7) */
-  .calendar-cell.status-selesai:not(.selected) {
-    background-color: var(--color-selesai-bg);
-    color: var(--hc-red);
-    font-weight: 700;
-  }
-  .calendar-cell.status-terdekat:not(.selected) {
-    background-color: var(--color-terdekat-bg);
-    color: var(--hc-green);
-    font-weight: 700;
-  }
-  .calendar-cell.status-akan-datang:not(.selected) {
-    background-color: var(--color-datang-bg);
-    color: var(--hc-blue);
-    font-weight: 700;
-  }
+    .calendar-grid-header,
+    .calendar-grid-body {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+    }
+    .calendar-grid-header div {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      padding-bottom: 8px;
+    }
+    .calendar-cell {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--hc-text);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      border: 2px solid transparent;
+    }
+    .calendar-cell:not(.empty):hover {
+      background-color: #f1f5f9;
+    }
+    .calendar-cell.today {
+      border-color: var(--hc-toska); /* Ganti var(--hc-bg) agar lebih kontras */
+      font-weight: 700;
+    }
+    .calendar-cell.selected {
+      background-color: var(--hc-blue);
+      color: white;
+      font-weight: 700;
+    }
 
-  /* Daftar Agenda (dari V7) */
-  #agenda-list-date {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--hc-dark);
-    margin: 0 0 16px 0;
-  }
-  #agenda-list {
-    display: grid;
-    gap: 12px;
-  }
-  #agenda-list-placeholder {
-    text-align: center;
-    color: #64748b;
-    font-size: 14px;
-    padding: 20px 0;
-  }
+    /* Status Warna Kalender */
+    .calendar-cell.status-selesai:not(.selected) {
+      background-color: var(--color-selesai-bg);
+      color: var(--hc-red);
+      font-weight: 700;
+    }
+    .calendar-cell.status-terdekat:not(.selected) {
+      background-color: var(--color-terdekat-bg);
+      color: var(--hc-green);
+      font-weight: 700;
+    }
+    .calendar-cell.status-akan-datang:not(.selected) {
+      background-color: var(--color-datang-bg);
+      color: var(--hc-blue);
+      font-weight: 700;
+    }
 
-  /* Desain Item Agenda (Card) (dari V7) */
-  .agenda-item {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
-    border: 1px solid #e2e8f0;
-    display: flex;
-    gap: 12px;
-    padding: 12px;
-    align-items: center;
-    transition: background-color 0.3s ease;
-  }
-  .agenda-item-photo {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    background-color: var(--hc-bg);
-    background-size: cover;
-    background-position: center;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--hc-blue);
-    overflow: hidden;
-  }
-  .agenda-item-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .agenda-item-details {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .agenda-item-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-  .agenda-item-details .judul {
-    font-weight: 600;
-    color: var(--hc-dark);
-    font-size: 15px;
-    line-height: 1.4;
-  }
-  .agenda-item-details .waktu {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-  .agenda-item-details .tempat {
-    font-size: 13px;
-    color: var(--hc-text);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .icon-location-pin {
-     width: 14px;
-     height: 14px;
-     opacity: 0.6;
-     flex-shrink: 0;
-  }
-  .agenda-item-details .deskripsi {
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 8px;
-    line-height: 1.5;
-    border-top: 1px solid #cbd5e1; /* Garis pemisah lebih tebal */
-    padding-top: 8px;
-  }
+    /* List Agenda */
+    #agenda-list-date {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--hc-dark);
+      margin: 0 0 16px 0;
+    }
+    #agenda-list {
+      display: grid;
+      gap: 12px;
+    }
+    #agenda-list-placeholder {
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      padding: 20px 0;
+    }
 
-  /* Warna Teks Waktu SOLID (dari V7) */
-  .agenda-item.agenda-selesai {
-    background-color: var(--color-selesai-bg);
-    border-color: rgba(211, 14, 20, 0.1);
-  }
-  .agenda-item.agenda-selesai .waktu {
-    color: var(--hc-red); /* Teks Solid Merah */
-    background-color: rgba(211, 14, 20, 0.1);
-  }
-  .agenda-item.agenda-terdekat {
-    background-color: var(--color-terdekat-bg);
-    border-color: rgba(21, 162, 86, 0.15);
-  }
-  .agenda-item.agenda-terdekat .waktu {
-    color: var(--hc-green); /* Teks Solid Hijau */
-    background-color: rgba(21, 162, 86, 0.1);
-  }
-  .agenda-item.agenda-akan-datang {
-    background-color: var(--color-datang-bg);
-    border-color: rgba(26, 71, 135, 0.1);
-  }
-  .agenda-item.agenda-akan-datang .waktu {
-    color: var(--hc-blue); /* Teks Solid Biru */
-    background-color: rgba(26, 71, 135, 0.1);
-  }
-  
-  /* Legenda Warna (dari V8) */
-  #agenda-legend {
-    margin-top: 24px;
-    padding: 16px;
-    background-color: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
-  }
-  .legend-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--hc-dark);
-    margin: 0 0 12px 0;
-  }
-  .legend-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 16px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--hc-text);
-  }
-  .legend-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-  
-  /* ======================================
-    PERUBAHAN V9: Footer Asli
-    ======================================
-  */
-  /* Ini adalah style footer dari widget Daftar Anggota Anda.
-    Warna #072943 mendekati --hc-dark #2e2e2e, kita gunakan
-    --hc-dark agar konsisten dengan brand guide.
-  */
-  #agenda-hc32-footer {
-    background: var(--hc-dark); /* Menggunakan --hc-dark */
-    color: white;
-    text-align: center;
-    padding: 20px 10px;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 32px; /* Jarak dari legenda */
-  }
-  /* ==================================== */
+    /* Card Item Agenda */
+    .agenda-item {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+    .agenda-item-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background-color: var(--hc-bg);
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--hc-blue);
+      overflow: hidden;
+    }
+    .agenda-item-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .agenda-item-details {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .agenda-item-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .agenda-item-details .judul {
+      font-weight: 600;
+      color: var(--hc-dark);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+    .agenda-item-details .waktu {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .agenda-item-details .tempat {
+      font-size: 13px;
+      color: var(--hc-text);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .icon-location-pin {
+       width: 14px;
+       height: 14px;
+       opacity: 0.6;
+       flex-shrink: 0;
+    }
+    .agenda-item-details .deskripsi {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 8px;
+      line-height: 1.5;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 8px;
+    }
 
-</style>
+    /* Warna Teks Waktu SOLID */
+    .agenda-item.agenda-selesai {
+      background-color: var(--color-selesai-bg);
+      border-color: rgba(211, 14, 20, 0.1);
+    }
+    .agenda-item.agenda-selesai .waktu {
+      color: var(--hc-red);
+      background-color: rgba(211, 14, 20, 0.1);
+    }
+    .agenda-item.agenda-terdekat {
+      background-color: var(--color-terdekat-bg);
+      border-color: rgba(21, 162, 86, 0.15);
+    }
+    .agenda-item.agenda-terdekat .waktu {
+      color: var(--hc-green);
+      background-color: rgba(21, 162, 86, 0.1);
+    }
+    .agenda-item.agenda-akan-datang {
+      background-color: var(--color-datang-bg);
+      border-color: rgba(26, 71, 135, 0.1);
+    }
+    .agenda-item.agenda-akan-datang .waktu {
+      color: var(--hc-blue);
+      background-color: rgba(26, 71, 135, 0.1);
+    }
+    
+    /* Legenda Warna */
+    #agenda-legend {
+      margin-top: 24px;
+      padding: 16px;
+      background-color: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, .05);
+    }
+    .legend-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--hc-dark);
+      margin: 0 0 12px 0;
+    }
+    .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--hc-text);
+    }
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
 
 <div id="agenda-hc32">
-  
-  <div id="agenda-loading-overlay">
-    <div class="agenda-loader">
-      <div class="agenda-loader-spinner"></div>
-      <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" class="agenda-loader-logo" alt="Logo HC">
+  <h2>Agenda History Club 32</h2>
+  <p class="agenda-subtitle">Pilih tanggal untuk melihat agenda</p>
+
+  <div id="agenda-calendar">
+    <div class="calendar-header">
+      <div class="calendar-nav">
+        <button id="btn-prev" title="Bulan Sebelumnya"><</button>
+        <button id="btn-next" title="Bulan Berikutnya">></button>
+      </div>
+      <h3 id="calendar-month-year"></h3>
+    </div>
+    <div class="calendar-grid-header">
+      <div>M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>
+    </div>
+    <div class="calendar-grid-body" id="calendar-body">
     </div>
   </div>
 
-  <div class="agenda-content-wrapper">
-    <h2>Agenda History Club 32</h2>
-    <p class="agenda-subtitle">Pilih tanggal untuk melihat agenda</p>
+  <h4 id="agenda-list-date"></h4>
+  <div id="agenda-list"></div>
+  <div id="agenda-list-placeholder">Memuat agenda...</div>
 
-    <div id="agenda-calendar">
-      <div class="calendar-header">
-        <div class="calendar-nav">
-          <button id="btn-prev" title="Bulan Sebelumnya"><</button>
-          <button id="btn-next" title="Bulan Berikutnya">></button>
-        </div>
-        <h3 id="calendar-month-year"></h3>
+  <div id="agenda-legend">
+    <h5 class="legend-title">Keterangan Warna</h5>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-dot" style="background-color: var(--color-terdekat-bg); border: 1px solid var(--hc-green);"></span>
+        Agenda Terdekat
       </div>
-      <div class="calendar-grid-header">
-        <div>M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background-color: var(--color-datang-bg); border: 1px solid var(--hc-blue);"></span>
+        Agenda Yang Akan Datang
       </div>
-      <div class="calendar-grid-body" id="calendar-body">
-        </div>
-    </div>
-  </div> <div class="agenda-content-wrapper">
-    <h4 id="agenda-list-date"></h4>
-    <div id="agenda-list">
-      </div>
-    <div id="agenda-list-placeholder">Memuat agenda...</div>
-
-    <div id="agenda-legend">
-      <h5 class="legend-title">Keterangan Warna</h5>
-      <div class="legend-items">
-        <div class="legend-item">
-          <span class="legend-dot" style="background-color: var(--color-terdekat-bg); border: 1px solid var(--hc-green);"></span>
-          Agenda Terdekat
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot" style="background-color: var(--color-datang-bg); border: 1px solid var(--hc-blue);"></span>
-          Agenda Yang Akan Datang
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot" style="background-color: var(--color-selesai-bg); border: 1px solid var(--hc-red);"></span>
-          Agenda Yang Sudah Selesai
-        </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background-color: var(--color-selesai-bg); border: 1px solid var(--hc-red);"></span>
+        Agenda Yang Sudah Selesai
       </div>
     </div>
-
-  </div> <div id="agenda-hc32-footer">
-      <div style="font-size: 13px;">© 2025 History Club SMAN 32 Jakarta. All rights reserved.</div>
-      <div style="font-size: 12px; margin-top: 4px; color: #e7e9ea; opacity: 0.8;">
-        Dibuat dan dikembangkan oleh <span style="font-weight: 600; color: white;">@vitezegi</span>.
-      </div>
   </div>
-
 </div>
 
 <script>
+  // Inisialisasi Components (Header, Sidebar, Footer)
+  document.addEventListener('DOMContentLoaded', () => initHC32Navigation('agenda'));
+
   (function() {
-    // URL SCRIPT TETAP SAMA
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+    // URL SCRIPT GOOGLE APPS SCRIPT
+    // Gunakan GAS_URL dari config.js jika ada, atau fallback string ini
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
 
     // Elemen DOM
-    const loadingOverlay = document.getElementById("agenda-loading-overlay");
     const listEl = document.getElementById("agenda-list");
     const placeholderEl = document.getElementById("agenda-list-placeholder");
     const listDateEl = document.getElementById("agenda-list-date");
@@ -449,20 +390,14 @@
     const today = new Date();
     const cleanToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     
-    let nextAgendaDate = null; // Variabel untuk 'Satu Agenda Terdekat'
+    let nextAgendaDate = null; 
     
     const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-    // ===== HELPER PARSE DATA =====
-    
+    // ===== HELPER =====
     function parseDateFromItem(itemTanggal) {
       if (!itemTanggal) return null;
-      try {
-        return new Date(itemTanggal);
-      } catch (e) {
-        console.error("Format tanggal tidak valid:", itemTanggal, e);
-        return null;
-      }
+      try { return new Date(itemTanggal); } catch (e) { console.error("Invalid date:", itemTanggal); return null; }
     }
 
     function isSameDay(date1, date2) {
@@ -472,39 +407,31 @@
              date1.getDate() === date2.getDate();
     }
     
-    // Fungsi untuk menentukan status warna sel kalender
     function getAgendaStatus(date) {
       const agendasForDay = allAgendaData.filter(item => isSameDay(item.parsedDate, date));
-      if (agendasForDay.length === 0) {
-        return null;
-      }
+      if (agendasForDay.length === 0) return null;
       
       const cleanDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       const diffTime = cleanDate.getTime() - cleanToday.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      if (diffDays < 0) {
-        return 'status-selesai'; // Pink
-      } 
-      
-      if (nextAgendaDate && isSameDay(date, nextAgendaDate)) {
-        return 'status-terdekat'; // Hijau
+      if (diffDays < 0) return 'status-selesai';
+      if (nextAgendaDate && isSameDay(date, nextAgendaDate)) return 'status-terdekat';
+      return 'status-akan-datang';
+    }
+
+    // ===== LOAD DATA =====
+    async function loadAllAgenda() {
+      // Tampilkan Global Spinner dari components.js
+      if (typeof window.showHC32Status === 'function') {
+        window.showHC32Status('loading', 'Memuat Agenda...', 'Mohon tunggu sebentar.');
       }
       
-      return 'status-akan-datang'; // Biru
-    }
-    // ======================================
-
-
-    // ===== FUNGSI UTAMA =====
-
-    async function loadAllAgenda() {
-      if (loadingOverlay) loadingOverlay.style.display = 'flex';
-      
       try {
+        // Fetch data
         const [nextRes, riwayatRes] = await Promise.all([
-          fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "getKegiatanPublik", mode: "next" }) }),
-          fetch(WEB_APP_URL, { method: "POST", body: JSON.stringify({ action: "getKegiatanPublik", mode: "riwayat" }) })
+          fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "getKegiatanPublik", mode: "next" }) }),
+          fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "getKegiatanPublik", mode: "riwayat" }) })
         ]);
 
         const nextOut = await nextRes.json();
@@ -514,33 +441,34 @@
         const riwayatData = (riwayatOut.status === "ok" && riwayatOut.data) ? riwayatOut.data : [];
 
         allAgendaData = [...nextData, ...riwayatData]
-          .map(item => ({
-            ...item,
-            parsedDate: parseDateFromItem(item.tanggal) 
-          }))
+          .map(item => ({ ...item, parsedDate: parseDateFromItem(item.tanggal) }))
           .filter(item => item.parsedDate);
           
         // Cari satu agenda terdekat
         const futureAgendas = allAgendaData
           .filter(item => item.parsedDate.getTime() >= cleanToday.getTime())
-          .sort((a, b) => a.parsedDate - b.parsedDate); // Urutkan dari terdekat
+          .sort((a, b) => a.parsedDate - b.parsedDate);
 
-        if (futureAgendas.length > 0) {
-          nextAgendaDate = futureAgendas[0].parsedDate; // Ambil tanggal paling dekat
-        }
+        if (futureAgendas.length > 0) nextAgendaDate = futureAgendas[0].parsedDate;
         
         selectedDate = new Date();
         renderCalendar();
         renderAgendaList(today);
         
+        // Sembunyikan spinner
+        if (typeof window.hideHC32Status === 'function') window.hideHC32Status();
+
       } catch (error) {
         console.error("Gagal memuat agenda:", error);
-        if (placeholderEl) placeholderEl.textContent = "Gagal memuat data agenda. Coba refresh.";
-      } finally {
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (placeholderEl) placeholderEl.textContent = "Gagal memuat data agenda.";
+        
+        if (typeof window.showHC32Status === 'function') {
+           window.showHC32Status('error', 'Gagal Memuat', 'Periksa koneksi internet Anda.');
+        }
       }
     }
 
+    // ===== RENDER UI =====
     function renderCalendar() {
       calendarBody.innerHTML = "";
       const year = displayDate.getFullYear();
@@ -565,17 +493,11 @@
         
         const cellDate = new Date(year, month, day);
 
-        if (isSameDay(cellDate, today)) {
-          cell.classList.add("today");
-        }
-        if (isSameDay(cellDate, selectedDate)) {
-          cell.classList.add("selected");
-        }
+        if (isSameDay(cellDate, today)) cell.classList.add("today");
+        if (isSameDay(cellDate, selectedDate)) cell.classList.add("selected");
         
         const status = getAgendaStatus(cellDate);
-        if (status) {
-          cell.classList.add(status);
-        }
+        if (status) cell.classList.add(status);
         
         cell.addEventListener("click", () => {
           selectedDate = cellDate;
@@ -593,7 +515,7 @@
       
       const agendaForDay = allAgendaData
         .filter(item => isSameDay(item.parsedDate, date))
-        .sort((a, b) => a.parsedDate - b.parsedDate); // Urutkan berdasarkan jam
+        .sort((a, b) => a.parsedDate - b.parsedDate);
 
       if (agendaForDay.length === 0) {
         placeholderEl.style.display = "block";
@@ -606,32 +528,24 @@
       agendaForDay.forEach(item => {
         const d = document.createElement("div");
 
-        // Logika pewarnaan list
         let agendaClass = '';
         const itemDate = item.parsedDate;
         const cleanItemDate = new Date(itemDate.getFullYear(), itemDate.getMonth(), itemDate.getDate());
         const diffTime = cleanItemDate.getTime() - cleanToday.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diffDays < 0) {
-          agendaClass = 'agenda-selesai'; // Pink
-        } else if (nextAgendaDate && isSameDay(itemDate, nextAgendaDate)) {
-          agendaClass = 'agenda-terdekat'; // Hijau
-        } else {
-          agendaClass = 'agenda-akan-datang'; // Biru
-        }
+        if (diffDays < 0) agendaClass = 'agenda-selesai';
+        else if (nextAgendaDate && isSameDay(itemDate, nextAgendaDate)) agendaClass = 'agenda-terdekat';
+        else agendaClass = 'agenda-akan-datang';
         
         d.className = `agenda-item ${agendaClass}`;
         
         let waktuFormatted = "";
-        if (item.waktu) {
-          waktuFormatted = item.waktu.trim();
-        } else if (item.parsedDate) {
+        if (item.waktu) waktuFormatted = item.waktu.trim();
+        else if (item.parsedDate) {
           const jam = item.parsedDate.getHours().toString().padStart(2, '0');
           const menit = item.parsedDate.getMinutes().toString().padStart(2, '0');
-          if (jam !== '00' || menit !== '00') {
-            waktuFormatted = `${jam}:${menit}`;
-          }
+          if (jam !== '00' || menit !== '00') waktuFormatted = `${jam}:${menit}`;
         }
         
         const inisial = item.judul ? item.judul.substring(0, 1).toUpperCase() : "H";
@@ -646,9 +560,7 @@
               <div class="judul">${item.judul || "Judul Kegiatan"}</div>
               ${waktuFormatted ? `<div class="waktu">${waktuFormatted}</div>` : ''}
             </div>
-            
             ${item.tempat ? `<div class="tempat">${locationIcon}<span>${item.tempat}</span></div>` : ''}
-            
             ${item.deskripsi ? `<div class="deskripsi">${item.deskripsi}</div>` : ''}
           </div>
         `;
@@ -656,7 +568,6 @@
       });
     }
 
-    // ===== Event Listeners Navigasi Kalender =====
     btnPrev.addEventListener("click", () => {
       displayDate.setMonth(displayDate.getMonth() - 1);
       selectedDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), 1);
@@ -677,8 +588,10 @@
       placeholderEl.textContent = "Pilih tanggal untuk melihat agenda.";
     });
 
-    // Mulai!
+    // Jalankan
     loadAllAgenda();
 
   })();
 </script>
+</body>
+</html>
