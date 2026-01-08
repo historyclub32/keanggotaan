@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Kepengurusan History Club 32</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Warna dari Brand Guide */
+            --hc-blue: #1a4787;
+            --hc-toska: #0f8a94;
+            --hc-dark: #2e2e2e;
+            --hc-green: #15a256;
+            --hc-red: #d30e14;
+            --hc-bg: #e7e9ea;
+            --hc-blue-light: #2e5eab; 
+        }
+
+        @keyframes hcspin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Wrapper Utama */
+        #hc32-struktur {
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif; /* Sesuai Pedoman */
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 6px 16px; /* Tambah padding HP */
+            position: relative;
+            min-height: 50vh; /* Agar loading terlihat */
+        }
+
+        /* Grid Responsif */
+        .hc-struktur-grid {
+            display: grid;
+            gap: 16px;
+            /* Dibuat lebih responsif, mirip Daftar Anggota */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            margin-bottom: 24px;
+        }
+        
+        /* Judul Section */
+        .hc-section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--hc-dark);
+            margin: 16px 0 12px 0;
+            border-bottom: 2px solid var(--hc-bg);
+            padding-bottom: 8px;
+        }
+
+        /* Desain Card Baru (Terinspirasi Lampiran) */
+        .hc-struktur-card {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+            text-align: center;
+            border-top: 5px solid; /* Border warna di atas */
+        }
+
+        .hc-card-avatar {
+            width: 100px;
+            height: 100px;
+            border: 4px solid white; /* Border putih pemisah */
+            border-radius: 999px;
+            margin: -4px auto 12px auto; /* Tarik ke atas sedikit */
+            overflow: hidden;
+            background: var(--hc-bg);
+            /* Bayangan avatar */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        .hc-card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hc-card-nama {
+            font-weight: 600;
+            color: var(--hc-dark);
+            font-size: 16px;
+        }
+        .hc-card-jabatan {
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .hc-card-periode {
+            color: #475569;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* Loading Overlay (BARU) */
+        #hc32-loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(2px);
+            display: flex; /* Tampil di awal */
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            min-height: 400px;
+            border-radius: 16px;
+        }
+        .hc-loader {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hc-loader-spinner {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 5px solid var(--hc-blue);
+            border-top-color: var(--hc-toska);
+            animation: hcspin 1s linear infinite;
+        }
+        .hc-loader-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+        }
+
+        /* Footer (BARU) */
+        #hc32-footer {
+            background: var(--hc-dark);
+            color: white;
+            text-align: center;
+            padding: 20px 10px;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 80px;
+        }
+        #hc32-footer .footer-sub {
+            font-size: 12px; 
+            margin-top: 4px; 
+            color: #e7e9ea; 
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body style="background-color: #f8fafc;">
+
+    <div id="hc32-struktur">
+        
+        <div id="hc32-loading-overlay">
+            <div class="hc-loader">
+                <div class="hc-loader-spinner"></div>
+                <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" class="hc-loader-logo" alt="Logo HC">
+            </div>
+        </div>
+
+        <h2 style="font-size:28px;margin-bottom:6px;color:#0f172a;">Struktur Kepengurusan</h2>
+        <p style="color:#475569;margin-bottom:18px;">Tim di balik History Club 32 Jakarta.</p>
+
+        <h3 class="hc-section-title">Pembina & Pelatih</h3>
+        <div id="hc32-pembina" class="hc-struktur-grid"></div>
+
+        <h3 class="hc-section-title">Pimpinan Klub</h3>
+        <div id="hc32-pimpinan" class="hc-struktur-grid"></div>
+
+        <h3 class="hc-section-title">Divisi</h3>
+        <div id="hc32-divisi" class="hc-struktur-grid"></div>
+    </div>
+
+    <div id="hc32-footer">
+        <div style="font-size: 13px;">© 2025 History Club SMAN 32 Jakarta. All rights reserved.</div>
+        <div class="footer-sub">
+            Dibuat dan dikembangkan oleh <span style="font-weight: 600; color: white;">@vitezegi</span>.
+        </div>
+    </div>
+
+    <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+    const PLACEHOLDER = "https://placehold.co/200x200/2e2e2e/ffffff?text=HC";
+    const LOADER = document.getElementById("hc32-loading-overlay");
+
+    // Palet Warna Jabatan (Sesuai Brand Guide)
+    const ROLE_COLORS = {
+        "Pembina": "var(--hc-dark)",        // [cite: 57]
+        "Pelatih": "var(--hc-blue-light)",  // [cite: 64]
+        "Ketua": "var(--hc-toska)",       // [cite: 38]
+        "Wakil Ketua": "var(--hc-blue)",     // [cite: 33]
+        "Pengurus": "var(--hc-red)"         // [cite: 69]
+    };
+
+    // Deteksi Role (Dipisah)
+    function detectRole(j) {
+        if (!j) return null;
+        j = j.toLowerCase();
+        if (j.includes("pembina")) return { label: "Pembina", level: 1 };
+        if (j.includes("pelatih") || j.includes("pembimbing")) return { label: "Pelatih", level: 2 };
+        if (j.includes("ketua") && !j.includes("wakil")) return { label: "Ketua", level: 3 };
+        if (j.includes("wakil")) return { label: "Wakil Ketua", level: 4 };
+        // Semua sisanya adalah Pengurus/Divisi
+        return { label: "Pengurus", level: 5 };
+    }
+
+    // Fungsi Buat Card (BARU)
+    function makeCard(person, color, roleLabel, showPeriode) {
+        const foto = person.foto || PLACEHOLDER;
+        const nama = person.nama || "[Belum diisi]";
+        // Tampilkan jabatan spesifik (cth: Sekretaris) BUKAN "Pengurus"
+        const jab  = person.jabatan || ""; 
+        // Tampilkan "Periode 2024/2025" jika diminta
+        const periode = showPeriode ? (person.keterangan || "") : "";
+
+        const wrap = document.createElement("div");
+        wrap.className = "hc-struktur-card";
+        wrap.style.borderColor = color; // Warna di border atas
+
+        wrap.innerHTML = `
+            <div class="hc-card-avatar" style="border-color: ${color};">
+                <img src="${foto}" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+            <div>
+                <div class="hc-card-nama">${nama}</div>
+                <div class="hc-card-jabatan" style="color:${color};">${jab}</div>
+                <div class="hc-card-periode">${periode}</div>
+            </div>
+        `;
+        return wrap;
+    }
+
+    // Tampilkan loading saat fetch
+    LOADER.style.display = 'flex';
+
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "getStrukturKepengurusanPublik" })
+    })
+    .then(r => r.json())
+    .then(out => {
+        if (out.status !== "ok") return;
+        const data = out.data || [];
+        const elPembina  = document.getElementById("hc32-pembina");
+        const elPimpinan = document.getElementById("hc32-pimpinan");
+        const elDivisi   = document.getElementById("hc32-divisi");
+
+        data.forEach(item => {
+            const role = detectRole(item.jabatan);
+            if (!role) return; // Skip jika tidak ada role
+
+            const color = ROLE_COLORS[role.label];
+            
+            // Tentukan card dan tujuannya
+            if (role.level <= 2) {
+                // Pembina & Pelatih (tidak menampilkan periode)
+                elPembina.appendChild(makeCard(item, color, role.label, false));
+            } else if (role.level <= 4) {
+                // Pimpinan Klub (menampilkan periode)
+                elPimpinan.appendChild(makeCard(item, color, role.label, true));
+            } else {
+                // Divisi (menampilkan periode)
+                elDivisi.appendChild(makeCard(item, color, role.label, true));
+            }
+        });
+
+        // Tampilkan placeholder jika kosong
+        if (!elPembina.innerHTML.trim()) elPembina.innerHTML = "<p style='color:#94a3b8;'>Belum diisi.</p>";
+        if (!elPimpinan.innerHTML.trim()) elPimpinan.innerHTML = "<p style='color:#94a3b8;'>Belum diisi.</p>";
+        if (!elDivisi.innerHTML.trim()) elDivisi.innerHTML = "<p style='color:#94a3b8;'>Belum diisi.</p>";
+    })
+    .catch(err => {
+        console.error("Gagal memuat data:", err);
+        // Tampilkan error
+        const container = document.getElementById("hc32-struktur");
+        container.innerHTML = "<p style='color:var(--hc-red); text-align:center;'>Gagal memuat data. Periksa koneksi internet Anda.</p>";
+    })
+    .finally(() => {
+        // Selalu sembunyikan loading
+        LOADER.style.display = 'none';
+    });
+    </script>
+
+</body>
+</html>
