@@ -1,4 +1,4 @@
-\<!doctype html>
+<!doctype html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
@@ -104,10 +104,8 @@
     #crop-modal .modal-box { background: #1e293b; color: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; }
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
-    /* BATAL = MERAH */
     .btn-modal.cancel { background: var(--hc-red); color: white; } 
-    /* SIMPAN = TOSKA HC */
-    .btn-modal.confirm { background: var(--hc-toska); color: white; }
+    .btn-modal.confirm { background: var(--hc-toska); color: white; } /* TOSKA HC */
 
     /* Signature */
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
@@ -151,6 +149,15 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
+    /* Modal OK Button */
+    .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
+    /* Status Modal Styles */
+    .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
+    .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
+    .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .status-icon-circle.success { border: 4px solid var(--hc-green); }
+    .status-icon-circle.error { border: 4px solid var(--hc-red); }
+
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
         .card { padding: 20px; }
@@ -166,7 +173,7 @@
           <div id="status-icon-container" class="status-icon-circle success"></div>
           <h3 id="status-title" style="margin: 0 0 10px;"></h3>
           <p id="status-desc" style="margin: 0; color:#666;"></p>
-          <button id="modal-ok-btn" class="hc-status-btn" style="display:block">Oke</button>
+          <button id="modal-ok-btn" class="modal-ok-btn">Oke</button>
       </div>
   </div>
 
@@ -225,26 +232,14 @@
                                   <option value="+66">🇹🇭 +66</option>
                                   <option value="+63">🇵🇭 +63</option>
                                   <option value="+84">🇻🇳 +84</option>
-                                  <option value="+673">🇧🇳 +673</option>
-                                  <option value="+855">🇰🇭 +855</option>
-                                  <option value="+856">🇱🇦 +856</option>
-                                  <option value="+95">🇲🇲 +95</option>
-                                  <option value="+670">🇹🇱 +670</option>
                                   <option value="+1">🇺🇸 +1</option>
                                   <option value="+44">🇬🇧 +44</option>
                                   <option value="+81">🇯🇵 +81</option>
-                                  <option value="+82">🇰🇷 +82</option>
                                   <option value="+86">🇨🇳 +86</option>
                                   <option value="+61">🇦🇺 +61</option>
-                                  <option value="+91">🇮🇳 +91</option>
                                   <option value="+49">🇩🇪 +49</option>
                                   <option value="+33">🇫🇷 +33</option>
-                                  <option value="+34">🇪🇸 +34</option>
                                   <option value="+7">🇷🇺 +7</option>
-                                  <option value="+55">🇧🇷 +55</option>
-                                  <option value="+20">🇪🇬 +20</option>
-                                  <option value="+90">🇹🇷 +90</option>
-                                  <option value="+966">🇸🇦 +966</option>
                               </select>
                               <input id="fd-nohp" type="tel" placeholder="812xxx" required>
                           </div>
@@ -482,7 +477,7 @@
         if(min) validateField(this, this.value.length >= min);
     });
 
-    // --- FUNGSI UTAMA PERUBAHAN TIPE ---
+    // FUNGSI UTAMA PERUBAHAN TIPE (FIXED PLACEHOLDER & ALUMNI LOGIC)
     function handleTypeChange() {
         const v = tipeSel.value;
         
@@ -491,7 +486,7 @@
         grpJab.classList.add('hidden');
         grpLulus.classList.add('hidden');
         
-        // 2. Reset Input No. Identitas agar bersih
+        // 2. Reset Input agar bersih & tidak ada error sisa
         nisInput.value = '';
         nisInput.classList.remove('input-error'); 
         
@@ -511,8 +506,8 @@
         else if (v === 'alumni') {
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
-            // Alumni: Max 7 Digit (NIS / No. Perpus)
-            setIDConstraint(7, 4, 'NIS / No. Anggota Perpus (Max 7 Digit)');
+            // Alumni: Max 7 Digit (NIS / No. Perpus) - FIXED
+            setIDConstraint(7, 4, 'NIS / No. Anggota Perpus (Maks 7 Digit)');
         } 
         else { 
             grpJab.classList.remove('hidden');
@@ -521,9 +516,17 @@
         }
     }
 
+    // Helper: Set constraint input (FIXED: Force Attribute Update)
     function setIDConstraint(maxLen, minLen, placeholder) {
-        nisInput.maxLength = maxLen;
+        nisInput.value = ""; // Clear again to be safe
+        
+        // Set Attributes explicitly (for HTML behavior)
+        nisInput.setAttribute('maxlength', maxLen);
         nisInput.setAttribute('minlength', minLen);
+        nisInput.setAttribute('placeholder', placeholder);
+        
+        // Set Properties explicitly (for DOM/JS behavior)
+        nisInput.maxLength = maxLen;
         nisInput.placeholder = placeholder;
     }
 
@@ -795,7 +798,7 @@
         if (!document.getElementById('fd-tgllahir').value) errors.push("Tanggal Lahir");
         
         const hp = document.getElementById('fd-nohp');
-        if (hp.value.length < 5) { errors.push("No. HP"); validateField(hp, false); }
+        if (hp.value.length < 5) { errors.push("No HP"); validateField(hp, false); }
         
         const tipe = tipeSel.value;
         if (tipe === 'siswa' && !document.getElementById('fd-kelas').value) errors.push("Kelas");
