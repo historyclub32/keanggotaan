@@ -1,0 +1,62 @@
+<div style="max-width:420px;margin:0 auto;padding:24px 16px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+  <h2 style="text-align:center;margin-bottom:14px;color:#0f172a;">Login Pengurus HC 32</h2>
+  <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">ID HC</label>
+  <input id="login-username" type="text" style="width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:10px;">
+  <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">Password</label>
+  <input id="login-password" type="password" style="width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:14px;">
+  <button id="login-btn" style="width:100%;background:#005A9C;color:white;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;">Masuk</button>
+  <p id="login-msg" style="text-align:center;font-size:13px;margin-top:10px;color:#ef4444;"></p>
+</div>
+
+<script>
+  // backend kamu
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+
+  // dashboard kamu di GitHub
+  const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
+
+  document.getElementById("login-btn").addEventListener("click", async () => {
+    const u = document.getElementById("login-username").value.trim();
+    const p = document.getElementById("login-password").value.trim();
+    const msg = document.getElementById("login-msg");
+    msg.textContent = "Memeriksa...";
+    msg.style.color = "#0f172a";
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "loginAdmin",
+          username: u,
+          password: p
+        })
+      });
+      const out = await res.json();
+      // ...
+      if (out.status === "ok") {
+        // bikin URL dengan querystring
+        const url = new URL(DASHBOARD_BASE);
+        url.searchParams.set("token", out.token);
+        url.searchParams.set("u", out.username);
+        url.searchParams.set("n", out.nama);
+        url.searchParams.set("r", out.role);
+        url.searchParams.set("t", out.tipe || "");
+        url.searchParams.set("j", out.jabatan || "Admin"); // 'j' untuk Jabatan
+        url.searchParams.set("f", out.foto || "");      // 'f' untuk Foto
+
+        // buka di TAB BARU, supaya tidak di-embed oleh Google Sites
+// 
+        window.open(url.toString(), "_blank");
+
+        msg.style.color = "green";
+        msg.textContent = "Login berhasil. Dashboard dibuka di tab baru.";
+      } else {
+        msg.style.color = "#ef4444";
+        msg.textContent = out.message || "Login gagal";
+      }
+    } catch (err) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Gagal menghubungi server.";
+    }
+  });
+</script>
