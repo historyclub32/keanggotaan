@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info & Artikel - HC 32</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --hc-blue: #1a4787;
+            --hc-toska: #0f8a94;
+            --hc-dark: #2e2e2e;
+            --hc-bg: #e7e9ea;
+        }
+        @keyframes hcspin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        body {
+            font-family: 'Poppins', system-ui;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        #hc32-posting-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            position: relative;
+            min-height: 50vh;
+        }
+        .hc-page-title {
+            text-align: center;
+            margin: 16px 0 24px 0;
+            color: var(--hc-dark);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        #posts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .posts-placeholder {
+            color: #94a3b8;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* Card "Info & Artikel" */
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .post-card:hover { transform: translateY(-3px); }
+        .post-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--hc-bg);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .post-card-content { padding: 14px 16px 16px 16px; }
+        .post-card-meta { font-size: 12px; color: var(--hc-toska); margin-bottom: 4px; font-weight: 500; }
+        .post-card-title { font-weight: 600; font-size: 16px; color: var(--hc-dark); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 48px; }
+        .post-card-isi { font-size: 13px; color: #475569; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        #hc32-loading-overlay {
+            position: fixed; /* Full Screen */
+            inset: 0;
+            background: rgba(248, 250, 252, 0.85);
+            backdrop-filter: blur(2px);
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .hc-loader { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+        .hc-loader-spinner { position: absolute; inset: 0; border-radius: 50%; border: 5px solid var(--hc-blue); border-top-color: var(--hc-toska); animation: hcspin 1s linear infinite; }
+        .hc-loader-logo { width: 44px; height: 44px; border-radius: 50%; }
+
+        #hc32-footer { background: var(--hc-dark); color: white; text-align: center; padding: 20px 10px; width: 100vw; position: relative; left: 50%; transform: translateX(-50%); margin-top: 80px; }
+        #hc32-footer .footer-sub { font-size: 12px; margin-top: 4px; color: #e7e9ea; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div id="hc32-posting-wrapper">
+        <div id="hc32-loading-overlay">
+            <div class="hc-loader">
+                <div class="hc-loader-spinner"></div>
+                <img src="https://lh3.googleusercontent.com/d/1lAev2D5Pxp5Rt36iy4y0YMibEnYu5BgI" class="hc-loader-logo" alt="Logo HC">
+            </div>
+        </div>
+        <h2 class="hc-page-title">Informasi & Artikel Sejarah</h2>
+        <div id="posts-container">
+            <p class="posts-placeholder" id="posts-placeholder-text">Memuat...</p>
+        </div>
+    </div>
+    <div id="hc32-footer">
+        <div style="font-size: 13px;">© 2025 History Club SMAN 32 Jakarta. All rights reserved.</div>
+        <div class="footer-sub">
+            Dibuat dan dikembangkan oleh <span style="font-weight: 600; color: white;">@vitezegi</span>.
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+        const LOADER = document.getElementById("hc32-loading-overlay");
+        const postsContainer = document.getElementById("posts-container");
+
+        function renderInfoGramCard(p) {
+            let imgPart = p.gambar ? `<img src="${p.gambar}" alt="${p.judul}" class="post-card-img">` : '';
+            const meta = `${p.tanggal || ""} • ${p.kategori || ""}`;
+            const isi = (p.isi || '').substring(0, 140) + (p.isi && p.isi.length > 140 ? '...' : '');
+
+            return `
+                ${imgPart}
+                <div class="post-card-content">
+                    <div class="post-card-meta">${meta}</div>
+                    <div class="post-card-title">${p.judul}</div>
+                    <div class="post-card-isi">${isi}</div>
+                </div>
+            `;
+        }
+
+        async function loadInfoDanArtikel() {
+            try {
+                // Ambil data gabungan
+                const res = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        action: "getPostingPublik", 
+                        kategori: ["info-gram", "artikel-sejarah"] 
+                    })
+                });
+                const out = await res.json();
+
+                if (out.status !== "ok" || !out.data || out.data.length === 0) {
+                    postsContainer.innerHTML = `<p class="posts-placeholder">Belum ada info atau artikel.</p>`;
+                    return;
+                }
+                
+                postsContainer.innerHTML = ""; // Kosongkan
+                out.data.forEach(p => {
+                    const d = document.createElement("div");
+                    d.className = "post-card";
+                    d.innerHTML = renderInfoGramCard(p);
+                    postsContainer.appendChild(d);
+                });
+            } catch (err) {
+                console.error("Gagal memuat posting:", err);
+                postsContainer.innerHTML = `<p class="posts-placeholder" style="color:var(--hc-red);">Gagal memuat data. Periksa koneksi.</p>`;
+            } finally {
+                LOADER.style.display = 'none';
+            }
+        }
+        
+        loadInfoDanArtikel();
+    </script>
+</body>
+</html>
