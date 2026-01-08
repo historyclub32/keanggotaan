@@ -1,23 +1,61 @@
 /**
  * HISTORY CLUB 32 - SHARED UI COMPONENTS
  * (Header, Sidebar, Footer, Global Loader & Status System)
+ * Updated to match GitHub structure: historyclub32.github.io
  */
 
-// === KONFIGURASI MENU SIDEBAR ===
+// === FUNGSI BANTUAN UNTUK PATH RELATIF ===
+// Mendeteksi kedalaman folder untuk menyesuaikan link href
+function getBasePath() {
+    const path = window.location.pathname;
+    // Hitung berapa kali '/' muncul setelah root domain
+    // Asumsi di GitHub Pages: /repo-name/folder/subfolder/index.html
+    // Atau local: /folder/subfolder/index.html
+    
+    // Cara sederhana: Cek posisi file index.html saat ini
+    if (path.includes('/keanggotaan/pendaftaran/') || 
+        path.includes('/keanggotaan/presensi/') || 
+        path.includes('/keanggotaan/anggota/') || 
+        path.includes('/keanggotaan/login%20pengurus/') || 
+        path.includes('/profil/tentang/') ||
+        path.includes('/profil/sejarah/') ||
+        path.includes('/profil/kepengurusan/') ||
+        path.includes('/aktivitas/agenda/') ||
+        path.includes('/aktivitas/kegiatan/') ||
+        path.includes('/aktivitas/informasi/') ||
+        path.includes('/bantuan/faq/') ||
+        path.includes('/bantuan/track/')) {
+        return '../../'; // Naik 2 level
+    }
+    // Jika di root (index.html utama)
+    return ''; 
+}
+
+const BASE = getBasePath();
+
+// === KONFIGURASI MENU SIDEBAR LENGKAP ===
 const HC32_MENU = [
-    { type: 'link', text: 'Beranda', href: 'https://sites.google.com/view/historyclub32/beranda', id: 'beranda' },
+    { type: 'link', text: 'Beranda', href: BASE + 'index.html', id: 'beranda' },
+    
     { type: 'category', text: 'Profil' },
-    { type: 'link', text: 'Tentang Kami', href: 'https://sites.google.com/view/historyclub32/profil/tentang-kami', id: 'tentang' },
-    { type: 'link', text: 'Sejarah', href: 'https://sites.google.com/view/historyclub32/profil/sejarah', id: 'sejarah' },
-    { type: 'link', text: 'Kepengurusan', href: 'https://sites.google.com/view/historyclub32/profil/kepengurusan', id: 'kepengurusan' },
+    { type: 'link', text: 'Tentang Kami', href: BASE + 'profil/tentang/index.html', id: 'tentang' },
+    { type: 'link', text: 'Sejarah', href: BASE + 'profil/sejarah/index.html', id: 'sejarah' },
+    { type: 'link', text: 'Kepengurusan', href: BASE + 'profil/kepengurusan/index.html', id: 'kepengurusan' },
+    
     { type: 'category', text: 'Aktivitas' },
-    { type: 'link', text: 'Agenda', href: 'https://sites.google.com/view/historyclub32/aktivitas/agenda', id: 'agenda' },
-    { type: 'link', text: 'Kegiatan', href: 'https://sites.google.com/view/historyclub32/aktivitas/kegiatan', id: 'kegiatan' },
+    { type: 'link', text: 'Agenda', href: BASE + 'aktivitas/agenda/index.html', id: 'agenda' },
+    { type: 'link', text: 'Kegiatan', href: BASE + 'aktivitas/kegiatan/index.html', id: 'kegiatan' },
+    { type: 'link', text: 'Informasi', href: BASE + 'aktivitas/informasi/index.html', id: 'informasi' },
+    
     { type: 'category', text: 'Keanggotaan' },
-    { type: 'link', text: 'Anggota', href: 'https://sites.google.com/view/historyclub32/keanggotaan/anggota', id: 'anggota' },
-    { type: 'link', text: 'Presensi', href: 'presensi.html', id: 'presensi' },
-    { type: 'link', text: 'Pendaftaran', href: 'pendaftaran.html', id: 'pendaftaran' },
-    { type: 'link', text: 'Lacak', href: 'track.html', id: 'track' }
+    { type: 'link', text: 'Daftar Anggota', href: BASE + 'keanggotaan/anggota/index.html', id: 'anggota' },
+    { type: 'link', text: 'Presensi', href: BASE + 'keanggotaan/presensi/index.html', id: 'presensi' },
+    { type: 'link', text: 'Pendaftaran', href: BASE + 'keanggotaan/pendaftaran/index.html', id: 'pendaftaran' },
+    { type: 'link', text: 'Login Pengurus', href: BASE + 'keanggotaan/login pengurus/index.html', id: 'login' },
+    
+    { type: 'category', text: 'Bantuan' },
+    { type: 'link', text: 'Lacak Status', href: BASE + 'bantuan/track/index.html', id: 'track' },
+    { type: 'link', text: 'FAQ', href: BASE + 'bantuan/faq/index.html', id: 'faq' }
 ];
 
 // === CSS GABUNGAN ===
@@ -52,6 +90,7 @@ const HC32_STYLES = `
     .hc-spinner-box {
         position: relative; width: 80px; height: 80px; margin: 0 auto 20px;
     }
+    /* Cincin Spinner (Base Biru, Spin Toska) */
     .hc-spinner-ring {
         position: absolute; inset: 0; border-radius: 50%;
         border: 5px solid var(--hc-blue);
@@ -68,31 +107,25 @@ const HC32_STYLES = `
     .hc-status-icon-box {
         width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 40px; display: none; /* Hidden by default */
+        font-size: 40px; display: none; 
     }
-    
-    /* Warna & Animasi Status */
     .state-success .hc-status-icon-box { display: flex; background: #dcfce7; color: var(--hc-green); border: 4px solid #bbf7d0; animation: popIn 0.4s; }
     .state-error .hc-status-icon-box { display: flex; background: #fee2e2; color: var(--hc-red); border: 4px solid #fecaca; animation: shake 0.4s; }
     
-    /* Text Styles */
+    /* Teks Keterangan */
     .hc-status-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 700; color: var(--hc-dark); margin-bottom: 8px; }
     .hc-status-desc { font-family: 'Poppins', sans-serif; font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 20px; }
     
-    /* TOMBOL OKE (Efek Tekan/Active) */
+    /* TOMBOL OKE */
     .hc-status-btn {
         width: 100%; padding: 14px; border: none; border-radius: 12px;
         background: var(--hc-blue); color: white; font-weight: 600; font-family: 'Poppins', sans-serif;
         cursor: pointer; transition: all 0.1s ease-in-out; 
-        display: none; /* Hidden saat loading */
+        display: none; 
         box-shadow: 0 4px 12px rgba(26, 71, 135, 0.2);
     }
     .hc-status-btn:hover { background: var(--hc-toska); }
-    .hc-status-btn:active { 
-        background: #0f6c74; /* Toska Gelap */
-        transform: scale(0.96); 
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
+    .hc-status-btn:active { background: #0f6c74; transform: scale(0.96); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
     @keyframes hcspin { to { transform: rotate(360deg); } }
     @keyframes popIn { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
@@ -154,7 +187,7 @@ function initHC32Navigation(activePageId) {
     styleTag.textContent = HC32_STYLES;
     document.head.appendChild(styleTag);
 
-    // 1. DEFINE FUNCTIONS FIRST
+    // 1. DEFINE FUNCTIONS
     window.hideHC32Status = () => {
         const overlay = document.getElementById('hc32-global-overlay');
         if (overlay) {
@@ -168,7 +201,6 @@ function initHC32Navigation(activePageId) {
         const card = document.getElementById('hc32-status-card');
         const spinnerBox = document.getElementById('hc32-spinner-box');
         const iconBox = document.getElementById('hc32-status-icon-box');
-        const icon = document.getElementById('hc32-status-icon');
         const titleEl = document.getElementById('hc32-status-title');
         const descEl = document.getElementById('hc32-status-desc');
         const btn = document.getElementById('hc32-status-btn');
@@ -178,14 +210,11 @@ function initHC32Navigation(activePageId) {
         // Reset state
         card.classList.remove('state-success', 'state-error');
         overlay.style.display = 'flex';
-        void overlay.offsetWidth; // Trigger reflow
+        void overlay.offsetWidth; 
         overlay.classList.add('active');
 
         titleEl.textContent = title;
-        
-        // --- PERBAIKAN UTAMA: Gunakan innerHTML untuk render tag HTML ---
-        descEl.innerHTML = message || ''; 
-        // -----------------------------------------------------------------
+        descEl.innerHTML = message || ''; // Use innerHTML for <br> support
 
         if (type === 'loading') {
             spinnerBox.style.display = 'block';
@@ -198,15 +227,15 @@ function initHC32Navigation(activePageId) {
             
             if (type === 'success') {
                 card.classList.add('state-success');
-                icon.className = 'ri-check-line';
+                document.getElementById('hc32-status-icon').className = 'ri-check-line';
             } else {
                 card.classList.add('state-error');
-                icon.className = 'ri-close-line';
+                document.getElementById('hc32-status-icon').className = 'ri-close-line';
             }
         }
     };
 
-    // 2. INJECT HTML
+    // 2. INJECT HTML (Loader)
     if (!document.getElementById('hc32-global-overlay')) {
         const overlayHTML = `
             <div id="hc32-global-overlay">
@@ -218,7 +247,6 @@ function initHC32Navigation(activePageId) {
                     <div class="hc-status-icon-box" id="hc32-status-icon-box">
                         <i id="hc32-status-icon"></i>
                     </div>
-                    
                     <div id="hc32-status-title" class="hc-status-title">Memuat...</div>
                     <div id="hc32-status-desc" class="hc-status-desc"></div>
                     <button id="hc32-status-btn" class="hc-status-btn">Oke</button>
@@ -227,7 +255,7 @@ function initHC32Navigation(activePageId) {
         `;
         document.body.insertAdjacentHTML('beforeend', overlayHTML);
         
-        // 3. BIND EVENT LISTENER
+        // EVENT LISTENER
         document.getElementById('hc32-status-btn').onclick = window.hideHC32Status;
     }
 
@@ -240,7 +268,9 @@ function initHC32Navigation(activePageId) {
     }
     headerEl.innerHTML = `
         <div class="header-left">
-            <img src="https://drive.google.com/thumbnail?id=1uBiuujXrUc6qEhKHnHjvveaAueQxR2IO&sz=w200" alt="History Club" class="header-logo">
+            <a href="${BASE}index.html">
+                <img src="https://drive.google.com/thumbnail?id=1uBiuujXrUc6qEhKHnHjvveaAueQxR2IO&sz=w200" alt="History Club" class="header-logo">
+            </a>
         </div>
         <button class="menu-btn" id="hc32-btn-menu" aria-label="Menu"><span></span><span></span><span></span></button>
     `;
@@ -255,8 +285,9 @@ function initHC32Navigation(activePageId) {
 
     let menuItemsHTML = '';
     HC32_MENU.forEach(item => {
-        if (item.type === 'category') menuItemsHTML += `<div class="menu-category">${item.text}</div>`;
-        else {
+        if (item.type === 'category') {
+            menuItemsHTML += `<div class="menu-category">${item.text}</div>`;
+        } else {
             const isActive = item.id === activePageId ? 'active' : '';
             menuItemsHTML += `<a href="${item.href}" class="nav-link ${isActive}">${item.text}</a>`;
         }
@@ -269,7 +300,7 @@ function initHC32Navigation(activePageId) {
     document.body.appendChild(sideOverlay);
     document.body.appendChild(sidebarEl);
 
-    // FOOTER
+    // FOOTER (DIPERBARUI DENGAN LINK YANG SESUAI)
     let footerEl = document.querySelector('footer.site-footer');
     if (!footerEl) {
         footerEl = document.createElement('footer');
@@ -286,30 +317,35 @@ function initHC32Navigation(activePageId) {
           <div class="footer-col">
               <h4>PROFIL</h4>
               <ul>
-                  <li><a href="https://sites.google.com/view/historyclub32/profil/tentang-kami">Tentang Kami</a></li>
-                  <li><a href="https://sites.google.com/view/historyclub32/profil/sejarah">Sejarah</a></li>
-                  <li><a href="https://sites.google.com/view/historyclub32/profil/kepengurusan">Kepengurusan</a></li>
+                  <li><a href="${BASE}profil/tentang/index.html">Tentang Kami</a></li>
+                  <li><a href="${BASE}profil/sejarah/index.html">Sejarah</a></li>
+                  <li><a href="${BASE}profil/kepengurusan/index.html">Kepengurusan</a></li>
               </ul>
           </div>
           <div class="footer-col">
               <h4>AKTIVITAS</h4>
               <ul>
-                  <li><a href="https://sites.google.com/view/historyclub32/aktivitas/agenda">Agenda</a></li>
-                  <li><a href="https://sites.google.com/view/historyclub32/aktivitas/kegiatan">Kegiatan</a></li>
+                  <li><a href="${BASE}aktivitas/agenda/index.html">Agenda</a></li>
+                  <li><a href="${BASE}aktivitas/kegiatan/index.html">Kegiatan</a></li>
+                  <li><a href="${BASE}aktivitas/informasi/index.html">Informasi</a></li>
               </ul>
           </div>
           <div class="footer-col">
               <h4>KEANGGOTAAN</h4>
               <ul>
-                  <li><a href="https://sites.google.com/view/historyclub32/keanggotaan/anggota">Daftar Anggota</a></li>
-                  <li><a href="presensi.html">Presensi</a></li>
-                  <li><a href="pendaftaran.html">Pendaftaran</a></li>
-                  <li><a href="track.html">Lacak</a></li>
+                  <li><a href="${BASE}keanggotaan/anggota/index.html">Daftar Anggota</a></li>
+                  <li><a href="${BASE}keanggotaan/presensi/index.html">Presensi</a></li>
+                  <li><a href="${BASE}keanggotaan/pendaftaran/index.html">Pendaftaran</a></li>
+                  <li><a href="${BASE}keanggotaan/login pengurus/index.html">Login Pengurus</a></li>
               </ul>
           </div>
           <div class="footer-col">
-              <h4>IKUTI KAMI</h4>
-              <ul><li><a href="https://instagram.com/historyclub32jkt" target="_blank">Instagram</a></li></ul>
+              <h4>BANTUAN</h4>
+              <ul>
+                  <li><a href="${BASE}bantuan/track/index.html">Lacak Status</a></li>
+                  <li><a href="${BASE}bantuan/faq/index.html">FAQ / Bantuan</a></li>
+                  <li><a href="https://instagram.com/historyclub32jkt" target="_blank">Instagram</a></li>
+              </ul>
           </div>
       </div>
       <div class="footer-bottom">
