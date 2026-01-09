@@ -1,62 +1,283 @@
-<div style="max-width:420px;margin:0 auto;padding:24px 16px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
-  <h2 style="text-align:center;margin-bottom:14px;color:#0f172a;">Login Pengurus HC 32</h2>
-  <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">ID HC</label>
-  <input id="login-username" type="text" style="width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:10px;">
-  <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">Password</label>
-  <input id="login-password" type="password" style="width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:14px;">
-  <button id="login-btn" style="width:100%;background:#005A9C;color:white;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;">Masuk</button>
-  <p id="login-msg" style="text-align:center;font-size:13px;margin-top:10px;color:#ef4444;"></p>
-</div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Pengurus - HC 32</title>
 
-<script>
-  // backend kamu
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
 
-  // dashboard kamu di GitHub
-  const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
+  <script src="../../config.js"></script>
+  <script src="../../components.js"></script>
 
-  document.getElementById("login-btn").addEventListener("click", async () => {
-    const u = document.getElementById("login-username").value.trim();
-    const p = document.getElementById("login-password").value.trim();
-    const msg = document.getElementById("login-msg");
-    msg.textContent = "Memeriksa...";
-    msg.style.color = "#0f172a";
-
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          action: "loginAdmin",
-          username: u,
-          password: p
-        })
-      });
-      const out = await res.json();
-      // ...
-      if (out.status === "ok") {
-        // bikin URL dengan querystring
-        const url = new URL(DASHBOARD_BASE);
-        url.searchParams.set("token", out.token);
-        url.searchParams.set("u", out.username);
-        url.searchParams.set("n", out.nama);
-        url.searchParams.set("r", out.role);
-        url.searchParams.set("t", out.tipe || "");
-        url.searchParams.set("j", out.jabatan || "Admin"); // 'j' untuk Jabatan
-        url.searchParams.set("f", out.foto || "");      // 'f' untuk Foto
-
-        // buka di TAB BARU, supaya tidak di-embed oleh Google Sites
-// 
-        window.open(url.toString(), "_blank");
-
-        msg.style.color = "green";
-        msg.textContent = "Login berhasil. Dashboard dibuka di tab baru.";
-      } else {
-        msg.style.color = "#ef4444";
-        msg.textContent = out.message || "Login gagal";
-      }
-    } catch (err) {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Gagal menghubungi server.";
+  <style>
+    /* Variabel Warna dari Brand Guide */
+    :root {
+        --hc-blue: #1a4787;
+        --hc-toska: #0f8a94;
+        --hc-dark: #2e2e2e;
+        --hc-bg: #e7e9ea;
     }
-  });
-</script>
+
+    body {
+        font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        background-color: var(--hc-bg);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Container Utama Login */
+    .login-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Kartu Login */
+    .login-card {
+        background: white;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Hiasan Atas (Opsional) */
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 6px;
+        background: linear-gradient(to right, var(--hc-blue), var(--hc-toska));
+    }
+
+    /* Logo Header */
+    .login-header-logo {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+    }
+    .login-header-logo img {
+        width: 50px;
+        height: auto;
+    }
+
+    .login-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--hc-dark);
+        margin-bottom: 8px;
+    }
+    .login-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 30px;
+    }
+
+    /* Form Group */
+    .form-group {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--hc-dark);
+        margin-bottom: 8px;
+    }
+    .input-wrapper {
+        position: relative;
+    }
+    .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 18px;
+    }
+    .form-input {
+        width: 100%;
+        padding: 12px 14px 12px 42px; /* Padding kiri untuk ikon */
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.2s;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+    .form-input:focus {
+        border-color: var(--hc-blue);
+        box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1);
+    }
+
+    /* Tombol Login */
+    .btn-login {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--hc-blue) 0%, var(--hc-toska) 100%);
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 10px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(15, 138, 148, 0.25);
+    }
+    .btn-login:active {
+        transform: scale(0.98);
+    }
+
+    /* Link Lupa Password (Opsional/Hiasan) */
+    .forgot-link {
+        display: block;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+        text-decoration: none;
+    }
+    .forgot-link:hover {
+        color: var(--hc-blue);
+        text-decoration: underline;
+    }
+
+    /* Info Tambahan */
+    .info-box {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
+        font-size: 12px;
+        color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+      <div class="login-card">
+          <div class="login-header-logo">
+              <img src="https://drive.google.com/thumbnail?id=1uBiuujXrUc6qEhKHnHjvveaAueQxR2IO&sz=w200" alt="Logo HC">
+          </div>
+          
+          <h2 class="login-title">Login Pengurus</h2>
+          <p class="login-subtitle">Masuk untuk mengakses Dashboard HC 32</p>
+
+          <form id="login-form" onsubmit="event.preventDefault();">
+              <div class="form-group">
+                  <label class="form-label">ID HC / Username</label>
+                  <div class="input-wrapper">
+                      <i class="ri-user-line input-icon"></i>
+                      <input id="login-username" type="text" class="form-input" placeholder="Masukkan ID Pengurus" required autocomplete="username">
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="form-label">Kata Sandi</label>
+                  <div class="input-wrapper">
+                      <i class="ri-lock-line input-icon"></i>
+                      <input id="login-password" type="password" class="form-input" placeholder="Masukkan Kata Sandi" required autocomplete="current-password">
+                  </div>
+              </div>
+
+              <button type="submit" id="login-btn" class="btn-login">Masuk Sekarang</button>
+          </form>
+
+          <div class="info-box">
+              Hanya untuk pengurus aktif History Club 32 Jakarta.<br>
+              Jika lupa password, hubungi Ketua.
+          </div>
+      </div>
+  </div>
+
+  <script>
+    // Inisialisasi Navigasi (Header, Footer, Sidebar)
+    document.addEventListener('DOMContentLoaded', () => initHC32Navigation('login'));
+
+    // Gunakan URL dari config.js jika ada
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+    const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
+
+    document.getElementById("login-form").addEventListener("submit", async () => {
+        const u = document.getElementById("login-username").value.trim();
+        const p = document.getElementById("login-password").value.trim();
+
+        if (!u || !p) {
+            window.showHC32Status('error', 'Data Belum Lengkap', 'Mohon isi ID dan Password.');
+            return;
+        }
+
+        // Tampilkan Loading Spinner Global
+        window.showHC32Status('loading', 'Memeriksa Akun...', 'Mohon tunggu sebentar.');
+
+        try {
+            const res = await fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "loginAdmin",
+                    username: u,
+                    password: p
+                })
+            });
+            
+            const out = await res.json();
+
+            if (out.status === "ok") {
+                // Login Berhasil
+                window.showHC32Status('success', 'Login Berhasil!', 'Mengarahkan ke Dashboard...');
+                
+                // Siapkan URL Dashboard
+                const url = new URL(DASHBOARD_BASE);
+                url.searchParams.set("token", out.token);
+                url.searchParams.set("u", out.username);
+                url.searchParams.set("n", out.nama);
+                url.searchParams.set("r", out.role);
+                url.searchParams.set("t", out.tipe || "");
+                url.searchParams.set("j", out.jabatan || "Admin");
+                url.searchParams.set("f", out.foto || "");
+
+                // Redirect setelah jeda singkat agar animasi terlihat
+                setTimeout(() => {
+                    window.open(url.toString(), "_blank");
+                    window.location.reload(); // Opsional: refresh halaman login agar bersih
+                }, 1500);
+
+            } else {
+                // Login Gagal (Password Salah / User Tidak Ditemukan)
+                window.showHC32Status('error', 'Login Gagal', out.message || 'ID atau Password salah.');
+            }
+
+        } catch (err) {
+            console.error(err);
+            window.showHC32Status('error', 'Kesalahan Koneksi', 'Gagal menghubungi server. Periksa internet Anda.');
+        }
+    });
+  </script>
+</body>
+</html>
