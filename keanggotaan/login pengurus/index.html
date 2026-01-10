@@ -20,7 +20,7 @@
         --hc-toska: #0f8a94;
         --hc-dark: #2e2e2e;
         --hc-bg: #e7e9ea;
-        --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08); /* Shadow konsisten dengan pendaftaran */
+        --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08);
     }
 
     body {
@@ -40,24 +40,23 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 40px 20px; /* Padding disamakan dengan pendaftaran */
+        padding: 40px 20px;
         gap: 20px;
     }
 
-    /* KONSISTENSI UKURAN CARD (Sesuai Pendaftaran: max-width 600px) */
     .login-card, .help-card {
         width: 100%;
-        max-width: 600px; /* Disamakan dengan form pendaftaran */
+        max-width: 600px;
         box-sizing: border-box;
     }
 
     /* Kartu Login */
     .login-card {
         background: white;
-        border-radius: 16px; /* Radius disamakan */
+        border-radius: 16px;
         box-shadow: var(--card-shadow);
-        border: 1px solid #cbd5e1; /* Border disamakan */
-        padding: 30px; /* Padding disamakan */
+        border: 1px solid #cbd5e1;
+        padding: 30px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -72,16 +71,15 @@
         background: linear-gradient(to right, var(--hc-blue), var(--hc-toska));
     }
 
-    /* Logo Header (UPDATED) */
+    /* Logo Header */
     .login-header-logo {
-        width: 100%; /* Full width container */
-        max-width: 250px; /* Batas lebar logo agar tidak terlalu besar */
+        width: 100%;
+        max-width: 250px;
         height: auto;
         margin: 0 auto 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        /* Hapus border bulat & background */
         background: transparent;
         box-shadow: none;
         border: none;
@@ -89,11 +87,11 @@
     .login-header-logo img {
         width: 100%;
         height: auto;
-        object-fit: contain; /* Pastikan logo utuh */
+        object-fit: contain;
     }
 
     .login-title {
-        font-size: 24px; /* Disamakan dengan h2 pendaftaran */
+        font-size: 24px;
         font-weight: 700;
         color: var(--hc-dark);
         margin-bottom: 8px;
@@ -122,14 +120,13 @@
     }
     .input-icon {
         position: absolute;
-        left: 16px; /* Sesuaikan padding */
+        left: 16px;
         top: 50%;
         transform: translateY(-50%);
         color: #94a3b8;
         font-size: 18px;
     }
     
-    /* Tombol Lihat Password */
     .toggle-password {
         position: absolute;
         right: 16px;
@@ -146,9 +143,9 @@
 
     .form-input {
         width: 100%;
-        padding: 12px 40px 12px 44px; /* Padding kiri/kanan disesuaikan icon */
+        padding: 12px 40px 12px 44px;
         border: 1px solid #cbd5e1;
-        border-radius: 10px; /* Radius input disamakan */
+        border-radius: 10px;
         font-size: 15px;
         outline: none;
         transition: all 0.2s;
@@ -163,7 +160,7 @@
     /* Tombol Login */
     .btn-login {
         width: 100%;
-        padding: 16px; /* Padding tombol disamakan */
+        padding: 16px;
         border: none;
         border-radius: 10px;
         background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
@@ -194,7 +191,7 @@
         font-style: italic;
     }
 
-    /* HELP CARD (Persis Pendaftaran) */
+    /* HELP CARD */
     .help-card {
         background: #fff; 
         border-radius: 16px;
@@ -290,10 +287,7 @@
               <button type="submit" id="login-btn" class="btn-login">Masuk Sekarang</button>
           </form>
 
-          <div class="form-group">
-              <i class="ri-eye-off-line toggle-password" id="toggle-password" title="Lihat Password"></i>
-          </div>
-          <div style="margin-top: -15px; margin-bottom: 20px; text-align: right;">
+          <div style="margin-top: 15px; text-align: right;">
               <a href="#" class="link-lupa" onclick="openOtpModal()">Lupa Kata Sandi? / Login OTP</a>
           </div>
       </div>
@@ -310,6 +304,37 @@
       </div>
 
   </div>
+
+  <div class="modal-overlay" id="modal-otp-request">
+      <div class="modal-card">
+          <button onclick="closeOtpModal()" style="position:absolute; top:15px; right:15px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
+          <h3 style="margin-top:0; color:var(--hc-blue);">Login dengan OTP</h3>
+          <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Masukkan ID Pengurus Anda. Kami akan mengirimkan kode akses ke email yang terdaftar di sistem.</p>
+        
+          <input type="text" id="otp-username-req" class="form-input" placeholder="Masukkan ID Pengurus (NIS/Username)" style="text-align:center; margin-bottom:15px;">
+        
+          <button onclick="requestOtp()" class="btn-login" id="btn-req-otp">Kirim Kode OTP</button>
+      </div>
+   </div>
+
+   <div class="modal-overlay" id="modal-otp-verify">
+       <div class="modal-card">
+           <h3 style="margin-top:0; color:var(--hc-blue);">Verifikasi Kode</h3>
+           <p style="font-size:13px; color:#64748b;">Masukkan 6 digit kode yang dikirim ke <br><strong id="otp-email-display">email</strong></p>
+        
+           <div class="otp-inputs" id="otp-container">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,1)">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,2)">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,3)">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,4)">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,5)">
+               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,6)">
+           </div>
+        
+           <button onclick="verifyOtp()" class="btn-login">Verifikasi & Masuk</button>
+           <p style="font-size:12px; margin-top:15px; cursor:pointer; color:#64748b;" onclick="openOtpModal()">Kirim Ulang Kode?</p>
+       </div>
+   </div>
 
   <script>
     // Inisialisasi Navigasi
@@ -330,7 +355,7 @@
         this.classList.toggle('ri-eye-off-line');
     });
 
-    // --- LOGIKA LOGIN UPDATE (Support 2FA) ---
+    // --- ALUR LOGIN UTAMA (PASSWORD -> 2FA) ---
     document.getElementById("login-form").addEventListener("submit", async () => {
         const u = document.getElementById("login-username").value.trim();
         const p = document.getElementById("login-password").value.trim();
@@ -355,22 +380,23 @@
             
             const out = await res.json();
 
-            // Skenario 1: Login Langsung (Status OK) - Jarang terjadi jika email ada
+            // Skenario 1: Login Langsung (Status OK) - Jarang terjadi jika email ada, tapi kita handle
             if (out.status === "ok") {
                 handleLoginSuccess(out);
             
-            // Skenario 2: Butuh OTP (Status otp_required) - INI YANG BARU
+            // Skenario 2: Butuh OTP (Status otp_required) - INI YANG ANDA INGINKAN
+            // Password benar -> Backend kirim OTP -> Frontend minta input OTP
             } else if (out.status === "otp_required") {
                 
                 // 1. Sembunyikan Loader
                 window.hideHC32Status();
                 
                 // 2. Set Data OTP
-                currentOtpUser = out.username; // Simpan username untuk verifikasi nanti
+                currentOtpUser = out.username; 
                 document.getElementById('otp-email-display').innerText = out.email;
                 
-                // 3. Buka Modal Verifikasi OTP (Langsung)
-                document.getElementById('modal-otp-request').classList.remove('active'); // Pastikan request tutup
+                // 3. Buka Modal Verifikasi OTP (LANGSUNG)
+                document.getElementById('modal-otp-request').classList.remove('active'); 
                 document.getElementById('modal-otp-verify').classList.add('active');
                 
                 // 4. Fokus ke input pertama
@@ -409,9 +435,10 @@
         }, 1500);
     }
 
-    // --- OTP SYSTEM ---
+    // --- SISTEM OTP & VERIFIKASI ---
     let currentOtpUser = '';
 
+    // Fungsi untuk Modal Manual (Tombol Lupa Password)
     function openOtpModal() {
         document.getElementById('modal-otp-request').classList.add('active');
         document.getElementById('modal-otp-verify').classList.remove('active');
@@ -434,6 +461,7 @@
         }
     }
 
+    // Request OTP Manual (Tombol di Modal Request)
     async function requestOtp() {
         const user = document.getElementById('otp-username-req').value.trim();
         if(!user) return alert("Masukkan ID Pengurus");
@@ -467,6 +495,7 @@
         btn.disabled = false;
     }
 
+    // Verifikasi OTP (Tombol di Modal Verify)
     async function verifyOtp() {
         // Gabungkan 6 digit
         let code = '';
@@ -488,22 +517,7 @@
             const out = await res.json();
 
             if (out.status === "ok") {
-                window.showHC32Status('success', 'Verifikasi Berhasil!', 'Mengarahkan ke Dashboard...');
-                
-                // Gunakan DASHBOARD_BASE yang sudah ada
-                const url = new URL(DASHBOARD_BASE);
-                url.searchParams.set("token", out.token);
-                url.searchParams.set("u", out.username);
-                url.searchParams.set("n", out.nama);
-                url.searchParams.set("r", out.role);
-                url.searchParams.set("t", out.tipe || "");
-                url.searchParams.set("j", out.jabatan || "Admin");
-                url.searchParams.set("f", out.foto || "");
-
-                setTimeout(() => {
-                    window.open(url.toString(), "_blank");
-                    window.location.reload(); 
-                }, 1500);
+                handleLoginSuccess(out);
             } else {
                 window.showHC32Status('error', 'Gagal', out.message);
             }
@@ -511,37 +525,6 @@
              window.showHC32Status('error', 'Error', e.message);
         }
     }
-  </script
-
-  <div class="modal-overlay" id="modal-otp-request">
-      <div class="modal-card">
-          <button onclick="closeOtpModal()" style="position:absolute; top:15px; right:15px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
-          <h3 style="margin-top:0; color:var(--hc-blue);">Login dengan OTP</h3>
-          <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Masukkan ID Pengurus Anda. Kami akan mengirimkan kode akses ke email yang terdaftar di sistem.</p>
-        
-          <input type="text" id="otp-username-req" class="form-input" placeholder="Masukkan ID Pengurus (NIS/Username)" style="text-align:center; margin-bottom:15px;">
-        
-          <button onclick="requestOtp()" class="btn-login" id="btn-req-otp">Kirim Kode OTP</button>
-      </div>
-   </div>
-
-   <div class="modal-overlay" id="modal-otp-verify">
-       <div class="modal-card">
-           <h3 style="margin-top:0; color:var(--hc-blue);">Verifikasi Kode</h3>
-           <p style="font-size:13px; color:#64748b;">Masukkan 6 digit kode yang dikirim ke <br><strong id="otp-email-display">email</strong></p>
-        
-           <div class="otp-inputs" id="otp-container">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,1)">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,2)">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,3)">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,4)">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,5)">
-               <input type="text" class="otp-input" maxlength="1" oninput="digitInput(this,6)">
-           </div>
-        
-           <button onclick="verifyOtp()" class="btn-login">Verifikasi & Masuk</button>
-           <p style="font-size:12px; margin-top:15px; cursor:pointer; color:#64748b;" onclick="openOtpModal()">Kirim Ulang Kode?</p>
-       </div>
-   </div> 
+  </script>
 </body>
 </html>
