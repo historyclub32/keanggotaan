@@ -36,9 +36,11 @@
     .login-wrapper {
         flex: 1;
         display: flex;
+        flex-direction: column; /* Stack vertikal untuk card bantuan */
         align-items: center;
         justify-content: center;
         padding: 20px;
+        gap: 20px; /* Jarak antar card */
     }
 
     /* Kartu Login */
@@ -54,7 +56,7 @@
         overflow: hidden;
     }
 
-    /* Hiasan Atas (Opsional) */
+    /* Hiasan Atas */
     .login-card::before {
         content: '';
         position: absolute;
@@ -75,10 +77,12 @@
         border-radius: 50%;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: 1px solid #f1f5f9;
+        overflow: hidden; /* Agar gambar bulat rapi */
     }
     .login-header-logo img {
-        width: 50px;
-        height: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Cover agar penuh */
     }
 
     .login-title {
@@ -116,9 +120,25 @@
         color: #94a3b8;
         font-size: 18px;
     }
+    
+    /* Tombol Lihat Password */
+    .toggle-password {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px; /* Area klik lebih luas */
+    }
+    .toggle-password:hover {
+        color: var(--hc-blue);
+    }
+
     .form-input {
         width: 100%;
-        padding: 12px 14px 12px 42px; /* Padding kiri untuk ikon */
+        padding: 12px 40px 12px 42px; /* Padding kanan ditambah untuk ikon mata */
         border: 1px solid #cbd5e1;
         border-radius: 12px;
         font-size: 14px;
@@ -155,19 +175,6 @@
         transform: scale(0.98);
     }
 
-    /* Link Lupa Password (Opsional/Hiasan) */
-    .forgot-link {
-        display: block;
-        margin-top: 20px;
-        font-size: 12px;
-        color: #64748b;
-        text-decoration: none;
-    }
-    .forgot-link:hover {
-        color: var(--hc-blue);
-        text-decoration: underline;
-    }
-
     /* Info Tambahan */
     .info-box {
         margin-top: 30px;
@@ -176,18 +183,55 @@
         font-size: 12px;
         color: #94a3b8;
     }
+
+    /* HELP CARD (Mirip Pendaftaran) */
+    .help-card {
+        width: 100%;
+        max-width: 400px;
+        background: #fff; 
+        border-radius: 16px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        padding: 16px 20px;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: space-between; 
+        gap: 12px;
+        border-left: 4px solid var(--hc-blue);
+        box-sizing: border-box;
+    }
+    @media (min-width: 600px) { .help-card { flex-direction: row; } }
+    .help-title { font-weight: 600; font-size: 14px; color: var(--hc-dark); margin: 0; }
+    .help-desc { font-size: 12px; color: #64748b; margin: 2px 0 0; }
+    .help-link { color: var(--hc-blue); font-weight: 600; text-decoration: none; }
+    .help-btn { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 8px; 
+        background: var(--hc-blue); 
+        color: white; 
+        padding: 8px 16px; 
+        border-radius: 8px; 
+        font-size: 13px; 
+        font-weight: 500; 
+        text-decoration: none; 
+        transition: 0.2s; 
+    }
+    .help-btn:hover { opacity: 0.9; }
+
   </style>
 </head>
 <body>
 
   <div class="login-wrapper">
+      
       <div class="login-card">
           <div class="login-header-logo">
-              <img src="https://drive.google.com/thumbnail?id=1uBiuujXrUc6qEhKHnHjvveaAueQxR2IO&sz=w200" alt="Logo HC">
+              <img src="https://drive.google.com/thumbnail?id=1rIKjfE_2G_o1yMNYUk6-hGKzR0hfqwhB&sz=w400" alt="Logo HC">
           </div>
           
           <h2 class="login-title">Login Pengurus</h2>
-          <p class="login-subtitle">Masuk untuk mengakses Dashboard HC 32</p>
+          <p class="login-subtitle">Login untuk mengakses Situs Web Pengurus HC 32</p>
 
           <form id="login-form" onsubmit="event.preventDefault();">
               <div class="form-group">
@@ -203,6 +247,7 @@
                   <div class="input-wrapper">
                       <i class="ri-lock-line input-icon"></i>
                       <input id="login-password" type="password" class="form-input" placeholder="Masukkan Kata Sandi" required autocomplete="current-password">
+                      <i class="ri-eye-off-line toggle-password" id="toggle-password" title="Lihat Password"></i>
                   </div>
               </div>
 
@@ -214,6 +259,18 @@
               Jika lupa password, hubungi Ketua.
           </div>
       </div>
+
+      <div class="help-card">
+          <div style="flex:1;">
+              <p class="help-title">Butuh Bantuan?</p>
+              <p class="help-desc">Hubungi Ketua HC <a href="https://instagram.com/mickovoitto" target="_blank" class="help-link">@mickovoitto</a> jika mengalami kendala sistem.</p>
+          </div>
+          <a href="https://www.instagram.com/historyclub32jkt/" target="_blank" class="help-btn">
+              Instagram HC 32
+              <i class="ri-instagram-line"></i>
+          </a>
+      </div>
+
   </div>
 
   <script>
@@ -224,6 +281,21 @@
     const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
     const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
 
+    // --- FITUR LIHAT PASSWORD ---
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('login-password');
+
+    togglePassword.addEventListener('click', function () {
+        // Toggle tipe input
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle icon mata
+        this.classList.toggle('ri-eye-line');
+        this.classList.toggle('ri-eye-off-line');
+    });
+
+    // --- LOGIKA LOGIN ---
     document.getElementById("login-form").addEventListener("submit", async () => {
         const u = document.getElementById("login-username").value.trim();
         const p = document.getElementById("login-password").value.trim();
