@@ -330,7 +330,7 @@
         this.classList.toggle('ri-eye-off-line');
     });
 
-    // --- LOGIKA LOGIN ---
+    // --- LOGIKA LOGIN UPDATE (Support 2FA) ---
     document.getElementById("login-form").addEventListener("submit", async () => {
         const u = document.getElementById("login-username").value.trim();
         const p = document.getElementById("login-password").value.trim();
@@ -355,24 +355,32 @@
             
             const out = await res.json();
 
+            // Skenario 1: Login Langsung (Status OK) - Jarang terjadi jika email ada
             if (out.status === "ok") {
-                window.showHC32Status('success', 'Login Berhasil!', 'Mengarahkan ke Dashboard...');
+                handleLoginSuccess(out);
+            
+            // Skenario 2: Butuh OTP (Status otp_required) - INI YANG BARU
+            } else if (out.status === "otp_required") {
                 
-                const url = new URL(DASHBOARD_BASE);
-                url.searchParams.set("token", out.token);
-                url.searchParams.set("u", out.username);
-                url.searchParams.set("n", out.nama);
-                url.searchParams.set("r", out.role);
-                url.searchParams.set("t", out.tipe || "");
-                url.searchParams.set("j", out.jabatan || "Admin");
-                url.searchParams.set("f", out.foto || "");
-
+                // 1. Sembunyikan Loader
+                window.hideHC32Status();
+                
+                // 2. Set Data OTP
+                currentOtpUser = out.username; // Simpan username untuk verifikasi nanti
+                document.getElementById('otp-email-display').innerText = out.email;
+                
+                // 3. Buka Modal Verifikasi OTP (Langsung)
+                document.getElementById('modal-otp-request').classList.remove('active'); // Pastikan request tutup
+                document.getElementById('modal-otp-verify').classList.add('active');
+                
+                // 4. Fokus ke input pertama
                 setTimeout(() => {
-                    window.open(url.toString(), "_blank");
-                    window.location.reload(); 
-                }, 1500);
+                    const firstInput = document.querySelector('.otp-input');
+                    if(firstInput) firstInput.focus();
+                }, 300);
 
             } else {
+                // Skenario 3: Gagal (Password salah / User tidak ada)
                 window.showHC32Status('error', 'Login Gagal', out.message || 'ID atau Password salah.');
             }
 
@@ -381,6 +389,25 @@
             window.showHC32Status('error', 'Kesalahan Koneksi', 'Gagal menghubungi server. Periksa internet Anda.');
         }
     });
+
+    // Helper: Redirect ke Dashboard
+    function handleLoginSuccess(out) {
+        window.showHC32Status('success', 'Login Berhasil!', 'Mengarahkan ke Dashboard...');
+        
+        const url = new URL(DASHBOARD_BASE);
+        url.searchParams.set("token", out.token);
+        url.searchParams.set("u", out.username);
+        url.searchParams.set("n", out.nama);
+        url.searchParams.set("r", out.role);
+        url.searchParams.set("t", out.tipe || "");
+        url.searchParams.set("j", out.jabatan || "Admin");
+        url.searchParams.set("f", out.foto || "");
+
+        setTimeout(() => {
+            window.open(url.toString(), "_blank");
+            window.location.reload(); 
+        }, 1500);
+    }
 
     // --- OTP SYSTEM ---
     let currentOtpUser = '';
