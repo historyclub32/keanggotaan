@@ -340,81 +340,90 @@
     // Inisialisasi Navigasi
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('login'));
 
-    // Gunakan URL dari config.js
-    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "https://script.google.com/macros/s/AKfycbz22NwYQ-WJwmdieMgzQxw1I2lXKTghebFO-oSY-wE_av-3oEYIi9TfSCqJCpy3iZKt/exec";
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_APPS_SCRIPT_ANDA";
     const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
 
     // --- FITUR LIHAT PASSWORD ---
     const togglePassword = document.getElementById('toggle-password');
     const passwordInput = document.getElementById('login-password');
 
-    togglePassword.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.classList.toggle('ri-eye-line');
-        this.classList.toggle('ri-eye-off-line');
-    });
+    if(togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('ri-eye-line');
+            this.classList.toggle('ri-eye-off-line');
+        });
+    }
+
+    // Variable global untuk menyimpan username asli dari backend
+    let currentOtpUser = '';
 
     // --- ALUR LOGIN UTAMA (PASSWORD -> 2FA) ---
-    document.getElementById("login-form").addEventListener("submit", async () => {
-        const u = document.getElementById("login-username").value.trim();
-        const p = document.getElementById("login-password").value.trim();
-
-        if (!u || !p) {
-            window.showHC32Status('error', 'Data Belum Lengkap', 'Mohon isi ID dan Password.');
-            return;
-        }
-
-        // Loader Global
-        window.showHC32Status('loading', 'Memeriksa Akun...', 'Mohon tunggu sebentar.');
-
-        try {
-            const res = await fetch(API_URL, {
-                method: "POST",
-                body: JSON.stringify({
-                    action: "loginAdmin",
-                    username: u,
-                    password: p
-                })
-            });
+    const loginForm = document.getElementById("login-form");
+    if(loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault(); // Mencegah reload
             
-            const out = await res.json();
+            const u = document.getElementById("login-username").value.trim();
+            const p = document.getElementById("login-password").value.trim();
 
-            // Skenario 1: Login Langsung (Status OK) - Jarang terjadi jika email ada, tapi kita handle
-            if (out.status === "ok") {
-                handleLoginSuccess(out);
-            
-            // Skenario 2: Butuh OTP (Status otp_required) - INI YANG ANDA INGINKAN
-            // Password benar -> Backend kirim OTP -> Frontend minta input OTP
-            } else if (out.status === "otp_required") {
-                
-                // 1. Sembunyikan Loader
-                window.hideHC32Status();
-                
-                // 2. Set Data OTP
-                currentOtpUser = out.username; 
-                document.getElementById('otp-email-display').innerText = out.email;
-                
-                // 3. Buka Modal Verifikasi OTP (LANGSUNG)
-                document.getElementById('modal-otp-request').classList.remove('active'); 
-                document.getElementById('modal-otp-verify').classList.add('active');
-                
-                // 4. Fokus ke input pertama
-                setTimeout(() => {
-                    const firstInput = document.querySelector('.otp-input');
-                    if(firstInput) firstInput.focus();
-                }, 300);
-
-            } else {
-                // Skenario 3: Gagal (Password salah / User tidak ada)
-                window.showHC32Status('error', 'Login Gagal', out.message || 'ID atau Password salah.');
+            if (!u || !p) {
+                window.showHC32Status('error', 'Data Belum Lengkap', 'Mohon isi ID dan Kata Sandi.');
+                return;
             }
 
-        } catch (err) {
-            console.error(err);
-            window.showHC32Status('error', 'Kesalahan Koneksi', 'Gagal menghubungi server. Periksa internet Anda.');
-        }
-    });
+            // Loader Global
+            window.showHC32Status('loading', 'Memeriksa Akun...', 'Mohon tunggu sebentar.');
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        action: "loginAdmin",
+                        username: u,
+                        password: p
+                    })
+                });
+                
+                const out = await res.json();
+
+                // 1. Password Benar, Perlu OTP (Skenario Utama)
+                if (out.status === "otp_required") {
+                    window.hideHC32Status();
+                    
+                    // PENTING: Gunakan 'real_username' dari backend, BUKAN input user (u)
+                    // Ini memperbaiki bug "OTP Salah" jika login pakai Email/NIS
+                    currentOtpUser = out.real_username; 
+                    
+                    document.getElementById('otp-email-display').innerText = out.email;
+                    
+                    // Buka Modal
+                    document.getElementById('modal-otp-request').classList.remove('active'); 
+                    document.getElementById('modal-otp-verify').classList.add('active');
+                    
+                    // Fokus input pertama
+                    setTimeout(() => {
+                        const firstInput = document.querySelector('.otp-input');
+                        if(firstInput) firstInput.focus();
+                    }, 300);
+
+                } else if (out.status === "ok") {
+                    // Skenario Login Langsung (Jika OTP didisable/error logic)
+                    handleLoginSuccess(out);
+                
+                } else {
+                    // Skenario Gagal (Password salah / User tidak ada)
+                    // Menggunakan Modal Popup component.js sesuai permintaan
+                    window.showHC32Status('error', 'Login Gagal', out.message);
+                }
+
+            } catch (err) {
+                console.error(err);
+                window.showHC32Status('error', 'Kesalahan Koneksi', 'Gagal menghubungi server.');
+            }
+        });
+    }
 
     // Helper: Redirect ke Dashboard
     function handleLoginSuccess(out) {
@@ -435,25 +444,24 @@
         }, 1500);
     }
 
-    // --- SISTEM OTP & VERIFIKASI ---
-    let currentOtpUser = '';
+    // --- FUNGSI MODAL & OTP ---
 
-    // Fungsi untuk Modal Manual (Tombol Lupa Password)
-    function openOtpModal() {
+    // Buka Modal Request Manual (Link Lupa Password)
+    window.openOtpModal = function() {
         document.getElementById('modal-otp-request').classList.add('active');
         document.getElementById('modal-otp-verify').classList.remove('active');
-        // Prefill jika user sudah mengetik di form login utama
+        
         const mainUser = document.getElementById('login-username').value;
         if(mainUser) document.getElementById('otp-username-req').value = mainUser;
     }
 
-    function closeOtpModal() {
+    window.closeOtpModal = function() {
         document.getElementById('modal-otp-request').classList.remove('active');
         document.getElementById('modal-otp-verify').classList.remove('active');
     }
 
     // Input digit otomatis pindah
-    function digitInput(el, idx) {
+    window.digitInput = function(el, idx) {
         el.value = el.value.replace(/[^0-9]/g, '');
         if(el.value.length >= 1) {
             const next = el.nextElementSibling;
@@ -461,47 +469,58 @@
         }
     }
 
-    // Request OTP Manual (Tombol di Modal Request)
-    async function requestOtp() {
+    // Request OTP Manual (Tombol Lupa Password)
+    window.requestOtp = async function() {
         const user = document.getElementById('otp-username-req').value.trim();
-        if(!user) return alert("Masukkan ID Pengurus");
+        if(!user) {
+            window.showHC32Status('error', 'Data Kosong', 'Masukkan ID Pengurus/Email/NIS.');
+            return;
+        }
 
         const btn = document.getElementById('btn-req-otp');
+        const originalText = btn.innerText;
         btn.innerText = "Mengirim...";
         btn.disabled = true;
 
         try {
             const res = await fetch(API_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "requestOtpAdmin", username: user })
+                body: JSON.stringify({ action: "requestOtpAdmin", username: user }) // Menggunakan endpoint lama utk request manual
+                // Catatan: Anda mungkin perlu menyesuaikan endpoint ini di backend jika ingin support multi-login juga untuk lupa password
             });
             const out = await res.json();
             
             if(out.status === 'ok') {
-                currentOtpUser = user;
+                // Disini backend requestOtpAdmin_ belum direvisi untuk return real_username (opsional)
+                // Sebaiknya requestOtpAdmin_ di backend juga disamakan logikanya.
+                // Untuk sekarang kita pakai user input dulu, tapi idealnya backend return real user.
+                currentOtpUser = user; 
+                
                 document.getElementById('otp-email-display').innerText = out.email;
                 document.getElementById('modal-otp-request').classList.remove('active');
                 document.getElementById('modal-otp-verify').classList.add('active');
-                // Clear inputs
+                
                 document.querySelectorAll('.otp-input').forEach(i => i.value = '');
                 document.querySelector('.otp-input').focus();
             } else {
-                alert(out.message);
+                window.showHC32Status('error', 'Gagal', out.message);
             }
         } catch(e) {
-            alert("Gagal koneksi: " + e.message);
+            window.showHC32Status('error', 'Error', e.message);
         }
-        btn.innerText = "Kirim Kode OTP";
+        btn.innerText = originalText;
         btn.disabled = false;
     }
 
     // Verifikasi OTP (Tombol di Modal Verify)
-    async function verifyOtp() {
-        // Gabungkan 6 digit
+    window.verifyOtp = async function() {
         let code = '';
         document.querySelectorAll('.otp-input').forEach(i => code += i.value);
         
-        if(code.length < 6) return alert("Masukkan 6 digit kode");
+        if(code.length < 6) {
+            window.showHC32Status('error', 'Kode Tidak Lengkap', 'Masukkan 6 digit kode OTP.');
+            return;
+        }
 
         window.showHC32Status('loading', 'Verifikasi...', 'Memeriksa kode OTP.');
 
@@ -510,7 +529,7 @@
                 method: "POST",
                 body: JSON.stringify({ 
                     action: "verifyOtpAdmin", 
-                    username: currentOtpUser,
+                    username: currentOtpUser, // Mengirim USERNAME ASLI dari hasil login awal
                     otp: code
                 })
             });
@@ -519,7 +538,10 @@
             if (out.status === "ok") {
                 handleLoginSuccess(out);
             } else {
-                window.showHC32Status('error', 'Gagal', out.message);
+                window.showHC32Status('error', 'Verifikasi Gagal', out.message);
+                // Clear input jika salah
+                document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+                document.querySelector('.otp-input').focus();
             }
         } catch(e) {
              window.showHC32Status('error', 'Error', e.message);
