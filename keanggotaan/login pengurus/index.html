@@ -340,7 +340,7 @@
                   <div class="input-wrapper">
                       <i class="ri-lock-password-line input-icon"></i>
                       <input id="reset-pass-1" type="password" class="form-input" placeholder="Minimal 8 karakter" autocomplete="new-password">
-                      <i class="ri-eye-off-line toggle-password" id="toggle-reset-1" title="Lihat Password"></i>
+                      <i class="ri-eye-off-line toggle-reset" data-target="reset-pass-1" title="Lihat Password"></i>
                   </div>
               </div>
 
@@ -349,7 +349,7 @@
                   <div class="input-wrapper">
                       <i class="ri-lock-password-line input-icon"></i>
                       <input id="reset-pass-2" type="password" class="form-input" placeholder="Harus sama persis" autocomplete="new-password">
-                      <i class="ri-eye-off-line toggle-password" id="toggle-reset-2" title="Lihat Password"></i>
+                      <i class="ri-eye-off-line toggle-reset" data-target="reset-pass-2" title="Lihat Password"></i>
                   </div>
               </div>
 
@@ -403,15 +403,29 @@
            </div>
         
            <button onclick="verifyOtp()" class="btn-login">Verifikasi & Masuk</button>
-           </div>
+       </div>
    </div>
 
   <script>
     // Inisialisasi Navigasi
     document.addEventListener('DOMContentLoaded', () => initHC32Navigation('login'));
 
+    // AMBIL API URL dari Config.js, Jika tidak ada pakai placeholder
     const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_APPS_SCRIPT_ANDA";
     const DASHBOARD_BASE = "https://historyclub32.github.io/pengurus/dashboard.html";
+
+    // ===============
+    // HELPER: POST JSON with TEXT/PLAIN Header (FIX CORS)
+    // ===============
+    async function postJson(payload) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        // PENTING: Gunakan text/plain agar tidak terkena Preflight CORS (OPTIONS)
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      });
+      return res.json();
+    }
 
     // ===============
     // MODE DETECTOR (Untuk Halaman Reset Password via Email)
@@ -445,32 +459,22 @@
     }
 
     // --- FITUR LIHAT PASSWORD (Reset) ---
-    function bindToggle(togglerId, inputId) {
-      const t = document.getElementById(togglerId);
-      const inp = document.getElementById(inputId);
-      if (!t || !inp) return;
-      t.addEventListener('click', function () {
-        const type = inp.getAttribute('type') === 'password' ? 'text' : 'password';
-        inp.setAttribute('type', type);
-        this.classList.toggle('ri-eye-line');
-        this.classList.toggle('ri-eye-off-line');
+    // Menggunakan class toggle-reset dan data-target
+    document.querySelectorAll('.toggle-reset').forEach(t => {
+      t.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const inp = document.getElementById(targetId);
+        if(inp) {
+            const type = inp.getAttribute('type') === 'password' ? 'text' : 'password';
+            inp.setAttribute('type', type);
+            this.classList.toggle('ri-eye-line');
+            this.classList.toggle('ri-eye-off-line');
+        }
       });
-    }
-    bindToggle('toggle-reset-1', 'reset-pass-1');
-    bindToggle('toggle-reset-2', 'reset-pass-2');
+    });
 
     // Variable global untuk menyimpan username asli dari backend (OTP flow)
     let currentOtpUser = '';
-
-    // Helper fetch JSON
-    async function postJson(payload) {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      return res.json();
-    }
 
     // =========================
     // RESET MODE FLOW (Saat user klik link dari email)
@@ -500,12 +504,11 @@
           token: resetToken
         });
 
-        if (out.status === 'ok') {
+        if (out.status === 'ok' && out.valid) {
           window.hideHC32Status();
           resetTokenValidated = true;
           if (resetSubtitle) resetSubtitle.innerText = 'Silakan buat kata sandi baru.';
           if (resetStatusText) resetStatusText.innerText = 'Token Valid';
-          // Backend verifyResetTokenAdmin belum tentu return email/user, tapi kalau ada bisa ditampilkan
           if (resetEmailText) resetEmailText.innerText = out.email || '(Terkonfirmasi)';
           if (resetUserText) resetUserText.innerText = out.username || '(Terkonfirmasi)';
           if (btnResetSubmit) btnResetSubmit.disabled = false;
@@ -606,6 +609,7 @@
             if (out.status === "otp_required") {
                 window.hideHC32Status();
                 
+                // Gunakan real_username dari backend untuk verifikasi
                 currentOtpUser = out.real_username || u;
                 document.getElementById('otp-email-display').innerText = out.email || 'email terdaftar';
                 
