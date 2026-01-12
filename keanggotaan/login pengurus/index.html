@@ -418,13 +418,17 @@
     // HELPER: POST JSON with TEXT/PLAIN Header (FIX CORS)
     // ===============
     async function postJson(payload) {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        // PENTING: Gunakan text/plain agar tidak terkena Preflight CORS (OPTIONS)
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-      });
-      return res.json();
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" }, // PENTING: text/plain
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return await res.json();
+      } catch (e) {
+        throw e; // Lempar error agar ditangkap catch block pemanggil
+      }
     }
 
     // ===============
@@ -445,33 +449,22 @@
       if (cardLogin) cardLogin.classList.remove('hidden');
     }
 
-    // --- FITUR LIHAT PASSWORD (Login) ---
-    const togglePassword = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('login-password');
-
-    if(togglePassword && passwordInput) {
-      togglePassword.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.classList.toggle('ri-eye-line');
-        this.classList.toggle('ri-eye-off-line');
-      });
-    }
-
-    // --- FITUR LIHAT PASSWORD (Reset) ---
-    // Menggunakan class toggle-reset dan data-target
-    document.querySelectorAll('.toggle-reset').forEach(t => {
-      t.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-target');
-        const inp = document.getElementById(targetId);
-        if(inp) {
-            const type = inp.getAttribute('type') === 'password' ? 'text' : 'password';
-            inp.setAttribute('type', type);
-            this.classList.toggle('ri-eye-line');
-            this.classList.toggle('ri-eye-off-line');
+    // --- FITUR LIHAT PASSWORD (Login & Reset) ---
+    function setupToggle(toggleId, inputId) {
+        const toggle = document.getElementById(toggleId);
+        const input = document.getElementById(inputId);
+        if (toggle && input) {
+            toggle.addEventListener('click', function() {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.classList.toggle('ri-eye-line');
+                this.classList.toggle('ri-eye-off-line');
+            });
         }
-      });
-    });
+    }
+    setupToggle('toggle-password', 'login-password');
+    setupToggle('toggle-reset-1', 'reset-pass-1');
+    setupToggle('toggle-reset-2', 'reset-pass-2');
 
     // Variable global untuk menyimpan username asli dari backend (OTP flow)
     let currentOtpUser = '';
@@ -504,8 +497,9 @@
           token: resetToken
         });
 
-        if (out.status === 'ok' && out.valid) {
-          window.hideHC32Status();
+        // Backend harus return { status:'ok', valid: true/false }
+        if (out && out.status === 'ok' && out.valid === true) {
+          window.hideHC32Status(); // Hilangkan loading
           resetTokenValidated = true;
           if (resetSubtitle) resetSubtitle.innerText = 'Silakan buat kata sandi baru.';
           if (resetStatusText) resetStatusText.innerText = 'Token Valid';
@@ -513,15 +507,16 @@
           if (resetUserText) resetUserText.innerText = out.username || '(Terkonfirmasi)';
           if (btnResetSubmit) btnResetSubmit.disabled = false;
         } else {
+          // Token Invalid / Expired
           resetTokenValidated = false;
           if (resetSubtitle) resetSubtitle.innerText = 'Tautan reset kedaluwarsa.';
           if (resetStatusText) resetStatusText.innerText = 'Tidak Valid';
           if (btnResetSubmit) btnResetSubmit.disabled = true;
-          window.showHC32Status('error', 'Gagal', out.message || 'Token tidak valid.');
+          window.showHC32Status('error', 'Gagal', (out && out.message) ? out.message : 'Token tidak valid.');
         }
       } catch (e) {
         resetTokenValidated = false;
-        window.showHC32Status('error', 'Koneksi Gagal', 'Tidak dapat menghubungi server.');
+        window.showHC32Status('error', 'Koneksi Gagal', 'Tidak dapat menghubungi server. Coba refresh.');
       }
     }
 
@@ -556,14 +551,16 @@
           newPassword: p1
         });
 
-        if (out.status === 'ok') {
+        if (out && out.status === 'ok') {
           window.showHC32Status('success', 'Berhasil!', 'Kata sandi diubah. Login ulang...');
           setTimeout(() => {
-            // Hapus query params agar kembali ke login screen
-            window.location.href = window.location.pathname; 
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete('reset');
+            cleanUrl.searchParams.delete('token');
+            window.location.href = cleanUrl.toString();
           }, 2000);
         } else {
-          window.showHC32Status('error', 'Gagal', out.message);
+          window.showHC32Status('error', 'Gagal', (out && out.message) ? out.message : 'Gagal reset password.');
         }
       } catch (e) {
         window.showHC32Status('error', 'Koneksi Gagal', e.message);
@@ -605,15 +602,11 @@
                 password: p
             });
             
-            // Skenario 1: Password Benar -> Butuh OTP (2FA)
             if (out.status === "otp_required") {
                 window.hideHC32Status();
-                
-                // Gunakan real_username dari backend untuk verifikasi
                 currentOtpUser = out.real_username || u;
                 document.getElementById('otp-email-display').innerText = out.email || 'email terdaftar';
                 
-                // Pastikan modal reset tertutup, buka modal OTP
                 document.getElementById('modal-otp-request').classList.remove('active'); 
                 document.getElementById('modal-otp-verify').classList.add('active');
                 
@@ -622,10 +615,8 @@
                     if(firstInput) firstInput.focus();
                 }, 300);
 
-            // Skenario 2: Login Langsung (Jarang, jika OTP off)
             } else if (out.status === "ok") {
                 handleLoginSuccess(out);
-            
             } else {
                 window.showHC32Status('error', 'Login Gagal', out.message);
             }
@@ -639,7 +630,6 @@
 
     function handleLoginSuccess(out) {
       window.showHC32Status('success', 'Login Berhasil!', 'Mengarahkan ke Dashboard...');
-      
       const url = new URL(DASHBOARD_BASE);
       url.searchParams.set("token", out.token);
       url.searchParams.set("u", out.username);
@@ -658,11 +648,8 @@
     // =========================
     // MODAL & FUNGSI (Reset & OTP)
     // =========================
-
-    // Fungsi membuka modal RESET PASSWORD (dari link "Lupa Kata Sandi?")
     window.openResetModal = function() {
         document.getElementById('modal-otp-request').classList.add('active');
-        // Prefill jika user sudah mengetik di form login utama
         const mainUser = document.getElementById('login-username').value;
         if(mainUser) document.getElementById('otp-username-req').value = mainUser;
     }
@@ -671,7 +658,6 @@
         document.getElementById('modal-otp-request').classList.remove('active');
     }
 
-    // Input digit otomatis pindah (untuk Modal Verify OTP)
     window.digitInput = function(el, idx) {
         el.value = el.value.replace(/[^0-9]/g, '');
         if(el.value.length >= 1) {
@@ -680,8 +666,6 @@
         }
     }
 
-    // FUNGSI REQUEST RESET (Mengirim Link ke Email)
-    // Backend: requestOtpAdmin_ (sekarang mengirim link reset, bukan kode login)
     window.requestReset = async function() {
         const user = document.getElementById('otp-username-req').value.trim();
         if(!user) {
@@ -697,11 +681,11 @@
         try {
             const out = await postJson({ action: "requestOtpAdmin", username: user });
             
-            if(out.status === 'ok') {
+            if(out && out.status === 'ok') {
                 window.closeOtpModal();
                 window.showHC32Status('success', 'Email Terkirim', 'Silakan cek email Anda untuk tautan reset kata sandi.');
             } else {
-                window.showHC32Status('error', 'Gagal', out.message);
+                window.showHC32Status('error', 'Gagal', (out && out.message) ? out.message : 'Terjadi kesalahan.');
             }
         } catch(e) {
             window.showHC32Status('error', 'Error', e.message);
@@ -710,7 +694,6 @@
         btn.disabled = false;
     }
 
-    // FUNGSI VERIFIKASI OTP (Untuk Login 2FA)
     window.verifyOtp = async function() {
         let code = '';
         document.querySelectorAll('.otp-input').forEach(i => code += i.value);
@@ -725,15 +708,14 @@
         try {
              const out = await postJson({
                 action: "verifyOtpAdmin",
-                username: currentOtpUser, // Menggunakan username asli dari step login sebelumnya
+                username: currentOtpUser,
                 otp: code
             });
 
-            if (out.status === "ok") {
+            if (out && out.status === "ok") {
                 handleLoginSuccess(out);
             } else {
-                window.showHC32Status('error', 'Verifikasi Gagal', out.message);
-                // Clear input
+                window.showHC32Status('error', 'Verifikasi Gagal', (out && out.message) ? out.message : 'Kode OTP Salah.');
                 document.querySelectorAll('.otp-input').forEach(i => i.value = '');
                 document.querySelector('.otp-input')?.focus();
             }
