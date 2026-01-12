@@ -100,7 +100,7 @@ const HC32_MENU = [
     { type: 'link', text: 'Daftar Anggota', href: BASE + 'keanggotaan/anggota/', id: 'anggota' },
     { type: 'link', text: 'Presensi', href: BASE + 'keanggotaan/presensi/', id: 'presensi' },
     { type: 'link', text: 'Pendaftaran', href: BASE + 'keanggotaan/pendaftaran/', id: 'pendaftaran' },
-    { type: 'link', text: 'Login Pengurus', href: BASE + 'keanggotaan/login pengurus/', id: 'login' },
+    { type: 'link', text: 'Login Pengurus', href: BASE + 'keanggotaan/login%20pengurus/', id: 'login' },
     
     { type: 'category', text: 'Bantuan/Layanan' },
     { type: 'link', text: 'Lacak Status', href: BASE + 'bantuan/track/', id: 'track' },
