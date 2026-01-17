@@ -929,6 +929,8 @@
 
     // =========================
     // COUNTDOWN 30 MENIT
+    // Catatan: paling akurat kalau backend mengirim expiresAt/remainingSec.
+    // Kalau tidak ada, countdown dihitung dari saat token dinyatakan valid di halaman ini.
     // =========================
     function formatMs_(ms){
       const totalSec = Math.max(0, Math.floor(ms / 1000));
@@ -959,7 +961,7 @@
           resetTokenValidated = false;
           updateSubmitState_();
 
-          resetSubtitle && (resetSubtitle.inner, resetSubtitle.innerText = 'Tautan atur ulang kedaluwarsa.');
+          resetSubtitle && (resetSubtitle.innerText = 'Tautan atur ulang kedaluwarsa.');
           if (resetStatusText) resetStatusText.innerText = 'Tidak Valid';
           if (resetStatusPill){
             resetStatusPill.classList.remove('pill-ok');
@@ -998,6 +1000,8 @@
 
           resetTokenValidated = true;
           resetUsernameConfirmed = out.username || '';
+          // saran backend: kembalikan out.expiresAt (ISO string) ATAU out.remainingSec.
+          // kalau tidak ada, fallback: 30 menit dari sekarang.
           if (out.expiresAt){
             resetExpiresAt = new Date(out.expiresAt);
           } else if (typeof out.remainingSec === 'number'){
@@ -1021,6 +1025,7 @@
           if (resetEmailText) resetEmailText.innerText = out.email || '(Terkonfirmasi)';
           if (resetUserText) resetUserText.innerText = out.username || '(Terkonfirmasi)';
 
+          // start countdown + enable submit state (tergantung validasi password)
           startCountdown_();
           renderPwErrors_();
 
@@ -1065,6 +1070,7 @@
     async function submitResetPasswordFront_(){
       if (!isResetMode) return;
 
+      // paksa tampil error style kalau submit
       pass1Touched = true;
       pass2Touched = true;
       renderPwErrors_();
@@ -1108,6 +1114,7 @@
           stopCountdown_();
 
           setTimeout(() => {
+            // balik ke folder (tanpa index.html)
             window.location.href = "./";
           }, 1600);
         } else {
@@ -1151,6 +1158,7 @@
             document.getElementById('modal-otp-request').classList.remove('active');
             document.getElementById('modal-otp-verify').classList.add('active');
 
+            // reset input + countdown akurat dari backend
             otpSubmitting = false;
             clearOtpInputs_();
             startOtpCountdown_(out.serverNowMs, out.expiresAtMs);
@@ -1197,7 +1205,6 @@
       document.getElementById('modal-otp-request').classList.add('active');
       const mainUser = document.getElementById('login-username')?.value;
       if (mainUser) document.getElementById('otp-username-req').value = mainUser;
-      setTimeout(() => document.getElementById('otp-username-req')?.focus(), 50);
     }
 
     window.closeOtpModal = function(){
@@ -1293,6 +1300,7 @@
           clearOtpInputs_();
           document.querySelector('.otp-input')?.focus();
 
+          // re-enable tombol (kalau belum kedaluwarsa)
           if (btn) btn.disabled = isOtpExpired_();
         }
       } catch (e){
@@ -1303,37 +1311,12 @@
     }
 
     // =========================
-    // ENTER KEY -> CLICK (tambahan revisi)
-    // =========================
-    function bindEnterToAction_(inputEl, action){
-      if (!inputEl) return;
-      inputEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter'){
-          e.preventDefault();
-          if (typeof action === 'function') action();
-          else if (action && typeof action.click === 'function') action.click();
-        }
-      });
-    }
-
-    // =========================
     // INIT
     // =========================
     document.addEventListener('DOMContentLoaded', () => {
       initHC32Navigation('login');
 
       initOtpEnhancements_();
-
-      // ENTER untuk: Masuk Sekarang
-      bindEnterToAction_(document.getElementById('login-username'), document.getElementById('login-btn'));
-      bindEnterToAction_(document.getElementById('login-password'), document.getElementById('login-btn'));
-
-      // ENTER untuk: Kirim Tautan (modal atur ulang)
-      bindEnterToAction_(document.getElementById('otp-username-req'), () => window.requestResetLink && window.requestResetLink());
-
-      // ENTER untuk: Simpan Kata Sandi (reset)
-      bindEnterToAction_(document.getElementById('reset-pass-1'), document.getElementById('btn-reset-submit'));
-      bindEnterToAction_(document.getElementById('reset-pass-2'), document.getElementById('btn-reset-submit'));
 
       if (isResetMode){
         verifyResetTokenFront_();
