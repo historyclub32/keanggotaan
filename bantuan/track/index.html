@@ -27,7 +27,6 @@
       --radius:18px;
       --accent: var(--hc-blue);
       --accent2: var(--hc-toska);
-      --accentSoft: rgba(26,71,135,.10);
       --ok: #0f766e;
       --warn: #b45309;
     }
@@ -35,7 +34,7 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:'Poppins',system-ui,-apple-system,sans-serif;
+      font-family:'Poppins',sans-serif;
       background: #eaf2ff;
       color:#0f172a;
     }
@@ -43,33 +42,23 @@
     .page{
       min-height:100vh;
       display:flex;
+      flex-direction: column;
       align-items:center;
-      justify-content:center;
-      padding:24px 14px;
+      justify-content: flex-start;
+      padding:40px 14px;
     }
     .shell{
       width:100%;
-      max-width:980px;
-      border-radius:24px;
-      background:rgba(255,255,255,.55);
-      backdrop-filter: blur(8px);
-      border:1px solid rgba(255,255,255,.7);
-      box-shadow: 0 20px 70px rgba(15,23,42,.12);
-      padding:18px;
+      max-width:900px;
     }
 
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      margin-bottom:14px;
+      margin-bottom:20px;
     }
-    .topbar-left{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
+    .topbar-left{ display:flex; align-items:center; gap:12px; }
     .icon-btn{
       width:42px;height:42px;
       border-radius:14px;
@@ -78,24 +67,45 @@
       display:flex;align-items:center;justify-content:center;
       cursor:pointer;
       transition:.15s;
-      color:#0f172a;
     }
-    .icon-btn:hover{ box-shadow: 0 10px 25px rgba(0,0,0,.08); }
-    .title{
-      font-size:24px;
-      font-weight:800;
-      margin:0;
-      letter-spacing:.2px;
+    .title{ font-size:24px; font-weight:800; margin:0; }
+
+    /* Search Panel - Always Visible */
+    .search-panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .search-row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .inp{
+      width:100%; height:48px; border-radius:12px;
+      border:1px solid #cbd5e1; padding:0 16px;
+      font-family: inherit; font-size: 14px; outline: none;
+    }
+    .inp:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,71,135,.1); }
+    .btn{
+      width: 100%; height:48px; border:none; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff; font-weight:800; cursor:pointer; margin-top: 15px;
+      display:flex; align-items:center; justify-content:center; gap:8px;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 380px 1fr;
-      gap:16px;
+    /* Result Grid - Hidden by default */
+    .result-grid {
+      display: none; /* Hidden until search is performed */
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+      animation: fadeIn 0.4s ease;
     }
-    @media (max-width: 880px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .panel{
       background: var(--card);
@@ -103,370 +113,47 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
+      height: fit-content;
     }
-    .panel-head{
-      padding:14px 14px 10px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .panel-head h3{
-      margin:0;
-      font-size:14px;
-      color:#0f172a;
-      font-weight:800;
-    }
+    .panel-head{ padding:16px; border-bottom:1px solid var(--line); font-weight:800; font-size:14px; }
 
-    .search{
-      padding:14px;
-      border-bottom:1px solid var(--line);
-      background: linear-gradient(180deg, rgba(26,71,135,.06), rgba(255,255,255,0));
-    }
-    .search-row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width: 520px){
-      .search-row{ grid-template-columns: 1fr; }
-    }
-    .inp{
-      width:100%;
-      height:44px;
-      border-radius:14px;
-      border:1px solid #cbd5e1;
-      padding:0 14px;
-      outline:none;
-      font-size:13px;
-      font-family:'Poppins',sans-serif;
-      background:#fff;
-    }
-    .inp:focus{
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(26,71,135,.14);
-    }
-    .btn{
-      height:44px;
-      border:none;
-      border-radius:14px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:#fff;
-      font-weight:800;
-      font-family:'Poppins',sans-serif;
-      cursor:pointer;
-      transition:.15s;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
-    .btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 30px rgba(15,138,148,.22); }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
-
-    .hint{
-      margin:10px 0 0;
-      font-size:11px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-
-    .section{ padding:12px 14px 0; }
-    .section-title{
-      margin:0 0 10px;
-      font-size:12px;
-      font-weight:800;
-      color: #1e293b;
-    }
-    .section-title .count{
-      color: var(--accent);
-      font-weight:900;
-    }
-
-    .list{ padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
-
+    /* List styling */
+    .list-container { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
     .ticket{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      cursor:pointer;
-      transition:.15s;
-      background:#fff;
+      border:1px solid var(--line); border-radius:14px; padding:12px;
+      cursor:pointer; transition:.15s; background:#fff;
     }
-    .ticket:hover{ box-shadow: 0 12px 28px rgba(0,0,0,.08); transform: translateY(-1px); }
-    .ticket.active{
-      border-color: rgba(26,71,135,.35);
-      box-shadow: 0 14px 34px rgba(26,71,135,.12);
-      background: linear-gradient(180deg, rgba(26,71,135,.06), #fff);
-    }
-
-    .ticket-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:8px;
-    }
-    .code{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:700;
-      letter-spacing:.3px;
-      text-transform:uppercase;
-    }
-    .subject{
-      margin:2px 0 0;
-      font-size:13px;
-      font-weight:900;
-      color:#0f172a;
-      line-height:1.25;
-    }
-    .meta{
-      font-size:11px;
-      color:var(--muted);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-top:6px;
-    }
+    .ticket.active{ border-color: var(--accent); background: rgba(26,71,135,.03); }
+    .code{ font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; }
+    .subject{ font-size:13px; font-weight:800; margin:2px 0; }
+    
+    /* Detail styling */
+    .detail{ padding:20px; }
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-size:11px;
-      font-weight:800;
-      color:#0f172a;
-      white-space:nowrap;
+      display:inline-flex; align-items:center; gap:5px;
+      padding:4px 10px; border-radius:99px; font-size:11px; font-weight:800;
+      background: #f1f5f9; margin-bottom: 10px;
     }
-    .badge.blue{ border-color: rgba(26,71,135,.25); background: rgba(26,71,135,.08); color:#0f3a74; }
-    .badge.toska{ border-color: rgba(15,138,148,.25); background: rgba(15,138,148,.08); color:#0f766e; }
-    .badge.warn{ border-color: rgba(180,83,9,.25); background: rgba(180,83,9,.08); color:#854d0e; }
-    .badge.red{ border-color: rgba(211,14,20,.25); background: rgba(211,14,20,.08); color:#b91c1c; }
+    .badge.blue { background: rgba(26,71,135,.1); color: var(--hc-blue); }
+    .badge.toska { background: rgba(15,138,148,.1); color: var(--hc-toska); }
 
-    .mini-track{
-      margin-top:10px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:#cbd5e1;
-      flex:0 0 auto;
-    }
-    .dot.on{ background: var(--accent2); }
-    .track-line{
-      height:3px;
-      background:#e2e8f0;
-      border-radius:999px;
-      flex:1;
-      position:relative;
-      overflow:hidden;
-    }
-    .track-fill{
-      position:absolute;left:0;top:0;bottom:0;
-      width:0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius:999px;
-    }
-    .mid-icon{
-      width:38px;height:38px;border-radius:999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:#fff;
-      display:flex;align-items:center;justify-content:center;
-      box-shadow: 0 14px 28px rgba(15,138,148,.22);
-      flex:0 0 auto;
+    .timeline { margin-top: 20px; position: relative; }
+    .t-row { display: grid; grid-template-columns: 80px 20px 1fr; gap: 10px; padding-bottom: 20px; }
+    .t-date { font-size: 10px; color: var(--muted); font-weight: 700; }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; position: relative; z-index: 2; margin-top: 4px;}
+    .t-dot.on { background: var(--hc-toska); box-shadow: 0 0 0 4px rgba(15,138,148,0.1); }
+    .t-main { font-size: 12px; }
+    .t-title { font-weight: 800; }
+    .t-sub { color: var(--muted); font-size: 11px; }
+
+    /* Mobile Responsive */
+    @media (max-width: 880px){
+      .result-grid { grid-template-columns: 1fr; }
+      .search-row { grid-template-columns: 1fr; }
+      .page { padding: 20px 10px; }
     }
 
-    .detail{ padding:14px; }
-    .detail-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .detail-left .detail-code{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:800;
-      letter-spacing:.3px;
-      text-transform:uppercase;
-      margin-bottom:6px;
-    }
-    .detail-left .detail-title{
-      margin:0;
-      font-size:18px;
-      font-weight:900;
-      color:#0f172a;
-      line-height:1.2;
-    }
-    .detail-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .mini-btn{
-      height:36px;
-      padding:0 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#fff;
-      cursor:pointer;
-      font-family:'Poppins',sans-serif;
-      font-weight:800;
-      font-size:12px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      transition:.15s;
-      color:#0f172a;
-    }
-    .mini-btn:hover{ box-shadow:0 10px 20px rgba(0,0,0,.08); }
-
-    .detail-summary{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background: linear-gradient(180deg, rgba(26,71,135,.04), #fff);
-      margin-bottom:12px;
-    }
-    .sum-grid{
-      display:grid;
-      grid-template-columns: 130px 1fr;
-      gap:8px 10px;
-      align-items:center;
-      font-size:12px;
-    }
-    @media (max-width: 520px){
-      .sum-grid{ grid-template-columns: 1fr; }
-      .sum-grid .k{ margin-top:6px; }
-    }
-    .k{ color:#334155; font-weight:900; }
-    .v{ color:#0f172a; font-weight:700; }
-
-    .big-track{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fff;
-      margin-bottom:12px;
-    }
-    .big-row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-end;
-      margin-bottom:10px;
-      font-size:12px;
-      font-weight:800;
-    }
-    .big-row .left{ color: var(--accent2); }
-    .big-row .right{ color: var(--accent); text-align:right; }
-
-    .big-line{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .big-node{
-      width:12px;height:12px;border-radius:999px;background:#cbd5e1;
-      flex:0 0 auto;
-      position:relative;
-    }
-    .big-node.on{ background: var(--accent2); }
-    .big-bar{
-      height:4px;background:#e2e8f0;border-radius:999px;flex:1;
-      position:relative; overflow:hidden;
-    }
-    .big-fill{
-      position:absolute;left:0;top:0;bottom:0;width:0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius:999px;
-    }
-    .big-mid{
-      width:44px;height:44px;border-radius:999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;
-      box-shadow: 0 16px 34px rgba(15,138,148,.22);
-      flex:0 0 auto;
-    }
-
-    .timeline{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fff;
-    }
-    .t-row{
-      display:grid;
-      grid-template-columns: 96px 18px 1fr;
-      gap:10px;
-      padding:10px 0;
-    }
-    .t-date{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:800;
-      line-height:1.1;
-    }
-    .t-dot{
-      display:flex;
-      justify-content:center;
-      position:relative;
-    }
-    .t-dot::before{
-      content:'';
-      width:10px;height:10px;border-radius:999px;
-      background:#cbd5e1;
-      margin-top:2px;
-      z-index:2;
-    }
-    .t-dot::after{
-      content:'';
-      position:absolute;
-      top:14px; bottom:-10px;
-      width:3px;
-      background:#e2e8f0;
-      border-radius:999px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:1;
-    }
-    .t-row:last-child .t-dot::after{ display:none; }
-    .t-dot.on::before{ background: var(--accent2); }
-    .t-dot.ok::before{ background: var(--ok); }
-    .t-dot.warn::before{ background: var(--warn); }
-    .t-dot.red::before{ background: var(--hc-red); }
-
-    .t-main{ display:flex; flex-direction:column; gap:2px; }
-    .t-title{
-      font-size:12px;
-      font-weight:900;
-      color:#0f172a;
-      line-height:1.2;
-    }
-    .t-sub{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:600;
-      line-height:1.2;
-    }
-
-    .empty{
-      padding:18px 14px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:700;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 
@@ -476,60 +163,33 @@
 
       <div class="topbar">
         <div class="topbar-left">
-          <button class="icon-btn" type="button" onclick="history.back()" title="Kembali" aria-label="Kembali">
-            <i class="ri-arrow-left-line"></i>
-          </button>
+          <button class="icon-btn" onclick="history.back()"><i class="ri-arrow-left-line"></i></button>
           <h1 class="title">Tracking</h1>
         </div>
+        <button class="icon-btn" onclick="openSettings()"><i class="ri-settings-3-line"></i></button>
+      </div>
 
-        <button class="icon-btn" type="button" onclick="openSettings()" title="Pengaturan" aria-label="Pengaturan">
-          <i class="ri-settings-3-line"></i>
+      <div class="search-panel">
+        <div class="search-row">
+          <input id="inp-code" class="inp" placeholder="Kode Tracking (contoh: PA000123)" />
+          <input id="inp-secret" class="inp" placeholder="4 Digit Terakhir No HP" />
+        </div>
+        <button id="btn-check" class="btn" onclick="lookup()">
+          <i class="ri-search-2-line"></i> Cek Status
         </button>
       </div>
 
-      <div class="grid">
+      <div class="result-grid" id="result-area">
         <div class="panel">
-          <div class="search">
-            <div class="search-row">
-              <input id="inp-code" class="inp" placeholder="Kode Tracking (contoh: PA000123)" autocomplete="off" />
-              <input id="inp-secret" class="inp" placeholder="Verifikasi (4 digit terakhir No HP)" autocomplete="off" />
+          <div class="panel-head">Permintaan Terkini</div>
+          <div class="list-container" id="list-items">
             </div>
-            <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;">
-              <button id="btn-check" class="btn" type="button" onclick="lookup()">
-                <i class="ri-search-2-line"></i> Cek Status
-              </button>
-            </div>
-            <div class="hint">
-              Demi keamanan, status hanya bisa dibuka jika <b>kode</b> dan <b>verifikasi kedua</b> cocok.
-            </div>
-          </div>
-
-          <div class="section">
-            <p class="section-title">Current Request <span class="count" id="count-current">(0)</span></p>
-          </div>
-          <div class="list" id="list-current">
-            <div class="empty">Belum ada data. Masukkan kode tracking untuk mulai.</div>
-          </div>
-
-          <div class="section" style="padding-top:0;">
-            <p class="section-title" style="opacity:.65;">Previous Requests <span class="count" id="count-prev">(0)</span></p>
-          </div>
-          <div class="list" id="list-prev">
-            <div class="empty" style="opacity:.75;">Riwayat akan muncul di sini.</div>
-          </div>
         </div>
 
         <div class="panel">
-          <div class="panel-head">
-            <h3>Detail</h3>
-            <div style="display:flex;gap:8px;">
-              <span class="badge blue" id="detail-badge" style="display:none;"><i class="ri-shield-check-line"></i> -</span>
+          <div class="panel-head">Detail Status</div>
+          <div class="detail" id="detail-content">
             </div>
-          </div>
-
-          <div class="detail" id="detail">
-            <div class="empty">Pilih salah satu request untuk melihat detail timeline.</div>
-          </div>
         </div>
       </div>
 
@@ -538,353 +198,120 @@
 
   <script>
     const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_APPS_SCRIPT_ANDA_DISINI";
+    let ALL_ITEMS = [];
 
-    async function postJson(payload){
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("HTTP " + res.status);
+    // Helper API
+    async function apiCall(action, payload){
+      if (typeof hc32_post === 'function') return await hc32_post(action, payload);
+      const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, ...payload }) });
       return await res.json();
     }
 
-    // B1) API CALL HELPER
-    async function apiCall(action, payload){
-      if (typeof hc32_post === 'function') return await hc32_post(action, payload);
-      return await postJson({ action, ...payload });
-    }
+    // Input Rules
+    document.getElementById('inp-code').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0, 8);
+    });
+    document.getElementById('inp-secret').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g,'').slice(0, 4);
+    });
 
-    function safeShowStatus(type, title, msg){
-      if (typeof window.showHC32Status === 'function') window.showHC32Status(type, title, msg);
-    }
-    function safeHideStatus(){
-      if (typeof window.hideHC32Status === 'function') window.hideHC32Status();
-    }
-
-    let ALL_ITEMS = [];
-    let ACTIVE_ID = null;
-
-    // B2) INPUT NORMALIZER & PREFILL
-    function prefillFromQuery_(){
-      const qs = new URLSearchParams(location.search);
-      const code = (qs.get('code') || qs.get('trackingCode') || '').trim();
-      if (code) document.getElementById('inp-code').value = code.toUpperCase();
-    }
-
-    function bindInputRules_(){
-      const codeEl = document.getElementById('inp-code');
-      const secEl  = document.getElementById('inp-secret');
-      codeEl.addEventListener('input', () => {
-        codeEl.value = codeEl.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0, 8);
-      });
-      secEl.addEventListener('input', () => {
-        secEl.value = secEl.value.replace(/\D/g,'').slice(0, 4);
-      });
-    }
-
-    function fmtMiniDate(str){ return str || '-'; }
-
-    function pct_(cur, total){
-      cur = Number(cur); total = Number(total);
-      if (!isFinite(cur) || !isFinite(total) || total <= 0) return 0;
-      return Math.round(Math.max(0, Math.min(1, cur / total)) * 100);
-    }
-
-    function toneBadgeClass(tone){
-      if (tone === 'toska') return 'toska';
-      if (tone === 'warn') return 'warn';
-      if (tone === 'red') return 'red';
-      return 'blue';
-    }
-
-    function toneDotClass(tone){
-      if (tone === 'red') return 'red';
-      if (tone === 'warn') return 'warn';
-      if (tone === 'ok') return 'ok';
-      return 'on';
-    }
-
-    function copyText(txt){
-      const t = String(txt || '');
-      if (!t) return;
-      navigator.clipboard?.writeText(t);
-      safeShowStatus('success', 'Disalin', 'Kode berhasil disalin.');
-      setTimeout(() => safeHideStatus(), 800);
-    }
-
-    // B3) MAPPERS
-    function typeLabelByPrefix_(prefix){
-      prefix = String(prefix || '').toUpperCase();
-      if (prefix === 'PA') return 'Pendaftaran Anggota';
-      if (prefix === 'PD') return 'Perbaikan Data';
-      if (prefix === 'LS') return 'Live Chat Support';
-      if (prefix === 'AK') return 'Pembuatan Akun';
-      return 'Request';
-    }
-
-    function stagesByPrefix_(prefix){
-      prefix = String(prefix || '').toUpperCase();
-      if (prefix === 'PA') return ['Diterima','Verifikasi','Keputusan','Selesai'];
-      if (prefix === 'PD') return ['Diterima','Dicek','Perbaikan','Selesai'];
-      if (prefix === 'LS') return ['Dibuat','Diproses','Tindak Lanjut','Selesai'];
-      if (prefix === 'AK') return ['Diterima','Validasi','Aktivasi','Selesai'];
-      return ['Diterima','Dicek','Diproses','Selesai'];
-    }
-
-    function stageIndexByStatus_(status, stages){
-      const s = String(status || '').toLowerCase();
-      const last = stages.length - 1;
-      if (s.includes('selesai')) return last;
-      if (s.includes('ditolak') || s.includes('disetujui') || s.includes('perlu') || s.includes('revisi') || s.includes('perbaikan')) return Math.min(2, last);
-      if (s.includes('menunggu') || s.includes('pending') || s.includes('verifikasi')) return Math.min(1, last);
-      return 0;
-    }
-
-    function toneFromStatus_(label){
-      const s = String(label || '').toLowerCase();
-      if (s.includes('perlu') || s.includes('revisi') || s.includes('perbaikan')) return 'warn';
-      if (s.includes('ditolak')) return 'red';
-      if (s.includes('disetujui') || s.includes('selesai')) return 'toska';
-      return 'blue';
-    }
-
-    function formatDTShort_(s){
-      const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-      if (!m) return (s || '-');
-      const d = new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6]));
-      const date = new Intl.DateTimeFormat('id-ID', { day:'2-digit', month:'short', year:'2-digit' }).format(d);
-      const time = new Intl.DateTimeFormat('id-ID', { hour:'2-digit', minute:'2-digit' }).format(d);
-      return `${date} • ${time}`;
-    }
-
-    function formatDTLine_(s){
-      const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-      if (!m) return (s || '-');
-      const d = new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6]));
-      const date = new Intl.DateTimeFormat('id-ID', { day:'2-digit', month:'short', year:'2-digit' }).format(d);
-      const time = new Intl.DateTimeFormat('id-ID', { hour:'2-digit', minute:'2-digit' }).format(d);
-      return `${date}<br><span style="opacity:.7;">${time}</span>`;
-    }
-
-    function eventToneDot_(statusTone){
-      if (statusTone === 'red') return 'red';
-      if (statusTone === 'warn') return 'warn';
-      if (statusTone === 'toska') return 'ok';
-      return 'on';
-    }
-
-    function normalizeItem_(x){
-      x = x || {};
-      const prog = x.progress || {};
-      if (!prog || typeof prog !== 'object') x.progress = { currentIndex:0, total:4 };
-      if (typeof x.progress.currentIndex !== 'number') x.progress.currentIndex = 0;
-      if (!Array.isArray(x.events)) x.events = [];
-      return x;
-    }
-
-    function mapTrackOutToItem_(out){
-      const r = out.request || {};
-      const prefix = String(r.code || '').slice(0, 2).toUpperCase();
-      const stages = stagesByPrefix_(prefix);
-      const statusTone = toneFromStatus_(r.status);
-
-      const item = {
-        id: r.code || '-',
-        type: typeLabelByPrefix_(prefix),
-        title: r.title || typeLabelByPrefix_(prefix),
-        createdAt: formatDTShort_(r.createdAt),
-        updatedAt: formatDTShort_(r.updatedAt),
-        statusLabel: r.status || '-',
-        statusTone: statusTone,
-        isClosed: /selesai|ditolak/i.test(String(r.status || '')),
-        progress: { currentIndex: stageIndexByStatus_(r.status, stages), total: stages.length },
-        stages: stages,
-        note: r.publicNote || '—',
-        events: Array.isArray(out.events) ? out.events.map(ev => {
-          const toTone = toneFromStatus_(ev.toStatus || '');
-          let title = ev.type === 'created' ? 'Diterima' : (ev.type === 'status_change' ? (ev.toStatus ? `Status: ${ev.toStatus}` : 'Perubahan Status') : 'Catatan');
-          const sub = ev.note || (ev.fromStatus && ev.toStatus ? `${ev.fromStatus} → ${ev.toStatus}` : '');
-          return { at: formatDTLine_(ev.at), title, sub, tone: eventToneDot_(toTone) };
-        }) : []
-      };
-      return normalizeItem_(item);
-    }
-
-    function upsertItem_(item){
-      const idx = ALL_ITEMS.findIndex(x => x.id === item.id);
-      if (idx >= 0) ALL_ITEMS[idx] = item;
-      else ALL_ITEMS.unshift(item);
-      ACTIVE_ID = item.id;
-    }
-
-    // B4) UPDATED LOOKUP
     async function lookup(){
-      const code = (document.getElementById('inp-code').value || '').trim().toUpperCase();
-      const secret = (document.getElementById('inp-secret').value || '').trim();
+      const code = document.getElementById('inp-code').value.trim();
+      const secret = document.getElementById('inp-secret').value.trim();
 
-      if (!code || !secret){
-        safeShowStatus('error', 'Belum Lengkap', 'Masukkan kode tracking dan 4 digit terakhir No HP.');
+      if (!code || !secret) {
+        alert("Harap isi kode tracking dan verifikasi No HP");
         return;
       }
 
-      const btn = document.getElementById('btn-check');
-      btn.disabled = true;
-      safeShowStatus('loading', 'Memuat...', 'Mengambil data status dari server.');
+      if (window.showHC32Status) window.showHC32Status('loading', 'Mencari...', 'Menghubungkan ke server');
 
-      try{
+      try {
         const out = await apiCall('trackRequest', { trackingCode: code, secret });
 
-        if (out && out.status === 'ok' && out.request){
-          safeHideStatus();
+        if (out && out.status === 'ok' && out.request) {
+          if (window.hideHC32Status) window.hideHC32Status();
+          
+          // Munculkan grid hasil
+          document.getElementById('result-area').style.display = 'grid';
+          
           const item = mapTrackOutToItem_(out);
-          upsertItem_(item);
+          ALL_ITEMS = [item]; // Simpan hasil
           renderLists();
-          renderDetail(ALL_ITEMS.find(x => x.id === ACTIVE_ID));
+          renderDetail(item);
+          
+          // Scroll otomatis ke hasil pada mobile
+          if(window.innerWidth < 880) {
+              document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+          }
         } else {
-          safeShowStatus('error', 'Tidak Ditemukan', (out && out.message) ? out.message : 'Kode/verifikasi tidak cocok.');
+          if (window.showHC32Status) window.showHC32Status('error', 'Tidak Ditemukan', 'Kode atau verifikasi tidak cocok');
         }
-      } catch (e){
-        safeShowStatus('error', 'Koneksi Gagal', e.message);
-      } finally {
-        btn.disabled = false;
+      } catch (e) {
+        if (window.showHC32Status) window.showHC32Status('error', 'Koneksi Gagal', e.message);
       }
     }
 
-    function ticketCardHTML(item){
-      const id = item.id || '-';
-      const title = item.title || item.type || 'Request';
-      const type = item.type || 'Request';
-      const statusLabel = item.statusLabel || 'Diproses';
-      const tone = toneBadgeClass(item.statusTone);
-      const curIdx = item.progress.currentIndex;
-      const fill = pct_(curIdx, item.progress.total - 1);
-      const dots = Array.from({length:4}, (_, i) => `<span class="dot ${i <= curIdx ? 'on' : ''}"></span>`).join('');
+    function renderLists() {
+      const container = document.getElementById('list-items');
+      container.innerHTML = ALL_ITEMS.map(item => `
+        <div class="ticket active">
+          <div class="code">${item.id}</div>
+          <div class="subject">${item.title}</div>
+          <div class="code" style="color:var(--hc-toska)">${item.statusLabel}</div>
+        </div>
+      `).join('');
+    }
 
-      return `
-        <div class="ticket ${item.id === ACTIVE_ID ? 'active' : ''}" onclick="selectTicket('${encodeURIComponent(id)}')">
-          <div class="ticket-top">
-            <div>
-              <div class="code">${id}</div>
-              <div class="subject">${escapeHtml(title)}</div>
-              <div class="meta">
-                <span class="badge ${tone}"><i class="ri-file-list-3-line"></i> ${escapeHtml(type)}</span>
-                <span class="badge ${tone}"><i class="ri-information-line"></i> ${escapeHtml(statusLabel)}</span>
+    function renderDetail(item) {
+      const container = document.getElementById('detail-content');
+      container.innerHTML = `
+        <div class="badge blue">${item.type}</div>
+        <div style="font-weight:800; font-size:18px; margin-bottom:5px;">${item.title}</div>
+        <div class="code" style="margin-bottom:20px;">Update Terakhir: ${item.updatedAt}</div>
+        
+        <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:20px; font-size:13px;">
+          <strong>Catatan:</strong><br>${item.note}
+        </div>
+
+        <div class="timeline">
+          ${item.events.map(ev => `
+            <div class="t-row">
+              <div class="t-date">${ev.at}</div>
+              <div class="t-dot on"></div>
+              <div class="t-main">
+                <div class="t-title">${ev.title}</div>
+                <div class="t-sub">${ev.sub}</div>
               </div>
             </div>
-            <button class="icon-btn" type="button" onclick="event.stopPropagation(); copyText('${escapeAttr(id)}')">
-              <i class="ri-file-copy-line"></i>
-            </button>
-          </div>
-          <div class="mini-track">
-            ${dots}
-            <div class="track-line"><div class="track-fill" style="width:${fill}%;"></div></div>
-            <div class="mid-icon"><i class="ri-truck-line"></i></div>
-          </div>
-        </div>`;
+          `).join('')}
+        </div>
+      `;
     }
 
-    function renderLists(){
-      const current = ALL_ITEMS.filter(x => !x.isClosed);
-      const prev = ALL_ITEMS.filter(x => x.isClosed);
-      document.getElementById('count-current').textContent = `(${current.length})`;
-      document.getElementById('count-prev').textContent = `(${prev.length})`;
-      document.getElementById('list-current').innerHTML = current.length ? current.map(ticketCardHTML).join('') : `<div class="empty">Tidak ada request aktif.</div>`;
-      document.getElementById('list-prev').innerHTML = prev.length ? prev.map(ticketCardHTML).join('') : `<div class="empty" style="opacity:.75;">Belum ada riwayat.</div>`;
+    // Mapper (Simplified version of your logic)
+    function mapTrackOutToItem_(out){
+      const r = out.request || {};
+      return {
+        id: r.code || '-',
+        type: 'Permintaan',
+        title: r.title || 'Layanan HC32',
+        updatedAt: r.updatedAt || '-',
+        statusLabel: r.status || 'Diproses',
+        note: r.publicNote || 'Sedang dalam peninjauan oleh tim admin.',
+        events: out.events || []
+      };
     }
 
-    function renderDetail(item){
-      const d = document.getElementById('detail');
-      if (!item){
-        d.innerHTML = `<div class="empty">Pilih salah satu request untuk melihat detail timeline.</div>`;
-        document.getElementById('detail-badge').style.display = 'none';
-        return;
+    function openSettings(){ alert("Pengaturan akan tersedia segera."); }
+
+    // Prefill if URL has code
+    window.onload = () => {
+      const qs = new URLSearchParams(location.search);
+      if(qs.get('code')) {
+        document.getElementById('inp-code').value = qs.get('code').toUpperCase();
       }
-      const tone = toneBadgeClass(item.statusTone);
-      const curIdx = item.progress.currentIndex;
-      const fill = pct_(curIdx, item.progress.total - 1);
-      
-      const badge = document.getElementById('detail-badge');
-      badge.className = `badge ${tone}`;
-      badge.style.display = 'inline-flex';
-      badge.innerHTML = `<i class="ri-information-line"></i> ${escapeHtml(item.statusLabel)}`;
-
-      d.innerHTML = `
-        <div class="detail-head">
-          <div class="detail-left">
-            <div class="detail-code">${escapeHtml(item.id)}</div>
-            <h2 class="detail-title">${escapeHtml(item.title)}</h2>
-            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
-              <span class="badge ${tone}">${escapeHtml(item.type)}</span>
-              <span class="badge">Dibuat: ${escapeHtml(item.createdAt)}</span>
-              <span class="badge">Update: ${escapeHtml(item.updatedAt)}</span>
-            </div>
-          </div>
-          <div class="detail-actions">
-            <button class="mini-btn" onclick="copyText('${escapeAttr(item.id)}')"><i class="ri-file-copy-line"></i> Salin</button>
-            <button class="mini-btn" onclick="lookup()"><i class="ri-refresh-line"></i> Refresh</button>
-          </div>
-        </div>
-        <div class="detail-summary">
-          <div class="sum-grid">
-            <div class="k">Status</div><div class="v">${escapeHtml(item.statusLabel)}</div>
-            <div class="k">Catatan</div><div class="v">${escapeHtml(item.note)}</div>
-          </div>
-        </div>
-        <div class="big-track">
-          <div class="big-line">
-            ${item.stages.map((_, i) => `<span class="big-node ${i <= curIdx ? 'on' : ''}"></span>`).join('')}
-            <div class="big-bar"><div class="big-fill" style="width:${fill}%;"></div></div>
-            <div class="big-mid"><i class="ri-flag-2-line"></i></div>
-          </div>
-          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
-            ${item.stages.map((s, i) => `<span class="badge ${i <= curIdx ? tone : ''}">${escapeHtml(s)}</span>`).join('')}
-          </div>
-        </div>
-        <div class="timeline">${item.events.map(ev => `
-          <div class="t-row">
-            <div class="t-date">${ev.at}</div>
-            <div class="t-dot ${ev.tone}"></div>
-            <div class="t-main">
-              <div class="t-title">${escapeHtml(ev.title)}</div>
-              <div class="t-sub">${escapeHtml(ev.sub)}</div>
-            </div>
-          </div>`).join('') || '<div class="empty">Timeline belum tersedia.</div>'}
-        </div>`;
-    }
-
-    function selectTicket(encodedId){
-      ACTIVE_ID = decodeURIComponent(encodedId);
-      renderLists();
-      renderDetail(ALL_ITEMS.find(x => x.id === ACTIVE_ID));
-    }
-
-    function bindEnterToLookup_(){
-      document.querySelector('.search').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') lookup();
-      });
-    }
-
-    function escapeHtml(s){
-      return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
-
-    function openSettings(){
-      safeShowStatus('info', 'Info', 'Pengaturan akan tersedia segera.');
-      setTimeout(() => safeHideStatus(), 1200);
-    }
-
-    // INIT
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof initHC32Navigation === 'function') initHC32Navigation('tracking');
-      bindEnterToLookup_();
-      prefillFromQuery_();
-      bindInputRules_();
-      
-      // B5) DEMO DATA DISABLED
-      // loadDemo_(); 
-    });
+    };
   </script>
 </body>
 </html>
