@@ -39,11 +39,9 @@
     input:focus, select:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
     input:disabled, select:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
     
-    /* ERROR STATE */
     .input-error { border-color: var(--hc-red) !important; box-shadow: 0 0 0 3px rgba(211, 14, 20, 0.1) !important; animation: shakeInput 0.3s; }
     @keyframes shakeInput { 0%{transform:translateX(0)} 25%{transform:translateX(-2px)} 75%{transform:translateX(2px)} }
 
-    /* Phone Group Style */
     .phone-group { display: flex; gap: 8px; }
     .phone-group select { width: 110px; flex-shrink: 0; font-size: 13px; }
     .phone-group input { flex-grow: 1; }
@@ -57,11 +55,10 @@
     button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 138, 148, 0.4); }
     button[type="submit"]:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; color: #64748b; }
 
-    /* INFO CARD (UPDATED COLOR: TOSKA) */
     .info-card { 
         margin-top: 20px; background: #fff; border-radius: 16px; 
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; 
-        border-left: 4px solid var(--hc-toska); /* UPDATE KE TOSKA */
+        border-left: 4px solid var(--hc-toska); 
         transition: all 0.3s ease; 
     }
     .info-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: #fff; }
@@ -75,7 +72,6 @@
     .info-card.open .info-body { display: block; }
     .info-card.open .info-icon { transform: rotate(180deg); }
 
-    /* HELP CARD */
     .help-card { margin-top: 20px; margin-bottom: 10px; background: #fff; border-radius: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 16px 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 12px; border-left: 4px solid var(--hc-blue); }
     @media (min-width: 600px) { .help-card { flex-direction: row; } }
     .help-title { font-weight: 600; font-size: 14px; color: var(--hc-dark); margin: 0; }
@@ -84,7 +80,6 @@
     .help-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--hc-blue); color: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: 0.2s; }
     .help-btn:hover { opacity: 0.9; }
 
-    /* UI FOTO & Modal */
     .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
     #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; position: relative; }
     #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
@@ -105,14 +100,12 @@
     .btn-shutter-cam::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 2px solid #2e2e2e; }
     .btn-switch-cam { width: 50px; height: 50px; border-radius: 50%; background-color: #1a4787; color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(26, 71, 135, 0.4); }
 
-    /* Crop Modal */
     #crop-modal .modal-box { background: #1e293b; color: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 20px; }
     .crop-actions { display: flex; gap: 10px; margin-top: 20px; }
     .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
     .btn-modal.cancel { background: var(--hc-red); color: white; } 
     .btn-modal.confirm { background: var(--hc-toska); color: white; }
 
-    /* Signature */
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
     canvas#sig-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
     .sig-tools { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 8px; }
@@ -121,7 +114,6 @@
     .sig-btn-undo { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
     .sig-btn-clear { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
 
-    /* Security Check */
     .captcha-card { margin: 30px 0 20px; background: #fff; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .captcha-header { background: linear-gradient(to right, #f8fafc, #fff); padding: 12px 20px; border-bottom: 1px solid #e2e8f0; font-weight: 700; color: var(--hc-dark); font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
     .refresh-btn { cursor: pointer; padding: 5px 10px; border-radius: 4px; font-size: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; display: none; align-items: center; gap: 5px; }
@@ -133,7 +125,6 @@
     .verified-text { font-weight: 700; font-size: 16px; }
     .status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: transform 0.2s; }
     
-    /* Security Models */
     .puzzle-area { position: relative; width: 100%; height: 160px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; border-radius: 8px; overflow: hidden; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
     .puzzle-hole { width: 48px; height: 48px; background: rgba(0,0,0,0.5); box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: absolute; border-radius: 6px; border: 1px solid rgba(255,255,255,0.4); }
     .puzzle-piece { width: 48px; height: 48px; background: url('https://drive.google.com/thumbnail?id=1RmudK--TsYa-sF7Fk6R9YQD9ZiMBv8KS&sz=w1000') center/cover; position: absolute; left: 10px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.5); border: 2px solid #fff; cursor: grab; z-index: 10; }
@@ -154,14 +145,14 @@
     .quiz-btn.correct { background: var(--hc-green); color: white; border-color: var(--hc-green); }
     .quiz-btn.wrong { background: var(--hc-red); color: white; border-color: var(--hc-red); animation: shake 0.3s; }
 
-    /* Modal OK Button */
     .modal-ok-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
-    /* Status Modal Styles */
     .status-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; }
-    .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; }
+    .status-modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center; }
     .status-icon-circle { width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .status-icon-circle.success { border: 4px solid var(--hc-green); }
     .status-icon-circle.error { border: 4px solid var(--hc-red); }
+
+    .hc-status-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--hc-blue); color: white; font-weight: 600; margin-top: 15px; cursor: pointer; }
 
     @media (max-width: 600px) {
         .two-col { grid-template-columns: 1fr; }
@@ -447,7 +438,62 @@
         document.getElementById('info-card').classList.toggle('open');
     }
 
-    // Backup Status Modal (Just in case components.js fails)
+    // A) HELPER MODAL SUKSES + TRACKING
+    function showTrackingSuccessModal_(trackingCode, last4) {
+      const modal = document.getElementById('status-modal');
+      const iconBox = document.getElementById('status-icon-container');
+      const titleEl = document.getElementById('status-title');
+      const descEl  = document.getElementById('status-desc');
+
+      iconBox.className = 'status-icon-circle success';
+      iconBox.innerHTML = `<i class="ri-checkbox-circle-fill" style="font-size:44px;color:var(--hc-green)"></i>`;
+
+      titleEl.textContent = 'Berhasil!';
+      
+      const trackUrl = new URL('../bantuan/track/?code=' + encodeURIComponent(trackingCode), location.href).toString();
+
+      const masked = last4 ? `••••${last4}` : '(4 digit terakhir No HP)';
+      descEl.innerHTML = `
+        Pendaftaran diterima.<br><br>
+
+        <div style="font-weight:800;margin-bottom:6px;color:#111;">Kode Tracking</div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:.6px;color:var(--hc-blue);">
+          ${trackingCode}
+        </div>
+
+        <div style="margin-top:10px;font-size:12px;color:#666;line-height:1.5;">
+          Untuk membuka status, masukkan <b>4 digit terakhir No HP</b> (${masked}) di halaman tracking.
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <a href="${trackUrl}"
+             style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--hc-blue);color:#fff;text-decoration:none;font-weight:800;">
+            <i class="ri-search-2-line"></i> Buka Tracking
+          </a>
+
+          <button type="button" id="btn-copy-tracking"
+            style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:#fff;border:1px solid #cbd5e1;color:#111;font-weight:800;cursor:pointer;">
+            <i class="ri-file-copy-line"></i> Salin Kode
+          </button>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      const copyBtn = document.getElementById('btn-copy-tracking');
+      if (copyBtn) {
+        copyBtn.onclick = async () => {
+          try {
+            await navigator.clipboard?.writeText(trackingCode);
+            window.showHC32Status?.('success', 'Disalin', 'Kode tracking berhasil disalin.');
+          } catch (e) {
+            window.showHC32Status?.('info', 'Info', 'Tidak bisa salin otomatis. Silakan salin manual.');
+          }
+        };
+      }
+    }
+
+    // Backup Status Modal OK Button
     document.getElementById('modal-ok-btn').onclick = () => document.getElementById('status-modal').style.display = 'none';
 
     // ==== LOGIKA UTAMA & VALIDASI ====
@@ -469,79 +515,60 @@
         [2026, 2027, 2028].forEach(yr => angkatanSel.add(new Option(yr, yr)));
     }
 
-    // Helper: Validasi Field
     function validateField(el, isValid) {
         if (!isValid) el.classList.add('input-error');
         else el.classList.remove('input-error');
     }
 
-    // Listener No HP (Hanya Angka & Validasi Panjang)
     hpInput.addEventListener('input', function() {
         this.value = this.value.replace(/\D/g, ''); 
         validateField(this, this.value.length >= 5);
     });
 
-    // Listener Email (Regex Format)
     emailInput.addEventListener('input', function() {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         validateField(this, regex.test(this.value));
     });
 
-    // Listener ID (Hanya Angka & Validasi Sesuai Tipe)
     nisInput.addEventListener('input', function() {
         this.value = this.value.replace(/\D/g, '');
         const min = this.getAttribute('minlength');
         if(min) validateField(this, this.value.length >= min);
     });
 
-    // --- FUNGSI UTAMA PERUBAHAN TIPE ---
     function handleTypeChange() {
         const v = tipeSel.value;
-        
-        // 1. Reset Tampilan Group
         grpSiswa.classList.add('hidden');
         grpJab.classList.add('hidden');
         grpLulus.classList.add('hidden');
-        
-        // 2. Reset Input No. Identitas agar bersih
         nisInput.value = '';
         nisInput.classList.remove('input-error'); 
         
-        // 3. Logika Per Kategori
         if (v === 'siswa') {
             grpSiswa.classList.remove('hidden');
-            // Siswa: Wajib 7 Digit NIS
             setIDConstraint(7, 7, 'Nomor Induk Siswa (7 Digit)');
         } 
         else if (v === 'guru') {
             grpJab.classList.remove('hidden');
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus'; 
-            // Guru: Wajib 18 Digit NIP
             setIDConstraint(18, 18, 'NIP (18 Digit)');
         } 
         else if (v === 'alumni') {
             grpLulus.classList.remove('hidden');
             lblLulus.innerHTML = 'Tahun Lulus <span class="req-star">*</span>'; 
-            // Alumni: Max 7 Digit (NIS / No. Perpus) - FIXED
             setIDConstraint(7, 4, 'NIS / No. Anggota Perpus (Max 7 Digit)');
         } 
         else { 
             grpJab.classList.remove('hidden');
-            // Lainnya: Max 18 (KTP/Identitas Lain)
             setIDConstraint(18, 5, 'NIK / Identitas Lainnya');
         }
     }
 
     function setIDConstraint(maxLen, minLen, placeholder) {
-        nisInput.value = ""; // Clear again to be safe
-        
-        // Set Attributes explicitly (for HTML behavior)
         nisInput.setAttribute('maxlength', maxLen);
         nisInput.setAttribute('minlength', minLen);
         nisInput.setAttribute('placeholder', placeholder);
-        
-        // Set Properties explicitly (for DOM/JS behavior)
         nisInput.maxLength = maxLen;
         nisInput.placeholder = placeholder;
     }
@@ -559,7 +586,6 @@
 
     tipeSel.addEventListener('change', handleTypeChange);
 
-    // ==== SECURITY CHECK VARS ====
     let isVerified = false;
     let puzzleTarget = 0;
     let textCode = "";
@@ -609,7 +635,7 @@
 
     document.getElementById('captcha-reload').onclick = resetCaptcha;
 
-    // AI MODELS (PUZZLE, GRID, TEXT, QUIZ)
+    // CAPTCHA INITIALIZERS
     function initPuzzle() {
         const slider = document.getElementById('puzzle-input');
         const piece = document.getElementById('puzzle-piece');
@@ -696,23 +722,18 @@
         document.getElementById('quiz-question-text').textContent = qData.q;
         const optsEl = document.getElementById('quiz-options');
         optsEl.innerHTML = '';
-        
         const shuffled = [...qData.a].sort(() => 0.5 - Math.random());
-        
         shuffled.forEach(opt => {
             const btn = document.createElement('div'); btn.className = 'quiz-btn'; btn.textContent = opt;
             btn.onclick = () => { 
-                if (opt === qData.c) { 
-                    btn.classList.add('correct'); setTimeout(verifySuccess, 500); 
-                } else { 
-                    btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); 
-                } 
+                if (opt === qData.c) { btn.classList.add('correct'); setTimeout(verifySuccess, 500); } 
+                else { btn.classList.add('wrong'); setTimeout(() => { btn.classList.remove('wrong'); showCaptchaError("Salah."); }, 500); } 
             };
             optsEl.appendChild(btn);
         });
     }
 
-    // ==== CAMERA & UPLOAD ====
+    // CAMERA & CROPPER
     let stream = null; let currentFacingMode = 'user'; let cropper = null;
     const camPopup = document.getElementById('cam-popup'); const video = document.getElementById('cam-video');
     const cropModal = document.getElementById('crop-modal'); const cropperImg = document.getElementById('cropper-img');
@@ -725,40 +746,30 @@
         video.srcObject = stream; camPopup.style.display = 'flex'; 
         const devices = await navigator.mediaDevices.enumerateDevices();
         const inputs = devices.filter(d => d.kind === 'videoinput');
-        if(inputs.length > 1) document.getElementById('btn-cam-switch').style.display = 'flex';
-        else document.getElementById('btn-cam-switch').style.display = 'none';
+        document.getElementById('btn-cam-switch').style.display = (inputs.length > 1) ? 'flex' : 'none';
         } catch(e) { alert("Gagal akses kamera."); }
     });
 
     function stopCam() { if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } camPopup.style.display = 'none'; }
     document.getElementById('btn-cam-cancel').addEventListener('click', stopCam);
-    
     document.getElementById('btn-cam-switch').addEventListener('click', () => { 
         currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; 
         video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)'; 
         document.getElementById('btn-open-camera-ui').click(); 
     });
-    
     document.getElementById('btn-cam-capture').addEventListener('click', () => {
         const cvs = document.createElement('canvas'); cvs.width = video.videoWidth; cvs.height = video.videoHeight;
         const ctx = cvs.getContext('2d'); if(currentFacingMode === 'user') { ctx.translate(cvs.width, 0); ctx.scale(-1, 1); }
         ctx.drawImage(video, 0, 0); stopCam(); startCropper(cvs.toDataURL('image/jpeg'));
     });
-
     document.getElementById('btn-cam-upload').addEventListener('click', () => document.getElementById('inp-file-foto').click());
-    
     document.getElementById('inp-file-foto').addEventListener('change', (e) => {
         if(e.target.files[0]) {
             const file = e.target.files[0];
-            if(file.size > 1.0*1024*1024) { 
-                window.showHC32Status('error', 'File Besar', 'Maksimal ukuran foto adalah 1 MB.');
-                document.getElementById('inp-file-foto').value = ''; 
-                return; 
-            }
+            if(file.size > 1.0*1024*1024) { window.showHC32Status('error', 'File Besar', 'Maksimal ukuran foto adalah 1 MB.'); return; }
             const r = new FileReader(); r.onload = (evt) => { stopCam(); startCropper(evt.target.result); }; r.readAsDataURL(file);
         }
     });
-
     function startCropper(src) {
         cropperImg.src = src; cropModal.style.display = 'flex';
         if(cropper) cropper.destroy(); cropper = new Cropper(cropperImg, { aspectRatio: 1, viewMode: 1 });
@@ -767,21 +778,18 @@
     document.getElementById('btn-crop-save').addEventListener('click', () => {
         if(!cropper) return;
         const cvs = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#fff' });
-        cvs.toBlob((blob) => {
-            const url = cvs.toDataURL('image/jpeg', 0.7); hiddenBase64.value = url;
-            previewImg.src = url; previewContainer.style.display = 'block';
-            document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Ulangi Foto';
-            document.querySelector('.btn-delete-photo').style.display = 'block';
-            cropModal.style.display = 'none'; if(cropper) cropper.destroy();
-        }, 'image/jpeg', 0.7);
+        const url = cvs.toDataURL('image/jpeg', 0.7); hiddenBase64.value = url;
+        previewImg.src = url; previewContainer.style.display = 'block';
+        document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Ulangi Foto';
+        document.querySelector('.btn-delete-photo').style.display = 'block';
+        cropModal.style.display = 'none'; if(cropper) cropper.destroy();
     });
-    
     document.querySelector('.btn-delete-photo').addEventListener('click', function() {
         hiddenBase64.value = ''; previewImg.src = ''; previewContainer.style.display = 'none';
         this.style.display = 'none'; document.querySelector('.btn-main-camera').innerHTML = '<i class="ri-camera-fill"></i> Aktifkan Kamera';
     });
 
-    // ==== SIGNATURE ====
+    // SIGNATURE
     const sigCanvas = document.getElementById('sig-canvas');
     let sigPad = new SignaturePad(sigCanvas, { backgroundColor: 'rgba(255,255,255,0)' });
     function resizeSig() {
@@ -791,15 +799,14 @@
     }
     window.addEventListener('resize', resizeSig);
     document.getElementById('sig-clear').addEventListener('click', () => sigPad.clear());
-    document.getElementById('sig-undo').addEventListener('click', () => { const d = sigPad.toData(); if(d) { d.pop(); sigPad.fromData(d); } });
+    document.getElementById('sig-undo').addEventListener('click', () => { const d = sigPad.toData(); if(d && d.length > 0) { d.pop(); sigPad.fromData(d); } });
 
-    // ==== SUBMIT ====
+    // SUBMIT HANDLER
     document.addEventListener('DOMContentLoaded', () => { populateDropdowns(); handleTypeChange(); resizeSig(); resetCaptcha(); });
 
     document.getElementById('form-daftar').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // AI Validation: Check All Errors
         let errors = [];
         const nis = document.getElementById('fd-nis');
         const minID = nis.getAttribute('minlength') || 0;
@@ -824,13 +831,9 @@
         if (!hiddenBase64.value) errors.push("Foto Profil");
         if (sigPad.isEmpty()) errors.push("Tanda Tangan");
 
-        // SMART ERROR HANDLING
         if (errors.length > 0) {
             let title = "Data Belum Lengkap";
-            let msg = "";
-            if (errors.length === 1) { title = errors[0]; msg = "Wajib diisi dengan benar."; }
-            else if (errors.length > 4) { msg = "Mohon lengkapi formulir pendaftaran dengan benar."; }
-            else { msg = "Mohon lengkapi: " + errors.join(", "); }
+            let msg = errors.length === 1 ? "Wajib diisi dengan benar." : (errors.length > 4 ? "Mohon lengkapi formulir pendaftaran dengan benar." : "Mohon lengkapi: " + errors.join(", "));
             window.showHC32Status('error', title, msg);
             return;
         }
@@ -842,50 +845,55 @@
 
         try {
             const rawId = nis.value.trim().replace(/\D+/g, '');
-            const tipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : tipeSel.value === 'lain' ? 'non-32' : tipeSel.value;
-            const dataEmail = email.value.trim();
-            const dataTglLahir = document.getElementById('fd-tgllahir').value;
-            const dataJabatan = document.getElementById('fd-jabatan').value.trim();
-            const dataThnLulus = document.getElementById('fd-thn-lulus').value.trim();
-            
-            // Combine Country Code + Phone
+            const combinedTipe = tipeSel.value === 'siswa' ? 'siswa-aktif' : (tipeSel.value === 'lain' ? 'non-32' : tipeSel.value);
             const fullPhone = document.getElementById('fd-phone-code').value + hp.value.trim();
 
             let pl = { nis:'', nisn:'', nip:'' };
-            if(tipe==='siswa-aktif') pl.nis = rawId; else if(tipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } else if(tipe==='alumni') pl.nis = rawId; else { if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; if(!pl.nis) pl.nis = rawId.slice(-7); }
+            if(combinedTipe==='siswa-aktif') pl.nis = rawId; 
+            else if(combinedTipe==='guru') { pl.nip = rawId; pl.nis = rawId.slice(-7); } 
+            else if(combinedTipe==='alumni') pl.nis = rawId; 
+            else { 
+                if(rawId.length===18) pl.nip=rawId; else if(rawId.length===10) pl.nisn=rawId; else pl.nis = rawId; 
+                if(!pl.nis) pl.nis = rawId.slice(-7); 
+            }
 
             const data = {
-                ...pl, nama: document.getElementById('fd-nama').value.trim(), tipe: tipe,
-                kelas: tipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
-                angkatan: tipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
-                nohp: fullPhone, email: dataEmail,
-                fotoBase64: hiddenBase64.value, jabatan: dataJabatan, tahunLulus: dataThnLulus,
-                tanggalLahir: dataTglLahir, tandaTangan: sigPad.toDataURL('image/png')
+                ...pl, nama: document.getElementById('fd-nama').value.trim(), tipe: combinedTipe,
+                kelas: combinedTipe === 'siswa-aktif' ? document.getElementById('fd-kelas').value : '',
+                angkatan: combinedTipe === 'siswa-aktif' ? document.getElementById('fd-angkatan').value : '',
+                nohp: fullPhone, email: email.value.trim(),
+                fotoBase64: hiddenBase64.value, jabatan: document.getElementById('fd-jabatan').value.trim(), 
+                tahunLulus: document.getElementById('fd-thn-lulus').value.trim(),
+                tanggalLahir: document.getElementById('fd-tgllahir').value, tandaTangan: sigPad.toDataURL('image/png')
             };
 
             const res = await hc32_post('pendaftaran', data);
-            if(res.status === 'ok') {
-                window.showHC32Status('success', 'Berhasil!', 'Pendaftaran diterima.');
-                e.target.reset(); sigPad.clear(); document.querySelector('.btn-delete-photo').click(); resetCaptcha();
+            
+            // B) LOGIKA SUKSES DENGAN TRACKING
+            if (res.status === 'ok') {
+                const trackingCode = (res.trackingCode || res.code || '').toString().trim().toUpperCase();
+                const last4 = (hp.value || '').replace(/\D/g, '').slice(-4);
+
+                if (trackingCode) {
+                    showTrackingSuccessModal_(trackingCode, last4);
+                } else {
+                    window.showHC32Status('success', 'Berhasil!', 'Pendaftaran diterima.');
+                }
+
+                e.target.reset();
+                sigPad.clear();
+                document.querySelector('.btn-delete-photo').click();
+                resetCaptcha();
             } else if(res.status === 'already') {
-                // LOGIKA DETEKSI DUPLIKAT SPESIFIK
                 let msgRaw = (res.message || "").toLowerCase();
                 let duplicates = [];
                 if (msgRaw.includes('identitas') || msgRaw.includes('nis') || msgRaw.includes('nip')) duplicates.push("No. Identitas");
                 if (msgRaw.includes('nama')) duplicates.push("Nama Lengkap");
-                if (msgRaw.includes('hp') || msgRaw.includes('wa') || msgRaw.includes('telepon')) duplicates.push("No. HP (WA)");
+                if (msgRaw.includes('hp') || msgRaw.includes('wa')) duplicates.push("No. HP (WA)");
                 if (msgRaw.includes('email')) duplicates.push("Email");
-
-                let finalTitle = "Data Terdaftar";
-                let finalMsg = "Data yang Anda masukkan sudah ada di sistem.";
-
-                if (duplicates.length > 0) {
-                    finalMsg = "Data berikut sudah terdaftar: <br><b>" + duplicates.join(", ") + "</b>";
-                } else if (msgRaw.length > 0) {
-                    finalMsg = res.message;
-                }
-
-                window.showHC32Status('error', finalTitle, finalMsg);
+                
+                let finalMsg = duplicates.length > 0 ? "Data berikut sudah terdaftar: <br><b>" + duplicates.join(", ") + "</b>" : (res.message || "Data sudah ada.");
+                window.showHC32Status('error', 'Data Terdaftar', finalMsg);
             } else {
                 window.showHC32Status('error', 'Error', res.message);
             }
