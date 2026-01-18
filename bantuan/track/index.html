@@ -66,55 +66,150 @@
       background: linear-gradient(90deg, var(--hc-blue), var(--hc-toska));
     }
 
-    .search-card h2 { font-size: 26px; font-weight: 800; margin: 0; color: var(--hc-dark); }
-    .search-card p { font-size: 13.5px; color: var(--muted); margin: 8px 0 25px; }
+    .search-card h2 {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0;
+      color: var(--hc-dark);
+    }
 
-    .search-row { display: flex; gap: 12px; margin-bottom: 15px; width: 100%; }
-    .inp-group { flex: 1; min-width: 0; }
+    .search-card p {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 8px 0 25px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .inp-group {
+      flex: 1;
+      min-width: 0;
+    }
 
     input {
-      width: 100%; height: 50px; padding: 0 16px; border: 1px solid #cbd5e1;
-      border-radius: 12px; font-size: 14px; outline: none;
-      font-family: 'Poppins', sans-serif; transition: 0.2s; background: #f8fafc;
+      width: 100%;
+      height: 50px;
+      padding: 0 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      font-family: 'Poppins', sans-serif;
+      transition: 0.2s;
+      background: #f8fafc;
     }
-    input:focus { border-color: var(--hc-blue); background: #fff; box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1); }
+
+    input:focus {
+      border-color: var(--hc-blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1);
+    }
 
     .btn-search {
-      width: 100%; height: 50px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
-      color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 15px;
-      cursor: pointer; box-shadow: 0 4px 12px rgba(15, 138, 148, 0.25);
-      transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(15, 138, 148, 0.25);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    #result-panel { display: none; animation: slideUp 0.4s ease; }
+    .btn-search:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(15, 138, 148, 0.35); }
+
+    #result-panel {
+      display: none;
+      animation: slideUp 0.4s ease;
+    }
+
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .card-detail { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 25px; border: 1px solid var(--line); }
-    .panel-head { padding-bottom: 15px; border-bottom: 1px solid var(--line); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .card-detail {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 25px;
+      border: 1px solid var(--line);
+    }
 
-    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; background: rgba(15, 138, 148, 0.1); color: var(--hc-toska); }
+    .panel-head {
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(15, 138, 148, 0.1);
+      color: var(--hc-toska);
+    }
+
     .req-owner { font-size: 22px; font-weight: 800; margin: 0; color: var(--hc-dark); }
     .req-meta { font-size: 10.5px; color: var(--muted); margin-top: 4px; font-weight: 600; letter-spacing: 0.3px; }
 
-    .note-box { background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid var(--hc-toska); margin: 20px 0; font-size: 13px; line-height: 1.5; }
-    .note-box.rejected { border-left-color: var(--hc-red); background: #fff5f5; }
+    .note-box {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 4px solid var(--hc-toska);
+      margin: 20px 0;
+      font-size: 13px;
+    }
 
     .timeline { margin-top: 25px; }
-    .t-row { display: grid; grid-template-columns: 85px 30px 1fr; gap: 5px; padding-bottom: 25px; }
+    .t-row { display: grid; grid-template-columns: 85px 30px 1fr; gap: 5px; padding-bottom: 25px; position: relative; }
+    
+    /* State untuk timeline yang belum tercapai (greyed out) */
+    .t-row.future { opacity: 0.4; filter: grayscale(1); }
+
     .t-date { font-size: 10px; color: var(--muted); font-weight: 700; text-align: right; padding-top: 4px; }
     .t-dot-col { display: flex; flex-direction: column; align-items: center; position: relative; }
     .t-dot { width: 12px; height: 12px; border-radius: 50%; background: #cbd5e1; z-index: 2; margin-top: 6px; border: 2px solid #fff; }
     .t-dot.on { background: var(--hc-toska); box-shadow: 0 0 0 3px rgba(15, 138, 148, 0.15); }
     .t-dot.err { background: var(--hc-red); box-shadow: 0 0 0 3px rgba(211, 14, 20, 0.15); }
-    .t-line { position: absolute; top: 18px; bottom: -18px; width: 2px; background: #e2e8f0; z-index: 1; }
+    
+    .t-line { position: absolute; top: 18px; bottom: -25px; width: 2px; background: #e2e8f0; z-index: 1; }
     .t-row:last-child .t-line { display: none; }
-    .t-title { font-size: 13.5px; font-weight: 800; color: var(--hc-dark); }
+    
+    .t-main { padding-left: 5px; }
+    .t-title { font-size: 13px; font-weight: 800; color: var(--hc-dark); }
     .t-sub { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
 
+    /* Tombol Perbaikan Khusus PA */
     .btn-fix {
-      display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
-      padding: 8px 16px; background: var(--hc-blue); color: #fff;
-      text-decoration: none; border-radius: 8px; font-size: 11px; font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: var(--hc-red);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
       transition: 0.2s;
     }
     .btn-fix:hover { opacity: 0.9; transform: scale(1.02); }
@@ -134,6 +229,7 @@
       <div class="search-card">
         <h2>Lacak Status</h2>
         <p>Masukan kode tracking untuk melihat progres permintaan Anda.</p>
+
         <div class="search-row">
           <div class="inp-group">
             <input id="inp-code" placeholder="Kode (Contoh: PA000123)" autocomplete="off" />
@@ -153,6 +249,7 @@
                 <div id="badge-container"></div>
                 <span id="txt-status-label" style="font-size: 12px; font-weight: 700;"></span>
             </div>
+            
             <div id="detail-content"></div>
         </div>
       </div>
@@ -178,113 +275,138 @@
       const secret = document.getElementById('inp-secret').value.trim();
 
       if (!code || !secret) {
-        if(window.showHC32Status) window.showHC32Status('error', 'Data Tidak Lengkap', 'Isi kode tracking dan verifikasi No HP.');
+        if(window.showHC32Status) window.showHC32Status('error', 'Lengkapi Data', 'Harap isi kode tracking dan verifikasi.');
         return;
       }
 
-      if (window.showHC32Spinner) window.showHC32Spinner('Menghubungkan ke pusat data...');
+      if (window.showHC32Spinner) window.showHC32Spinner('Sedang memuat status...');
 
       try {
         const out = await hc32_post('trackRequest', { trackingCode: code, secret });
+
         if (window.hideHC32Spinner) window.hideHC32Spinner();
 
         if (out && out.status === 'ok' && out.request) {
-          renderTimelineDetail(out);
+          renderDetail(out);
           document.getElementById('result-panel').style.display = 'block';
+          
           setTimeout(() => {
             window.scrollTo({ top: document.getElementById('result-panel').offsetTop - 80, behavior: 'smooth' });
           }, 150);
         } else {
-          if (window.showHC32Status) window.showHC32Status('error', 'Tidak Ditemukan', out.message || 'Kode atau verifikasi salah.');
+          if (window.showHC32Status) window.showHC32Status('error', 'Gagal', out.message || 'Data tidak ditemukan.');
         }
       } catch (e) {
         if (window.hideHC32Spinner) window.hideHC32Spinner();
-        if (window.showHC32Status) window.showHC32Status('error', 'Kesalahan Sistem', 'Gagal memuat data.');
+        if (window.showHC32Status) window.showHC32Status('error', 'Server Error', 'Terjadi masalah pada koneksi server.');
       }
     }
 
-    function renderTimelineDetail(out) {
+    function renderDetail(out) {
       const req = out.request;
+      const events = out.events || [];
       const prefix = (req.code || '').substring(0, 2).toUpperCase();
       
-      let typeLabel = "Permintaan";
-      let sendDesc = "Permintaan telah masuk ke sistem.";
-      if(prefix === "PA") { typeLabel = "Pendaftaran Anggota"; sendDesc = "Formulir pendaftaran telah diterima."; }
-      else if(prefix === "PD") { typeLabel = "Perbaikan Data"; sendDesc = "Data perbaikan telah diterima."; }
-
-      // Header Status Branding
-      const isSelesai = (req.status || '').includes('Selesai');
-      const isDitolak = (req.status || '').includes('Ditolak');
+      let typeLabel = "Permintaan Umum";
+      let sendDesc = "Permintaan telah kami terima dan masuk ke sistem.";
       
-      document.getElementById('txt-status-label').style.color = isDitolak ? 'var(--hc-red)' : (isSelesai ? 'var(--hc-toska)' : 'var(--hc-blue)');
+      if(prefix === "PA") { typeLabel = "Pendaftaran Anggota"; sendDesc = "Formulir pendaftaran telah diterima dan menunggu antrean verifikasi."; }
+      else if(prefix === "PD") { typeLabel = "Perbaikan Data"; sendDesc = "Permintaan perbaikan data telah kami terima."; }
+      else if(prefix === "LS") { typeLabel = "Layanan Support"; sendDesc = "Tiket dukungan telah dibuat."; }
+
+      document.getElementById('txt-status-label').style.color = (req.status || '').toLowerCase().includes('selesai') ? 'var(--hc-toska)' : 'var(--hc-blue)';
       document.getElementById('txt-status-label').innerText = req.status;
-      document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-history-line"></i> Service Timeline</div>`;
+      document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-price-tag-3-line"></i> ${typeLabel}</div>`;
 
-      let timelineHTML = '';
-      const events = out.events || [];
-      
-      // Susun urutan logis berdasarkan instruksi
-      // 1. Permintaan Terkirim (Selalu ada di awal)
-      timelineHTML += renderRow(req.createdAt, 'Permintaan Terkirim', sendDesc, true);
+      // Master Timeline Urutan 1-6
+      const masterStages = [
+        { key: 'created', label: 'Permintaan Terkirim', desc: sendDesc },
+        { key: 'Menunggu Verifikasi', label: 'Menunggu Verifikasi', desc: 'Permintaan telah masuk antrean pemeriksaan pengurus.' },
+        { key: 'Dalam Proses Verifikasi', label: 'Dalam Proses Verifikasi', desc: 'Data sedang divalidasi oleh tim admin/pengurus.' },
+        { key: 'Keputusan', label: 'Keputusan Pengurus', desc: 'Hasil verifikasi data Anda.' },
+        { key: 'Selesai', label: 'Selesai', desc: 'Proses telah selesai sepenuhnya.' }
+      ];
 
-      // Event-event antara (Menunggu Verifikasi, Dalam Proses, Keputusan)
-      events.forEach((ev, idx) => {
-        if (ev.type === 'created') return; // Skip karena sudah dirender di atas
-
-        let rowTitle = ev.toStatus || 'Update Status';
-        let rowDesc = ev.note || 'Sedang diproses.';
-        let isLast = (idx === events.length - 1);
-        let dotClass = isLast ? 'on' : '';
-
-        // Jika Ditolak & PA: Tambah Tombol Perbaikan
-        if (ev.toStatus === 'Ditolak' || isDitolak) {
-          dotClass = 'err';
-          if (prefix === 'PA') {
-            rowDesc += `<br><a href="../perbaikan/?code=${req.code}" class="btn-fix"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
-          }
-        }
-
-        timelineHTML += renderRow(ev.at, rowTitle, rowDesc, dotClass);
+      // Map event yang ada ke stage
+      const eventMap = {};
+      events.forEach(ev => {
+        if(ev.type === 'created') eventMap['created'] = ev;
+        else eventMap[ev.toStatus] = ev;
       });
 
+      // Render Content
       const content = document.getElementById('detail-content');
-      content.innerHTML = `
-        <div style="margin-bottom:20px">
-          <div class="badge toska" style="margin-bottom:8px">${typeLabel}</div>
-          <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
-          <div class="req-meta">TRACKING ID: ${req.code}</div>
-        </div>
-        
-        <div class="note-box ${isDitolak ? 'rejected' : ''}">
-          <div style="font-weight:800; margin-bottom:4px; color:${isDitolak ? 'var(--hc-red)' : 'var(--hc-blue)'}; font-size:11px;">STATUS SAAT INI:</div>
-          ${req.publicNote || 'Data Anda sedang dalam antrean verifikasi pengurus.'}
-        </div>
+      let timelineHTML = '';
 
+      masterStages.forEach((stage, index) => {
+        const ev = eventMap[stage.key] || null;
+        
+        // Logika khusus untuk tahap Keputusan (Ditolak/Disetujui)
+        let displayLabel = stage.label;
+        let displayDesc = stage.desc;
+        let dotClass = ev ? 'on' : '';
+        let isFuture = !ev;
+
+        if(stage.key === 'Keputusan') {
+          const approvedEv = eventMap['Disetujui'];
+          const rejectedEv = eventMap['Ditolak'];
+          
+          if(approvedEv) {
+            displayLabel = 'Disetujui';
+            displayDesc = approvedEv.note || 'Data Anda telah disetujui oleh pengurus.';
+            timelineHTML += renderRow(approvedEv.at, 'on', displayLabel, displayDesc, false);
+          } else if(rejectedEv) {
+            displayLabel = 'Ditolak';
+            dotClass = 'err';
+            displayDesc = `<span style="color:var(--hc-red); font-weight:600;">Alasan:</span> ${rejectedEv.note || 'Data tidak sesuai ketentuan.'}`;
+            
+            // Tambahkan tombol perbaikan jika PA
+            if(prefix === 'PA') {
+              displayDesc += `<br><a href="../pendaftaran/perbaikan.html?code=${req.code}" class="btn-fix"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
+            }
+            timelineHTML += renderRow(rejectedEv.at, 'err', displayLabel, displayDesc, false);
+          } else {
+            timelineHTML += renderRow('', '', displayLabel, 'Menunggu keputusan hasil verifikasi.', true);
+          }
+          return;
+        }
+
+        timelineHTML += renderRow(ev ? ev.at : '', dotClass, displayLabel, displayDesc, isFuture);
+      });
+
+      content.innerHTML = `
+        <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
+        <div class="req-meta">KODE: ${req.code} • DIPERBARUI: ${formatDT(req.updatedAt)}</div>
+        <div class="note-box"><strong>Status Terkini:</strong> ${req.status}</div>
         <div class="timeline">${timelineHTML}</div>
       `;
     }
 
-    function renderRow(date, title, desc, dotClass) {
-      const activeDot = dotClass === true || dotClass === 'on' ? 'on' : (dotClass === 'err' ? 'err' : '');
+    function renderRow(date, dotClass, title, sub, isFuture) {
       return `
-        <div class="t-row">
-          <div class="t-date">${formatDTLine(date)}</div>
+        <div class="t-row ${isFuture ? 'future' : ''}">
+          <div class="t-date">${date ? formatDTLine(date) : '--:--'}</div>
           <div class="t-dot-col">
-            <div class="t-dot ${activeDot}"></div>
+            <div class="t-dot ${dotClass}"></div>
             <div class="t-line"></div>
           </div>
           <div class="t-main">
             <div class="t-title">${title}</div>
-            <div class="t-sub">${desc}</div>
+            <div class="t-sub">${sub}</div>
           </div>
         </div>
       `;
+    }
+
+    function formatDT(s) {
+      if(!s) return '-';
+      const d = new Date(s);
+      return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) + ' ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
     }
 
     function formatDTLine(s) {
       if(!s) return '-';
       const d = new Date(s);
-      if(isNaN(d.getTime())) return s;
       return `<strong>${d.toLocaleDateString('id-ID', {day:'2-digit', month:'short'})}</strong><br><span style="opacity:0.6">${d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span>`;
     }
 
