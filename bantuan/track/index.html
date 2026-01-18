@@ -27,14 +27,12 @@
       --radius:18px;
       --accent: var(--hc-blue);
       --accent2: var(--hc-toska);
-      --ok: #0f766e;
-      --warn: #b45309;
     }
 
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:'Poppins',sans-serif;
+      font-family:'Poppins', sans-serif;
       background: #eaf2ff;
       color:#0f172a;
     }
@@ -49,7 +47,7 @@
     }
     .shell{
       width:100%;
-      max-width:900px;
+      max-width:700px; /* Dipersempit agar elegan karena 1 kolom */
     }
 
     .topbar{
@@ -70,7 +68,7 @@
     }
     .title{ font-size:24px; font-weight:800; margin:0; }
 
-    /* Search Panel - Always Visible */
+    /* Search Panel */
     .search-panel {
       background: var(--card);
       border: 1px solid var(--line);
@@ -97,11 +95,9 @@
       display:flex; align-items:center; justify-content:center; gap:8px;
     }
 
-    /* Result Grid - Hidden by default */
-    .result-grid {
-      display: none; /* Hidden until search is performed */
-      grid-template-columns: 350px 1fr;
-      gap: 20px;
+    /* Result Panel - Hidden by default */
+    #result-panel {
+      display: none;
       animation: fadeIn 0.4s ease;
     }
 
@@ -113,47 +109,47 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
-      height: fit-content;
     }
-    .panel-head{ padding:16px; border-bottom:1px solid var(--line); font-weight:800; font-size:14px; }
+    .panel-head{ padding:16px; border-bottom:1px solid var(--line); font-weight:800; font-size:14px; display: flex; justify-content: space-between; align-items: center;}
 
-    /* List styling */
-    .list-container { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .ticket{
-      border:1px solid var(--line); border-radius:14px; padding:12px;
-      cursor:pointer; transition:.15s; background:#fff;
-    }
-    .ticket.active{ border-color: var(--accent); background: rgba(26,71,135,.03); }
-    .code{ font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; }
-    .subject{ font-size:13px; font-weight:800; margin:2px 0; }
-    
     /* Detail styling */
-    .detail{ padding:20px; }
+    .detail{ padding:24px; }
     .badge{
       display:inline-flex; align-items:center; gap:5px;
-      padding:4px 10px; border-radius:99px; font-size:11px; font-weight:800;
-      background: #f1f5f9; margin-bottom: 10px;
+      padding:6px 14px; border-radius:99px; font-size:12px; font-weight:800;
+      background: #f1f5f9; margin-bottom: 12px;
+      text-transform: capitalize;
     }
     .badge.blue { background: rgba(26,71,135,.1); color: var(--hc-blue); }
-    .badge.toska { background: rgba(15,138,148,.1); color: var(--hc-toska); }
+    .badge.toska { background: rgba(15,138,148,0.15); color: #0d7078; }
 
-    .timeline { margin-top: 20px; position: relative; }
-    .t-row { display: grid; grid-template-columns: 80px 20px 1fr; gap: 10px; padding-bottom: 20px; }
-    .t-date { font-size: 10px; color: var(--muted); font-weight: 700; }
-    .t-dot { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; position: relative; z-index: 2; margin-top: 4px;}
-    .t-dot.on { background: var(--hc-toska); box-shadow: 0 0 0 4px rgba(15,138,148,0.1); }
-    .t-main { font-size: 12px; }
-    .t-title { font-weight: 800; }
-    .t-sub { color: var(--muted); font-size: 11px; }
+    .req-name { font-size: 22px; font-weight: 900; margin: 0; color: #0f172a; line-height: 1.2; }
+    .req-info { font-size: 11px; color: var(--muted); margin-top: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
 
-    /* Mobile Responsive */
-    @media (max-width: 880px){
-      .result-grid { grid-template-columns: 1fr; }
-      .search-row { grid-template-columns: 1fr; }
-      .page { padding: 20px 10px; }
+    .note-box {
+      background: #f8fafc; border: 1px solid var(--line); 
+      padding: 15px; border-radius: 14px; margin: 20px 0; font-size: 13px; line-height: 1.5;
     }
 
-    .hidden { display: none; }
+    .timeline { margin-top: 30px; position: relative; }
+    .t-row { display: grid; grid-template-columns: 90px 30px 1fr; gap: 5px; padding-bottom: 25px; }
+    .t-date { font-size: 10px; color: var(--muted); font-weight: 800; text-align: right; padding-top: 4px; line-height: 1.3;}
+    .t-dot-col { display: flex; flex-direction: column; align-items: center; position: relative; }
+    .t-dot { width: 12px; height: 12px; border-radius: 50%; background: #cbd5e1; z-index: 2; margin-top: 5px; border: 2px solid #fff; }
+    .t-dot.on { background: var(--hc-toska); box-shadow: 0 0 0 4px rgba(15,138,148,0.1); }
+    .t-line { position: absolute; top: 15px; bottom: -15px; width: 2px; background: #e2e8f0; z-index: 1; }
+    .t-row:last-child .t-line { display: none; }
+    
+    .t-main { padding-left: 5px; }
+    .t-title { font-size: 13px; font-weight: 800; color: #1e293b; }
+    .t-sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+    /* Mobile Responsive */
+    @media (max-width: 600px){
+      .search-row { grid-template-columns: 1fr; }
+      .t-row { grid-template-columns: 75px 25px 1fr; }
+      .req-name { font-size: 19px; }
+    }
   </style>
 </head>
 
@@ -179,15 +175,12 @@
         </button>
       </div>
 
-      <div class="result-grid" id="result-area">
+      <div id="result-panel">
         <div class="panel">
-          <div class="panel-head">Permintaan Terkini</div>
-          <div class="list-container" id="list-items">
-            </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">Detail Status</div>
+          <div class="panel-head">
+            <span>Detail Request</span>
+            <span id="txt-status-top" style="color:var(--hc-toska); font-size: 12px;"></span>
+          </div>
           <div class="detail" id="detail-content">
             </div>
         </div>
@@ -197,17 +190,15 @@
   </div>
 
   <script>
-    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_APPS_SCRIPT_ANDA_DISINI";
-    let ALL_ITEMS = [];
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_ANDA";
 
-    // Helper API
     async function apiCall(action, payload){
       if (typeof hc32_post === 'function') return await hc32_post(action, payload);
       const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, ...payload }) });
       return await res.json();
     }
 
-    // Input Rules
+    // Input Sanitizer
     document.getElementById('inp-code').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0, 8);
     });
@@ -220,97 +211,93 @@
       const secret = document.getElementById('inp-secret').value.trim();
 
       if (!code || !secret) {
-        alert("Harap isi kode tracking dan verifikasi No HP");
+        if(window.showHC32Status) window.showHC32Status('error', 'Cek Input', 'Kode dan Verifikasi wajib diisi.');
         return;
       }
 
-      if (window.showHC32Status) window.showHC32Status('loading', 'Mencari...', 'Menghubungkan ke server');
+      // 1. Tampilkan Spinner (dari component.js)
+      if (window.showHC32Spinner) window.showHC32Spinner('Mencari data...');
 
       try {
         const out = await apiCall('trackRequest', { trackingCode: code, secret });
 
+        // 2. Sembunyikan Spinner
+        if (window.hideHC32Spinner) window.hideHC32Spinner();
+
         if (out && out.status === 'ok' && out.request) {
-          if (window.hideHC32Status) window.hideHC32Status();
+          const req = out.request;
           
-          // Munculkan grid hasil
-          document.getElementById('result-area').style.display = 'grid';
+          // Munculkan Panel
+          document.getElementById('result-panel').style.display = 'block';
+          document.getElementById('txt-status-top').innerText = req.status;
+
+          // Mapping Jenis Berdasarkan Prefix
+          const prefix = code.substring(0, 2).toUpperCase();
+          let typeLabel = "Permintaan Umum";
+          if(prefix === "PA") typeLabel = "Pendaftaran Anggota";
+          if(prefix === "PD") typeLabel = "Perbaikan Data";
+          if(prefix === "LS") typeLabel = "Layanan Support";
+          if(prefix === "AK") typeLabel = "Akses Akun";
+
+          // Render Detail
+          const container = document.getElementById('detail-content');
+          container.innerHTML = `
+            <div class="badge toska"><i class="ri-file-info-line"></i> ${typeLabel}</div>
+            <h2 class="req-name">${req.ownerName || 'Pemohon'}</h2>
+            <div class="req-info">KODE: ${req.code} • Update: ${formatDT_(req.updatedAt)}</div>
+            
+            <div class="note-box">
+              <div style="font-weight:800; margin-bottom:4px; color:var(--hc-blue); font-size:11px;">CATATAN TERBARU:</div>
+              ${req.publicNote || 'Belum ada catatan publik dari admin.'}
+            </div>
+
+            <div class="timeline">
+              ${out.events.map((ev, i) => `
+                <div class="t-row">
+                  <div class="t-date">${formatDTLine_(ev.at)}</div>
+                  <div class="t-dot-col">
+                    <div class="t-dot ${i === 0 ? 'on' : ''}"></div>
+                    <div class="t-line"></div>
+                  </div>
+                  <div class="t-main">
+                    <div class="t-title">${ev.type === 'created' ? 'Request Terkirim' : (ev.toStatus || 'Update Status')}</div>
+                    <div class="t-sub">${ev.note || 'Status diproses oleh sistem.'}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
           
-          const item = mapTrackOutToItem_(out);
-          ALL_ITEMS = [item]; // Simpan hasil
-          renderLists();
-          renderDetail(item);
-          
-          // Scroll otomatis ke hasil pada mobile
-          if(window.innerWidth < 880) {
-              document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
-          }
+          window.scrollTo({ top: document.getElementById('result-panel').offsetTop - 20, behavior: 'smooth' });
+
         } else {
-          if (window.showHC32Status) window.showHC32Status('error', 'Tidak Ditemukan', 'Kode atau verifikasi tidak cocok');
+          if (window.showHC32Status) window.showHC32Status('error', 'Tidak Ditemukan', 'Data tidak ditemukan atau verifikasi salah.');
         }
       } catch (e) {
-        if (window.showHC32Status) window.showHC32Status('error', 'Koneksi Gagal', e.message);
+        if (window.hideHC32Spinner) window.hideHC32Spinner();
+        if (window.showHC32Status) window.showHC32Status('error', 'Gagal', 'Terjadi kesalahan koneksi.');
       }
     }
 
-    function renderLists() {
-      const container = document.getElementById('list-items');
-      container.innerHTML = ALL_ITEMS.map(item => `
-        <div class="ticket active">
-          <div class="code">${item.id}</div>
-          <div class="subject">${item.title}</div>
-          <div class="code" style="color:var(--hc-toska)">${item.statusLabel}</div>
-        </div>
-      `).join('');
+    function formatDT_(s) {
+      if(!s) return '-';
+      const d = new Date(s);
+      return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short'}) + ' ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
     }
 
-    function renderDetail(item) {
-      const container = document.getElementById('detail-content');
-      container.innerHTML = `
-        <div class="badge blue">${item.type}</div>
-        <div style="font-weight:800; font-size:18px; margin-bottom:5px;">${item.title}</div>
-        <div class="code" style="margin-bottom:20px;">Update Terakhir: ${item.updatedAt}</div>
-        
-        <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:20px; font-size:13px;">
-          <strong>Catatan:</strong><br>${item.note}
-        </div>
-
-        <div class="timeline">
-          ${item.events.map(ev => `
-            <div class="t-row">
-              <div class="t-date">${ev.at}</div>
-              <div class="t-dot on"></div>
-              <div class="t-main">
-                <div class="t-title">${ev.title}</div>
-                <div class="t-sub">${ev.sub}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+    function formatDTLine_(s) {
+      if(!s) return '-';
+      const d = new Date(s);
+      return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short'}) + '<br>' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
     }
 
-    // Mapper (Simplified version of your logic)
-    function mapTrackOutToItem_(out){
-      const r = out.request || {};
-      return {
-        id: r.code || '-',
-        type: 'Permintaan',
-        title: r.title || 'Layanan HC32',
-        updatedAt: r.updatedAt || '-',
-        statusLabel: r.status || 'Diproses',
-        note: r.publicNote || 'Sedang dalam peninjauan oleh tim admin.',
-        events: out.events || []
-      };
+    function openSettings(){ 
+      if(window.showHC32Status) window.showHC32Status('info', 'Pengaturan', 'Fitur ini akan segera tersedia.');
     }
 
-    function openSettings(){ alert("Pengaturan akan tersedia segera."); }
-
-    // Prefill if URL has code
     window.onload = () => {
       const qs = new URLSearchParams(location.search);
-      if(qs.get('code')) {
-        document.getElementById('inp-code').value = qs.get('code').toUpperCase();
-      }
+      if(qs.get('code')) document.getElementById('inp-code').value = qs.get('code').toUpperCase();
     };
   </script>
 </body>
