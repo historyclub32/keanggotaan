@@ -1,1 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lacak Status - HC 32</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
+
+  <!-- kalau kamu sudah punya config.js/components.js boleh dipakai -->
+  <script src="../../config.js"></script>
+  <script src="../../components.js"></script>
+
+  <style>
+    :root{
+      --hc-blue:#1a4787;
+      --hc-toska:#0f8a94;
+      --hc-dark:#2e2e2e;
+      --hc-bg:#e7e9ea;
+      --hc-red:#d30e14;
+
+      --card:#ffffff;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --shadow:0 10px 35px rgba(2, 6, 23, .08);
+      --radius:18px;
+
+      --accent: var(--hc-blue);
+      --accent2: var(--hc-toska);
+      --accentSoft: rgba(26,71,135,.10);
+      --ok: #0f766e;
+      --warn: #b45309;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,-apple-system,sans-serif;
+      background: #eaf2ff;
+      color:#0f172a;
+    }
+
+    /* layout container */
+    .page{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 14px;
+    }
+    .shell{
+      width:100%;
+      max-width:980px;
+      border-radius:24px;
+      background:rgba(255,255,255,.55);
+      backdrop-filter: blur(8px);
+      border:1px solid rgba(255,255,255,.7);
+      box-shadow: 0 20px 70px rgba(15,23,42,.12);
+      padding:18px;
+    }
+
+    /* top bar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .topbar-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .icon-btn{
+      width:42px;height:42px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;
+      transition:.15s;
+      color:#0f172a;
+    }
+    .icon-btn:hover{ box-shadow: 0 10px 25px rgba(0,0,0,.08); }
+    .title{
+      font-size:24px;
+      font-weight:800;
+      margin:0;
+      letter-spacing:.2px;
+    }
+
+    /* main grid */
+    .grid{
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:16px;
+    }
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    /* cards */
+    .panel{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel-head{
+      padding:14px 14px 10px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel-head h3{
+      margin:0;
+      font-size:14px;
+      color:#0f172a;
+      font-weight:800;
+    }
+
+    /* search box */
+    .search{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(26,71,135,.06), rgba(255,255,255,0));
+    }
+    .search-row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 520px){
+      .search-row{ grid-template-columns: 1fr; }
+    }
+    .inp{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      border:1px solid #cbd5e1;
+      padding:0 14px;
+      outline:none;
+      font-size:13px;
+      font-family:'Poppins',sans-serif;
+      background:#fff;
+    }
+    .inp:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(26,71,135,.14);
+    }
+    .btn{
+      height:44px;
+      border:none;
+      border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+      font-weight:800;
+      font-family:'Poppins',sans-serif;
+      cursor:pointer;
+      transition:.15s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 30px rgba(15,138,148,.22); }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .hint{
+      margin:10px 0 0;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    /* list sections */
+    .section{
+      padding:12px 14px 0;
+    }
+    .section-title{
+      margin:0 0 10px;
+      font-size:12px;
+      font-weight:800;
+      color: #1e293b;
+    }
+    .section-title .count{
+      color: var(--accent);
+      font-weight:900;
+    }
+
+    .list{ padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
+
+    .ticket{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      cursor:pointer;
+      transition:.15s;
+      background:#fff;
+    }
+    .ticket:hover{ box-shadow: 0 12px 28px rgba(0,0,0,.08); transform: translateY(-1px); }
+    .ticket.active{
+      border-color: rgba(26,71,135,.35);
+      box-shadow: 0 14px 34px rgba(26,71,135,.12);
+      background: linear-gradient(180deg, rgba(26,71,135,.06), #fff);
+    }
+
+    .ticket-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .code{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+    .subject{
+      margin:2px 0 0;
+      font-size:13px;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.25;
+    }
+    .meta{
+      font-size:11px;
+      color:var(--muted);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:11px;
+      font-weight:800;
+      color:#0f172a;
+      white-space:nowrap;
+    }
+    .badge.blue{ border-color: rgba(26,71,135,.25); background: rgba(26,71,135,.08); color:#0f3a74; }
+    .badge.toska{ border-color: rgba(15,138,148,.25); background: rgba(15,138,148,.08); color:#0f766e; }
+    .badge.warn{ border-color: rgba(180,83,9,.25); background: rgba(180,83,9,.08); color:#854d0e; }
+    .badge.red{ border-color: rgba(211,14,20,.25); background: rgba(211,14,20,.08); color:#b91c1c; }
+
+    /* mini progress line (like attachment) */
+    .mini-track{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:#cbd5e1;
+      flex:0 0 auto;
+    }
+    .dot.on{ background: var(--accent2); }
+    .track-line{
+      height:3px;
+      background:#e2e8f0;
+      border-radius:999px;
+      flex:1;
+      position:relative;
+      overflow:hidden;
+    }
+    .track-fill{
+      position:absolute;left:0;top:0;bottom:0;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius:999px;
+    }
+    .mid-icon{
+      width:38px;height:38px;border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: 0 14px 28px rgba(15,138,148,.22);
+      flex:0 0 auto;
+    }
+
+    /* detail panel */
+    .detail{
+      padding:14px;
+    }
+    .detail-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .detail-left .detail-code{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .detail-left .detail-title{
+      margin:0;
+      font-size:18px;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.2;
+    }
+    .detail-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .mini-btn{
+      height:36px;
+      padding:0 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:.15s;
+      color:#0f172a;
+    }
+    .mini-btn:hover{ box-shadow:0 10px 20px rgba(0,0,0,.08); }
+
+    .detail-summary{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background: linear-gradient(180deg, rgba(26,71,135,.04), #fff);
+      margin-bottom:12px;
+    }
+    .sum-grid{
+      display:grid;
+      grid-template-columns: 130px 1fr;
+      gap:8px 10px;
+      align-items:center;
+      font-size:12px;
+    }
+    @media (max-width: 520px){
+      .sum-grid{ grid-template-columns: 1fr; }
+      .sum-grid .k{ margin-top:6px; }
+    }
+    .k{ color:#334155; font-weight:900; }
+    .v{ color:#0f172a; font-weight:700; }
+
+    /* big progress line + nodes */
+    .big-track{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:#fff;
+      margin-bottom:12px;
+    }
+    .big-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-end;
+      margin-bottom:10px;
+      font-size:12px;
+      font-weight:800;
+    }
+    .big-row .left{ color: var(--accent2); }
+    .big-row .right{ color: var(--accent); text-align:right; }
+
+    .big-line{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .big-node{
+      width:12px;height:12px;border-radius:999px;background:#cbd5e1;
+      flex:0 0 auto;
+      position:relative;
+    }
+    .big-node.on{ background: var(--accent2); }
+    .big-bar{
+      height:4px;background:#e2e8f0;border-radius:999px;flex:1;
+      position:relative; overflow:hidden;
+    }
+    .big-fill{
+      position:absolute;left:0;top:0;bottom:0;width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius:999px;
+    }
+    .big-mid{
+      width:44px;height:44px;border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;
+      box-shadow: 0 16px 34px rgba(15,138,148,.22);
+      flex:0 0 auto;
+    }
+
+    /* timeline */
+    .timeline{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:#fff;
+    }
+    .t-row{
+      display:grid;
+      grid-template-columns: 96px 18px 1fr;
+      gap:10px;
+      padding:10px 0;
+    }
+    .t-date{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      line-height:1.1;
+    }
+    .t-dot{
+      display:flex;
+      justify-content:center;
+      position:relative;
+    }
+    .t-dot::before{
+      content:'';
+      width:10px;height:10px;border-radius:999px;
+      background:#cbd5e1;
+      margin-top:2px;
+      z-index:2;
+    }
+    .t-dot::after{
+      content:'';
+      position:absolute;
+      top:14px; bottom:-10px;
+      width:3px;
+      background:#e2e8f0;
+      border-radius:999px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:1;
+    }
+    .t-row:last-child .t-dot::after{ display:none; }
+
+    .t-dot.on::before{ background: var(--accent2); }
+    .t-dot.ok::before{ background: var(--ok); }
+    .t-dot.warn::before{ background: var(--warn); }
+    .t-dot.red::before{ background: var(--hc-red); }
+
+    .t-main{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .t-title{
+      font-size:12px;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.2;
+    }
+    .t-sub{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:600;
+      line-height:1.2;
+    }
+
+    .empty{
+      padding:18px 14px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="shell">
+
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn" type="button" onclick="history.back()" title="Kembali" aria-label="Kembali">
+            <i class="ri-arrow-left-line"></i>
+          </button>
+          <h1 class="title">Tracking</h1>
+        </div>
+
+        <button class="icon-btn" type="button" onclick="openSettings()" title="Pengaturan" aria-label="Pengaturan">
+          <i class="ri-settings-3-line"></i>
+        </button>
+      </div>
+
+      <div class="grid">
+        <!-- LEFT: list -->
+        <div class="panel">
+          <div class="search">
+            <div class="search-row">
+              <input id="inp-code" class="inp" placeholder="Kode Tracking (contoh: HC32-XXXXXX)" autocomplete="off" />
+              <input id="inp-secret" class="inp" placeholder="Verifikasi (NIS / last4 HP / DOB)" autocomplete="off" />
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px;">
+              <button id="btn-check" class="btn" type="button" onclick="lookup()">
+                <i class="ri-search-2-line"></i> Cek Status
+              </button>
+            </div>
+            <div class="hint">
+              Demi keamanan, status hanya bisa dibuka jika <b>kode</b> dan <b>verifikasi kedua</b> cocok.
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Current Request <span class="count" id="count-current">(0)</span></p>
+          </div>
+          <div class="list" id="list-current">
+            <div class="empty">Belum ada data. Masukkan kode tracking untuk mulai.</div>
+          </div>
+
+          <div class="section" style="padding-top:0;">
+            <p class="section-title" style="opacity:.65;">Previous Requests <span class="count" id="count-prev">(0)</span></p>
+          </div>
+          <div class="list" id="list-prev">
+            <div class="empty" style="opacity:.75;">Riwayat akan muncul di sini.</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: detail -->
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Detail</h3>
+            <div style="display:flex;gap:8px;">
+              <span class="badge blue" id="detail-badge" style="display:none;"><i class="ri-shield-check-line"></i> -</span>
+            </div>
+          </div>
+
+          <div class="detail" id="detail">
+            <div class="empty">Pilih salah satu request untuk melihat detail timeline.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // CONFIG
+    // =========================
+    const API_URL = (typeof GAS_URL !== 'undefined') ? GAS_URL : "URL_APPS_SCRIPT_ANDA_DISINI";
+
+    async function postJson(payload){
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return await res.json();
+    }
+
+    function safeShowStatus(type, title, msg){
+      if (typeof window.showHC32Status === 'function') window.showHC32Status(type, title, msg);
+    }
+    function safeHideStatus(){
+      if (typeof window.hideHC32Status === 'function') window.hideHC32Status();
+    }
+
+    // =========================
+    // STATE
+    // Backend idealnya return:
+    // {
+    //   status:'ok',
+    //   items:[{
+    //     id:'HC32-AB12CD',
+    //     type:'Pendaftaran' | 'Perbaikan Data' | 'Tiket Live Chat' | 'Pembuatan Akun' | ...
+    //     title:'Pendaftaran Anggota Baru' (atau judul singkat),
+    //     createdAt:'2026-01-18 10:15',
+    //     updatedAt:'2026-01-18 10:30',
+    //     statusLabel:'Menunggu Verifikasi' | 'Perlu Perbaikan' | 'Disetujui' | 'Selesai',
+    //     statusTone:'blue'|'toska'|'warn'|'red',
+    //     isClosed:false/true,
+    //     progress: { currentIndex:2, total:4 }, // untuk progress bar ringkas
+    //     route:{ from:'Masuk', to:'Selesai' },   // opsional
+    //     stages:[ 'Diterima','Dicek','Diproses','Selesai' ], // opsional
+    //     events:[ {at:'2026-01-18 10:15', title:'Diterima', sub:'Data berhasil masuk sistem'}, ... ]
+    //   }]
+    // }
+    // =========================
+    let ALL_ITEMS = [];
+    let ACTIVE_ID = null;
+
+    // =========================
+    // HELPERS
+    // =========================
+    function fmtMiniDate(str){
+      if (!str) return '-';
+      return str;
+    }
+
+    function pct_(cur, total){
+      cur = Number(cur); total = Number(total);
+      if (!isFinite(cur) || !isFinite(total) || total <= 0) return 0;
+      const p = Math.max(0, Math.min(1, cur / total));
+      return Math.round(p * 100);
+    }
+
+    function toneBadgeClass(tone){
+      if (tone === 'toska') return 'toska';
+      if (tone === 'warn') return 'warn';
+      if (tone === 'red') return 'red';
+      return 'blue';
+    }
+
+    function toneDotClass(tone){
+      if (tone === 'red') return 'red';
+      if (tone === 'warn') return 'warn';
+      if (tone === 'ok') return 'ok';
+      return 'on';
+    }
+
+    function copyText(txt){
+      const t = String(txt || '');
+      if (!t) return;
+      navigator.clipboard?.writeText(t);
+      safeShowStatus('success', 'Disalin', 'Kode berhasil disalin.');
+      setTimeout(() => safeHideStatus(), 800);
+    }
+
+    // =========================
+    // RENDER LIST
+    // =========================
+    function ticketCardHTML(item){
+      const id = item.id || '-';
+      const title = item.title || item.type || 'Request';
+      const type = item.type || 'Request';
+      const statusLabel = item.statusLabel || 'Diproses';
+      const tone = toneBadgeClass(item.statusTone);
+
+      const created = fmtMiniDate(item.createdAt);
+      const updated = fmtMiniDate(item.updatedAt);
+
+      const total = (item.progress && item.progress.total) ? item.progress.total : 4;
+      const curIdx = (item.progress && typeof item.progress.currentIndex === 'number') ? item.progress.currentIndex : 0;
+      const fill = pct_(curIdx, total - 1); // biar 0..100 saat index naik
+
+      // mini dots (4)
+      const dots = [];
+      for (let i=0;i<4;i++){
+        dots.push(`<span class="dot ${i <= curIdx ? 'on' : ''}"></span>`);
+      }
+
+      return `
+        <div class="ticket ${item.id === ACTIVE_ID ? 'active' : ''}" onclick="selectTicket('${encodeURIComponent(id)}')">
+          <div class="ticket-top">
+            <div>
+              <div class="code">${id}</div>
+              <div class="subject">${escapeHtml(title)}</div>
+              <div class="meta">
+                <span class="badge ${tone}"><i class="ri-file-list-3-line"></i> ${escapeHtml(type)}</span>
+                <span class="badge ${tone}"><i class="ri-information-line"></i> ${escapeHtml(statusLabel)}</span>
+              </div>
+              <div class="meta" style="margin-top:8px;opacity:.9;">
+                <span><i class="ri-time-line"></i> ${escapeHtml(created)}</span>
+                <span>•</span>
+                <span><i class="ri-refresh-line"></i> ${escapeHtml(updated)}</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="icon-btn" type="button" title="Salin" aria-label="Salin" onclick="event.stopPropagation(); copyText('${escapeAttr(id)}')">
+                <i class="ri-file-copy-line"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="mini-track">
+            ${dots.join('')}
+            <div class="track-line"><div class="track-fill" style="width:${fill}%;"></div></div>
+            <div class="mid-icon" aria-hidden="true"><i class="ri-truck-line"></i></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLists(){
+      const current = ALL_ITEMS.filter(x => !x.isClosed);
+      const prev = ALL_ITEMS.filter(x => x.isClosed);
+
+      document.getElementById('count-current').textContent = `(${current.length})`;
+      document.getElementById('count-prev').textContent = `(${prev.length})`;
+
+      const lc = document.getElementById('list-current');
+      const lp = document.getElementById('list-prev');
+
+      lc.innerHTML = current.length
+        ? current.map(ticketCardHTML).join('')
+        : `<div class="empty">Tidak ada request aktif.</div>`;
+
+      lp.innerHTML = prev.length
+        ? prev.map(ticketCardHTML).join('')
+        : `<div class="empty" style="opacity:.75;">Belum ada riwayat.</div>`;
+    }
+
+    // =========================
+    // RENDER DETAIL
+    // =========================
+    function renderDetail(item){
+      const d = document.getElementById('detail');
+      if (!item){
+        d.innerHTML = `<div class="empty">Pilih salah satu request untuk melihat detail timeline.</div>`;
+        document.getElementById('detail-badge').style.display = 'none';
+        return;
+      }
+
+      const id = item.id || '-';
+      const title = item.title || item.type || 'Request';
+      const type = item.type || 'Request';
+      const statusLabel = item.statusLabel || '-';
+      const tone = toneBadgeClass(item.statusTone);
+
+      const created = item.createdAt || '-';
+      const updated = item.updatedAt || '-';
+
+      // big progress
+      const stages = Array.isArray(item.stages) && item.stages.length ? item.stages : ['Diterima','Dicek','Diproses','Selesai'];
+      const total = stages.length;
+      const curIdx = (item.progress && typeof item.progress.currentIndex === 'number') ? item.progress.currentIndex : 0;
+      const fill = pct_(curIdx, total - 1);
+
+      // badge on header
+      const badge = document.getElementById('detail-badge');
+      badge.className = `badge ${tone}`;
+      badge.style.display = 'inline-flex';
+      badge.innerHTML = `<i class="ri-information-line"></i> ${escapeHtml(statusLabel)}`;
+
+      const from = (item.route && item.route.from) ? item.route.from : stages[0];
+      const to   = (item.route && item.route.to) ? item.route.to : stages[stages.length - 1];
+
+      const nodes = stages.map((_, i) => `<span class="big-node ${i <= curIdx ? 'on' : ''}"></span>`).join('');
+
+      const events = Array.isArray(item.events) ? item.events : [];
+      const timelineHTML = events.length
+        ? events.map(ev => {
+            const dotClass = toneDotClass(ev.tone || 'on');
+            return `
+              <div class="t-row">
+                <div class="t-date">${escapeHtml(ev.at || '-')}</div>
+                <div class="t-dot ${dotClass}"></div>
+                <div class="t-main">
+                  <div class="t-title">${escapeHtml(ev.title || '-')}</div>
+                  <div class="t-sub">${escapeHtml(ev.sub || '')}</div>
+                </div>
+              </div>
+            `;
+          }).join('')
+        : `<div class="empty">Timeline belum tersedia.</div>`;
+
+      d.innerHTML = `
+        <div class="detail-head">
+          <div class="detail-left">
+            <div class="detail-code">${escapeHtml(id)}</div>
+            <h2 class="detail-title">${escapeHtml(title)}</h2>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="badge ${tone}"><i class="ri-file-list-3-line"></i> ${escapeHtml(type)}</span>
+              <span class="badge"><i class="ri-time-line"></i> Dibuat: ${escapeHtml(created)}</span>
+              <span class="badge"><i class="ri-refresh-line"></i> Update: ${escapeHtml(updated)}</span>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="mini-btn" type="button" onclick="copyText('${escapeAttr(id)}')">
+              <i class="ri-file-copy-line"></i> Salin Kode
+            </button>
+            <button class="mini-btn" type="button" onclick="refreshActive()">
+              <i class="ri-refresh-line"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-summary">
+          <div class="sum-grid">
+            <div class="k">Status</div>
+            <div class="v">${escapeHtml(statusLabel)}</div>
+            <div class="k">Catatan</div>
+            <div class="v">${escapeHtml(item.note || '—')}</div>
+          </div>
+        </div>
+
+        <div class="big-track">
+          <div class="big-row">
+            <div class="left">${escapeHtml(from)}</div>
+            <div class="right">${escapeHtml(to)}</div>
+          </div>
+          <div class="big-line">
+            ${nodes}
+            <div class="big-bar"><div class="big-fill" style="width:${fill}%;"></div></div>
+            <div class="big-mid"><i class="ri-flag-2-line"></i></div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+            ${stages.map((s, i) => `
+              <span class="badge ${i <= curIdx ? tone : ''}" style="border-style:dashed;">
+                <i class="ri-checkbox-blank-circle-line"></i> ${escapeHtml(s)}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="timeline">
+          ${timelineHTML}
+        </div>
+      `;
+    }
+
+    function selectTicket(encodedId){
+      const id = decodeURIComponent(encodedId || '');
+      ACTIVE_ID = id;
+      renderLists();
+      const item = ALL_ITEMS.find(x => x.id === id);
+      renderDetail(item);
+    }
+
+    // =========================
+    // LOOKUP
+    // =========================
+    async function lookup(){
+      const code = (document.getElementById('inp-code').value || '').trim();
+      const secret = (document.getElementById('inp-secret').value || '').trim();
+
+      if (!code || !secret){
+        safeShowStatus('error', 'Belum Lengkap', 'Masukkan kode tracking dan verifikasi kedua.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-check');
+      btn.disabled = true;
+
+      safeShowStatus('loading', 'Memuat...', 'Mengambil data status dari server.');
+
+      try{
+        // GANTI action sesuai backend kamu
+        const out = await postJson({ action: 'trackLookup', code, secret });
+
+        if (out && out.status === 'ok' && Array.isArray(out.items)){
+          safeHideStatus();
+
+          ALL_ITEMS = out.items.map(normalizeItem_);
+          ACTIVE_ID = (ALL_ITEMS[0] && ALL_ITEMS[0].id) ? ALL_ITEMS[0].id : null;
+
+          renderLists();
+          renderDetail(ALL_ITEMS.find(x => x.id === ACTIVE_ID));
+
+          if (!ALL_ITEMS.length){
+            safeShowStatus('error', 'Tidak Ditemukan', 'Data tidak ditemukan atau verifikasi tidak cocok.');
+          }
+
+        } else {
+          safeShowStatus('error', 'Gagal', (out && out.message) ? out.message : 'Tidak bisa mengambil status.');
+        }
+
+      } catch (e){
+        safeShowStatus('error', 'Koneksi Gagal', e.message);
+      }
+
+      btn.disabled = false;
+    }
+
+    // refresh detail aktif (kalau backend kamu support)
+    async function refreshActive(){
+      const item = ALL_ITEMS.find(x => x.id === ACTIVE_ID);
+      if (!item) return;
+      // cara paling simpel: panggil lookup ulang dengan input yang sama
+      lookup();
+    }
+
+    // normalisasi supaya aman kalau backend belum lengkap
+    function normalizeItem_(x){
+      x = x || {};
+      const prog = x.progress || {};
+      if (!prog || typeof prog !== 'object') x.progress = { currentIndex:0, total:4 };
+      if (typeof x.progress.currentIndex !== 'number') x.progress.currentIndex = 0;
+
+      if (!Array.isArray(x.stages) || !x.stages.length){
+        x.stages = defaultStagesByType_(x.type);
+      }
+      if (!Array.isArray(x.events)) x.events = [];
+      if (!x.statusTone) x.statusTone = defaultToneByStatus_(x.statusLabel);
+      return x;
+    }
+
+    function defaultStagesByType_(type){
+      const t = String(type || '').toLowerCase();
+      if (t.includes('pendaftaran')) return ['Diterima','Verifikasi','Keputusan','Selesai'];
+      if (t.includes('perbaikan')) return ['Diterima','Dicek','Perbaikan','Selesai'];
+      if (t.includes('live chat') || t.includes('support')) return ['Dibuat','Diproses','Tindak Lanjut','Selesai'];
+      if (t.includes('akun')) return ['Diterima','Validasi','Aktivasi','Selesai'];
+      return ['Diterima','Dicek','Diproses','Selesai'];
+    }
+
+    function defaultToneByStatus_(label){
+      const s = String(label || '').toLowerCase();
+      if (s.includes('perlu') || s.includes('revisi')) return 'warn';
+      if (s.includes('ditolak')) return 'red';
+      if (s.includes('disetujui') || s.includes('selesai')) return 'toska';
+      return 'blue';
+    }
+
+    // =========================
+    // ENTER KEY BEHAVIOR
+    // (kode + secret -> Enter = Cek Status)
+    // =========================
+    function bindEnterToLookup_(){
+      const wrap = document.querySelector('.search');
+      if (!wrap) return;
+      wrap.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter'){
+          e.preventDefault();
+          lookup();
+        }
+      });
+    }
+
+    // basic escape
+    function escapeHtml(s){
+      return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+    // settings placeholder
+    function openSettings(){
+      safeShowStatus('info', 'Info', 'Pengaturan bisa kamu isi nanti (mis. bantuan, kebijakan privasi, dsb).');
+      setTimeout(() => safeHideStatus(), 1200);
+    }
+
+    // =========================
+    // DEMO DATA (hapus kalau sudah backend ready)
+    // =========================
+    function loadDemo_(){
+      ALL_ITEMS = [
+        {
+          id:'HC32-AB12CD',
+          type:'Pendaftaran Anggota',
+          title:'Pendaftaran Anggota Baru',
+          createdAt:'18 Jan, 26 • 10:15',
+          updatedAt:'18 Jan, 26 • 10:30',
+          statusLabel:'Menunggu Verifikasi',
+          statusTone:'blue',
+          isClosed:false,
+          progress:{ currentIndex:1, total:4 },
+          route:{ from:'Diterima', to:'Selesai' },
+          stages:['Diterima','Verifikasi','Keputusan','Selesai'],
+          note:'Admin sedang memeriksa data.',
+          events:[
+            { at:'18 Jan, 26<br><span style="opacity:.7;">10:15</span>', title:'Diterima', sub:'Form berhasil dikirim.', tone:'on' },
+            { at:'18 Jan, 26<br><span style="opacity:.7;">10:30</span>', title:'Mulai Verifikasi', sub:'Data sedang ditinjau pengurus.', tone:'on' }
+          ]
+        },
+        {
+          id:'HC32-ZX90QP',
+          type:'Tiket Live Chat Support',
+          title:'Tindak Lanjut Live Chat',
+          createdAt:'15 Jan, 26 • 19:02',
+          updatedAt:'16 Jan, 26 • 09:10',
+          statusLabel:'Selesai',
+          statusTone:'toska',
+          isClosed:true,
+          progress:{ currentIndex:3, total:4 },
+          stages:['Dibuat','Diproses','Tindak Lanjut','Selesai'],
+          note:'Tiket sudah ditutup.',
+          events:[
+            { at:'15 Jan, 26<br><span style="opacity:.7;">19:02</span>', title:'Tiket Dibuat', sub:'Laporan masuk dari Live Chat.', tone:'on' },
+            { at:'16 Jan, 26<br><span style="opacity:.7;">08:20</span>', title:'Diproses', sub:'Admin menghubungi pendaftar.', tone:'on' },
+            { at:'16 Jan, 26<br><span style="opacity:.7;">09:10</span>', title:'Selesai', sub:'Masalah terselesaikan.', tone:'ok' }
+          ]
+        }
+      ];
+      ACTIVE_ID = ALL_ITEMS[0].id;
+      renderLists();
+      renderDetail(ALL_ITEMS[0]);
+    }
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initHC32Navigation === 'function') initHC32Navigation('tracking');
+      bindEnterToLookup_();
+
+      // Demo (hapus kalau sudah backend)
+      loadDemo_();
+    });
+  </script>
+</body>
+</html>
 
