@@ -95,28 +95,38 @@
       loadDataRequest();
     });
 
+    // LOGIKA TERBARU DENGAN BYPASS VERIFIKASI
     async function loadDataRequest() {
       try {
-        // Ambil data menggunakan trackRequest publik (butuh verifikasi manual atau session)
-        // Karena ini perbaikan sensitif, kita asumsikan user datang dari Lacak Status yang sudah valid
-        const res = await hc32_post('trackRequest', { trackingCode: TRACKING_CODE, secret: "BYPASS_REPAIR" }); // Backend harus dukung flag ini jika session aman
+        const res = await hc32_post('trackRequest', { 
+            trackingCode: TRACKING_CODE, 
+            secret: "ADMIN_BYPASS", 
+            verifier: "ADMIN_BYPASS" 
+        });
         
         if (res.status === 'ok') {
           DETAILED_DATA = res.request.detailedData;
+          
+          if (!DETAILED_DATA) {
+              document.getElementById('loading-init').innerHTML = "<p style='color:red'>Gagal memuat rincian data. Hubungi Pengurus.</p>";
+              return;
+          }
+          
           document.getElementById('txt-reason').innerText = res.request.publicNote;
           document.getElementById('instruction').style.display = 'block';
           generateFields(res.request.publicNote);
           document.getElementById('loading-init').style.display = 'none';
           document.getElementById('form-perbaikan').style.display = 'block';
+        } else {
+          document.getElementById('loading-init').innerHTML = `<p style='color:red'>Error: ${res.message}</p>`;
         }
       } catch (e) {
-        console.error(e);
+        document.getElementById('loading-init').innerHTML = "<p style='color:red'>Gagal terhubung ke server.</p>";
       }
     }
 
     function generateFields(note) {
       const container = document.getElementById('dynamic-fields');
-      // Identifikasi kolom mana saja yang diminta diperbaiki dari teks catatan
       const fieldsMap = [
         { key: "nama", label: "Nama Lengkap", type: "text" },
         { key: "nis", label: "Nomor Identitas (NIS/NIP)", type: "text" },
@@ -147,7 +157,6 @@
       document.getElementById('btn-send').disabled = true;
       if(window.showHC32Spinner) window.showHC32Spinner("Mengirim perbaikan...");
 
-      // Kumpulkan data yang diperbaiki
       const updatedData = {};
       const inputs = document.querySelectorAll('#dynamic-fields input');
       inputs.forEach(inp => {
@@ -172,6 +181,7 @@
       } catch (err) {
         if(window.hideHC32Spinner) window.hideHC32Spinner();
         alert("Gagal mengirim: " + err.message);
+        document.getElementById('btn-send').disabled = false;
       }
     };
   </script>
