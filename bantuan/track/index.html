@@ -361,7 +361,7 @@
             
             // Tambahkan tombol perbaikan jika PA (FOLDER DIPERBARUI)
             if(prefix === 'PA') {
-              displayDesc += `<br><a href="../../pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
+              displayDesc += `<br><a href="../../keanggotaan/pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
             }
             timelineHTML += renderRow(rejectedEv.at, 'err', displayLabel, displayDesc, false);
           } else {
