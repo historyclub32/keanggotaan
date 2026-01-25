@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perbaikan Data - HC 32</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
+
+  <script src="../../config.js"></script>
+  <script src="../../components.js"></script>
+
+  <style>
+    :root {
+      --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-bg: #e7e9ea;
+      --hc-red: #d30e14; --card: #ffffff; --muted: #64748b;
+    }
+
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--hc-bg); color: #0f172a; }
+    .main-wrapper { padding: 40px 15px; min-height: 100vh; margin-top: 60px; }
+    .container { max-width: 600px; margin: 0 auto; }
+
+    .card {
+      background: var(--card); border-radius: 18px; box-shadow: 0 10px 35px rgba(0,0,0,0.05);
+      padding: 30px; border: 1px solid #e2e8f0;
+    }
+
+    .header-fix {
+      text-align: center; margin-bottom: 25px; padding-bottom: 20px;
+      border-bottom: 2px dashed #e2e8f0;
+    }
+    .header-fix h2 { margin: 0; color: var(--hc-red); font-weight: 800; }
+    .header-fix p { margin: 5px 0 0; font-size: 13px; color: var(--muted); }
+
+    .instruction-box {
+      background: #fff5f5; border-left: 4px solid var(--hc-red);
+      padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 13px;
+    }
+
+    .form-group { margin-bottom: 20px; display: none; /* Hidden by default, shown by logic */ }
+    .form-group.active { display: block; animation: fadeIn 0.4s; }
+    
+    label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--hc-blue); }
+    input, select, textarea {
+      width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 10px;
+      font-family: inherit; font-size: 14px; outline: none; transition: 0.2s;
+    }
+    input:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1); }
+
+    .btn-submit {
+      width: 100%; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska));
+      color: #fff; border: none; padding: 16px; border-radius: 12px;
+      font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); opacity: 0.9; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    <div class="container">
+      <div id="loading-init" style="text-align: center; padding: 50px;">
+        <i class="ri-loader-4-line ri-spin" style="font-size: 40px; color: var(--hc-blue);"></i>
+        <p>Menyiapkan formulir perbaikan...</p>
+      </div>
+
+      <div id="repair-card" class="card" style="display: none;">
+        <div class="header-fix">
+          <h2>Perbaikan Data</h2>
+          <p id="txt-req-code">KODE: PA000000</p>
+        </div>
+
+        <div class="instruction-box">
+          <strong>Catatan Pengurus:</strong><br>
+          <span id="txt-admin-note">Memuat instruksi...</span>
+        </div>
+
+        <form id="form-perbaikan">
+          <div class="form-group" data-field="Nama Lengkap">
+            <label>Nama Lengkap Baru</label>
+            <input type="text" name="nama" placeholder="Masukkan nama sesuai identitas">
+          </div>
+
+          <div class="form-group" data-field="Nomor Identitas">
+            <label>Nomor Identitas Baru (NIS/NIP)</label>
+            <input type="text" name="nis" placeholder="7 Digit NIS / 18 Digit NIP">
+          </div>
+
+          <div class="form-group" data-field="Nomor WhatsApp">
+            <label>Nomor WhatsApp Baru</label>
+            <input type="tel" name="nohp" placeholder="Contoh: 0812xxxx">
+          </div>
+
+          <div class="form-group" data-field="Alamat Email">
+            <label>Email Baru</label>
+            <input type="email" name="email" placeholder="contoh@email.com">
+          </div>
+
+          <div class="form-group" data-field="Data Kelas">
+            <label>Kelas Baru</label>
+            <input type="text" name="kelas" placeholder="Contoh: XI-4">
+          </div>
+
+          <div class="form-group" data-field="Foto Profil">
+            <label>Upload Ulang Foto Profil</label>
+            <p style="font-size: 11px; color: var(--hc-red); margin-bottom: 5px;">*Pastikan wajah terlihat jelas</p>
+            <input type="file" id="inp-foto" accept="image/*">
+            <input type="hidden" name="fotoBase64" id="foto-base64">
+          </div>
+
+          <div style="margin-top: 30px;">
+            <button type="submit" class="btn-submit">
+              <i class="ri-send-plane-fill"></i> Kirim Perbaikan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let TRACKING_CODE = "";
+    let SECRET_LAST4 = "";
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (typeof initHC32Navigation === 'function') initHC32Navigation('pendaftaran');
+      
+      const urlParams = new URLSearchParams(location.search);
+      TRACKING_CODE = urlParams.get('code');
+
+      if (!TRACKING_CODE) {
+        alert("Kode tracking tidak valid.");
+        window.location.href = "../track/";
+        return;
+      }
+
+      await loadRepairData();
+    });
+
+    async function loadRepairData() {
+      try {
+        // Kita hit backend untuk dapat info kenapa ditolak
+        // Untuk perbaikan, biasanya kita butuh verifikasi (manual prompt atau session)
+        // Karena ini web utama, kita minta 4 digit HP sebagai verifikasi kedua
+        SECRET_LAST4 = prompt("Untuk keamanan, masukkan 4 digit terakhir No HP yang terdaftar:");
+        
+        if (!SECRET_LAST4) {
+          window.location.href = "../track/";
+          return;
+        }
+
+        const res = await hc32_post('trackRequest', { 
+          trackingCode: TRACKING_CODE, 
+          secret: SECRET_LAST4 
+        });
+
+        if (res.status === 'ok') {
+          setupRepairForm(res.request);
+        } else {
+          alert("Gagal memuat data: " + res.message);
+          window.location.href = "../track/";
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Terjadi kesalahan koneksi.");
+      }
+    }
+
+    function setupRepairForm(req) {
+      document.getElementById('loading-init').style.display = 'none';
+      document.getElementById('repair-card').style.display = 'block';
+      document.getElementById('txt-req-code').innerText = "KODE: " + req.code;
+      
+      const adminNote = req.publicNote || "";
+      document.getElementById('txt-admin-note').innerText = adminNote;
+
+      // Logika Pintar: Deteksi field mana yang ditandai salah oleh admin
+      // Kita mencari teks seperti "Perbaikan diperlukan pada: Nama Lengkap, Foto Profil"
+      const groups = document.querySelectorAll('.form-group');
+      let foundAny = false;
+
+      groups.forEach(group => {
+        const fieldName = group.getAttribute('data-field');
+        if (adminNote.includes(fieldName)) {
+          group.classList.add('active');
+          foundAny = true;
+        }
+      });
+
+      // Jika admin note formatnya tidak standar, tampilkan semua field sebagai fallback
+      if (!foundAny) {
+        groups.forEach(g => g.classList.add('active'));
+      }
+    }
+
+    // Handle File to Base64 (Untuk Foto Profil)
+    document.getElementById('inp-foto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.getElementById('foto-base64').value = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('form-perbaikan').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (window.showHC32Spinner) window.showHC32Spinner('Mengirim perbaikan...');
+
+      const formData = new FormData(e.target);
+      const data = {
+        trackingCode: TRACKING_CODE,
+        secret: SECRET_LAST4,
+        updates: Object.fromEntries(formData.entries())
+      };
+
+      try {
+        // Kita buat action baru di backend: 'submitRepair'
+        const res = await hc32_post('submitRepair', data);
+
+        if (window.hideHC32Spinner) window.hideHC32Spinner();
+
+        if (res.status === 'ok') {
+          if (window.showHC32Status) {
+            window.showHC32Status('success', 'Berhasil Dikirim', 'Data perbaikan telah diterima. Status tracking Anda akan diperbarui.', () => {
+              window.location.href = "../track/?code=" + TRACKING_CODE;
+            });
+          }
+        } else {
+          alert("Gagal: " + res.message);
+        }
+      } catch (err) {
+        if (window.hideHC32Spinner) window.hideHC32Spinner();
+        alert("Gagal mengirim data.");
+      }
+    });
+  </script>
+</body>
+</html>
