@@ -12,6 +12,8 @@
 
   <script src="../../config.js"></script>
   <script src="../../components.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
   <style>
     :root {
@@ -28,14 +30,17 @@
     
     .instruction-box { background: #fff1f2; border-left: 4px solid var(--hc-red); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; }
     
-    .form-group { margin-bottom: 15px; }
+    .form-group { margin-bottom: 20px; }
     label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #1e293b; }
     input, select, textarea { 
       width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 12px; 
-      font-family: inherit; font-size: 14px; outline: none; transition: 0.2s;
+      font-family: inherit; font-size: 14px; outline: none; transition: 0.2s; background: #fff;
     }
     input:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1); }
     
+    .sig-wrapper { border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc; overflow: hidden; }
+    canvas { width: 100%; height: 150px; display: block; }
+
     .btn-submit { 
       width: 100%; padding: 15px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); 
       color: #fff; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px;
@@ -43,6 +48,7 @@
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
     
     #form-perbaikan { display: none; }
+    .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; margin-top: 10px; display: block; }
   </style>
 </head>
 <body>
@@ -82,8 +88,9 @@
   <script>
     let TRACKING_CODE = "";
     let DETAILED_DATA = null;
+    let sigPad = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       const params = new URLSearchParams(location.search);
       TRACKING_CODE = params.get('code');
       if (!TRACKING_CODE) {
@@ -105,22 +112,18 @@
         
         if (res.status === 'ok') {
           DETAILED_DATA = res.request.detailedData;
-          
           if (!DETAILED_DATA) {
-              document.getElementById('loading-init').innerHTML = "<p style='color:red'>Gagal memuat rincian data. Hubungi Pengurus.</p>";
+              document.getElementById('loading-init').innerHTML = "<p style='color:red'>Gagal memuat rincian data.</p>";
               return;
           }
-          
           document.getElementById('txt-reason').innerText = res.request.publicNote;
           document.getElementById('instruction').style.display = 'block';
           generateFields(res.request.publicNote);
           document.getElementById('loading-init').style.display = 'none';
           document.getElementById('form-perbaikan').style.display = 'block';
-        } else {
-          document.getElementById('loading-init').innerHTML = `<p style='color:red'>Error: ${res.message}</p>`;
         }
       } catch (e) {
-        document.getElementById('loading-init').innerHTML = "<p style='color:red'>Gagal terhubung ke server.</p>";
+          document.getElementById('loading-init').innerHTML = "<p style='color:red'>Koneksi Error.</p>";
       }
     }
 
@@ -130,41 +133,73 @@
         { key: "nama", label: "Nama Lengkap", type: "text" },
         { key: "nis", label: "Nomor Identitas (NIS/NIP)", type: "text" },
         { key: "kelas", label: "Data Kelas", type: "text" },
+        { key: "angkatan", label: "Tahun Angkatan", type: "text" },
         { key: "email", label: "Alamat Email", type: "email" },
-        { key: "nohp", label: "Nomor WhatsApp", type: "text" }
+        { key: "nohp", label: "Nomor WhatsApp", type: "text" },
+        { key: "tanggalLahir", label: "Tanggal Lahir", type: "date" },
+        { key: "foto", label: "Foto Profil", type: "file" },
+        { key: "tandaTanganURL", label: "Tanda Tangan", type: "signature" },
+        { key: "tahunLulus", label: "Tahun Kelulusan", type: "text" },
+        { key: "jabatan", label: "Jabatan/Keterangan", type: "text" }
       ];
 
       fieldsMap.forEach(field => {
         if (note.includes(field.label)) {
           const div = document.createElement('div');
           div.className = 'form-group';
-          div.innerHTML = `
-            <label>${field.label}</label>
-            <input type="${field.type}" id="inp-${field.key}" value="${DETAILED_DATA[field.key] || ''}" required>
-          `;
+          
+          if (field.type === 'file') {
+            div.innerHTML = `<label>${field.label}</label>
+                             <input type="file" id="inp-${field.key}" accept="image/*">
+                             <small>File lama tetap tersimpan jika tidak diupload baru.</small>`;
+          } else if (field.type === 'signature') {
+            div.innerHTML = `<label>${field.label}</label>
+                             <div class="sig-wrapper"><canvas id="sig-canvas"></canvas></div>
+                             <button type="button" id="btn-clear-sig" style="margin-top:5px; font-size:11px; padding:5px;">Hapus TTD</button>`;
+          } else {
+            div.innerHTML = `<label>${field.label}</label>
+                             <input type="${field.type}" id="inp-${field.key}" value="${DETAILED_DATA[field.key] || ''}" required>`;
+          }
           container.appendChild(div);
+          
+          if (field.type === 'signature') {
+             const canvas = document.getElementById('sig-canvas');
+             sigPad = new SignaturePad(canvas);
+             document.getElementById('btn-clear-sig').onclick = () => sigPad.clear();
+          }
         }
       });
-
-      if (container.innerHTML === "") {
-          container.innerHTML = "<p style='font-size:12px; color:var(--hc-red)'>Silakan hubungi pengurus untuk instruksi lebih lanjut.</p>";
-      }
     }
 
-    // HANDLER SUBMIT REVISI (AMAN DARI CSP)
-    document.getElementById('form-perbaikan').onsubmit = async (e) => {
+    document.getElementById('form-perbaikan').onsubmit = async function(e) {
       e.preventDefault();
       const btnSend = document.getElementById('btn-send');
       btnSend.disabled = true;
-      
       if(window.showHC32Spinner) window.showHC32Spinner("Mengirim perbaikan...");
 
       const updatedData = {};
-      const inputs = document.querySelectorAll('#dynamic-fields input');
+      
+      // Ambil input text/date
+      const inputs = document.querySelectorAll('#dynamic-fields input:not([type="file"])');
       inputs.forEach(inp => {
-          const key = inp.id.replace('inp-', '');
-          updatedData[key] = inp.value;
+          updatedData[inp.id.replace('inp-', '')] = inp.value;
       });
+
+      // Ambil input File (Foto) jika ada
+      const fileInput = document.getElementById('inp-foto');
+      if (fileInput && fileInput.files[0]) {
+          const reader = new FileReader();
+          const fileData = await new Promise(resolve => {
+              reader.onload = (e) => resolve(e.target.result);
+              reader.readAsDataURL(fileInput.files[0]);
+          });
+          updatedData['fotoBase64'] = fileData;
+      }
+
+      // Ambil Tanda Tangan jika ada
+      if (sigPad && !sigPad.isEmpty()) {
+          updatedData['ttdBase64'] = sigPad.toDataURL();
+      }
 
       const userNote = document.getElementById('user-note').value;
 
@@ -177,26 +212,17 @@
 
         if (res.status === 'ok') {
           if(window.hideHC32Spinner) window.hideHC32Spinner();
-          
-          if(window.showHC32Status) {
-            window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah dikirim ke pengurus.');
-          }
+          if(window.showHC32Status) window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah dikirim ke pengurus.');
 
-          // REDIRECT AMAN - Menggunakan function anonim & path absolut relatif yang benar
           setTimeout(function() {
               window.location.href = "../../../bantuan/track/?code=" + encodeURIComponent(TRACKING_CODE);
-          }, 2000);
-          
+          }, 2500);
         } else {
-          throw new Error(res.message);
+            throw new Error(res.message);
         }
       } catch (err) {
         if(window.hideHC32Spinner) window.hideHC32Spinner();
-        if(window.showHC32Status) {
-            window.showHC32Status('error', 'Gagal Mengirim', err.message);
-        } else {
-            alert("Gagal mengirim: " + err.message);
-        }
+        window.showHC32Status('error', 'Gagal', err.message);
         btnSend.disabled = false;
       }
     };
