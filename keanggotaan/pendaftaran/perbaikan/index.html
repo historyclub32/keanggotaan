@@ -88,14 +88,13 @@
       TRACKING_CODE = params.get('code');
       if (!TRACKING_CODE) {
           alert("Kode tracking tidak ditemukan!");
-          window.location.href = "../track/";
+          window.location.href = "../../../bantuan/track/";
           return;
       }
       document.getElementById('txt-code').innerText = "Kode: " + TRACKING_CODE;
       loadDataRequest();
     });
 
-    // LOGIKA TERBARU DENGAN BYPASS VERIFIKASI
     async function loadDataRequest() {
       try {
         const res = await hc32_post('trackRequest', { 
@@ -152,9 +151,12 @@
       }
     }
 
+    // HANDLER SUBMIT REVISI (AMAN DARI CSP)
     document.getElementById('form-perbaikan').onsubmit = async (e) => {
       e.preventDefault();
-      document.getElementById('btn-send').disabled = true;
+      const btnSend = document.getElementById('btn-send');
+      btnSend.disabled = true;
+      
       if(window.showHC32Spinner) window.showHC32Spinner("Mengirim perbaikan...");
 
       const updatedData = {};
@@ -175,13 +177,27 @@
 
         if (res.status === 'ok') {
           if(window.hideHC32Spinner) window.hideHC32Spinner();
-          window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah dikirim ke pengurus.');
-          setTimeout(() => { window.location.href = "../track/?code=" + TRACKING_CODE; }, 2000);
+          
+          if(window.showHC32Status) {
+            window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah dikirim ke pengurus.');
+          }
+
+          // REDIRECT AMAN - Menggunakan function anonim & path absolut relatif yang benar
+          setTimeout(function() {
+              window.location.href = "../../../bantuan/track/?code=" + encodeURIComponent(TRACKING_CODE);
+          }, 2000);
+          
+        } else {
+          throw new Error(res.message);
         }
       } catch (err) {
         if(window.hideHC32Spinner) window.hideHC32Spinner();
-        alert("Gagal mengirim: " + err.message);
-        document.getElementById('btn-send').disabled = false;
+        if(window.showHC32Status) {
+            window.showHC32Status('error', 'Gagal Mengirim', err.message);
+        } else {
+            alert("Gagal mengirim: " + err.message);
+        }
+        btnSend.disabled = false;
       }
     };
   </script>
