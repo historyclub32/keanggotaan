@@ -181,7 +181,6 @@
     .timeline { margin-top: 25px; }
     .t-row { display: grid; grid-template-columns: 85px 30px 1fr; gap: 5px; padding-bottom: 25px; position: relative; }
     
-    /* State untuk timeline yang belum tercapai (greyed out) */
     .t-row.future { opacity: 0.4; filter: grayscale(1); }
 
     .t-date { font-size: 10px; color: var(--muted); font-weight: 700; text-align: right; padding-top: 4px; }
@@ -197,7 +196,6 @@
     .t-title { font-size: 13px; font-weight: 800; color: var(--hc-dark); }
     .t-sub { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
 
-    /* Tombol Perbaikan Khusus PA */
     .btn-fix {
       display: inline-flex;
       align-items: center;
@@ -275,7 +273,7 @@
       const secret = document.getElementById('inp-secret').value.trim();
 
       if (!code || !secret) {
-        if(window.showHC32Status) window.showHC32Status('error', 'Lengkapi Data', 'Harap isi kode tracking dan verifikasi.');
+        if(window.showHC32Status) window.showHC32Status('warning', 'Lengkapi Data', 'Harap isi kode tracking dan verifikasi.');
         return;
       }
 
@@ -303,109 +301,96 @@
     }
 
     function renderDetail(out) {
-      const req = out.request;
-      const events = out.events || [];
-      const prefix = (req.code || '').substring(0, 2).toUpperCase();
-      
-      let typeLabel = "Permintaan Umum";
-      let sendDesc = "Permintaan telah kami terima dan masuk ke sistem.";
-      
-      if(prefix === "PA") { typeLabel = "Pendaftaran Anggota"; sendDesc = "Formulir pendaftaran telah diterima dan menunggu antrean verifikasi."; }
-      else if(prefix === "PD") { typeLabel = "Perbaikan Data"; sendDesc = "Permintaan perbaikan data telah kami terima."; }
-      else if(prefix === "LS") { typeLabel = "Layanan Support"; sendDesc = "Tiket dukungan telah dibuat."; }
+        const req = out.request;
+        const events = out.events || []; 
+        const prefix = (req.code || '').substring(0, 2).toUpperCase();
 
-      document.getElementById('txt-status-label').style.color = (req.status || '').toLowerCase().includes('selesai') ? 'var(--hc-toska)' : 'var(--hc-blue)';
-      document.getElementById('txt-status-label').innerText = req.status;
-      document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-price-tag-3-line"></i> ${typeLabel}</div>`;
+        // 1. Setup Header & Badge
+        let typeLabel = "Permintaan Umum";
+        if(prefix === "PA") typeLabel = "Pendaftaran Anggota";
+        else if(prefix === "PD") typeLabel = "Perbaikan Data";
+        else if(prefix === "LS") typeLabel = "Layanan Support";
 
-      // Master Timeline Urutan 1-6
-      const masterStages = [
-        { key: 'created', label: 'Permintaan Terkirim', desc: sendDesc },
-        { key: 'Menunggu Verifikasi', label: 'Menunggu Verifikasi', desc: 'Permintaan telah masuk antrean pemeriksaan pengurus.' },
-        { key: 'Dalam Proses Verifikasi', label: 'Dalam Proses Verifikasi', desc: 'Data sedang divalidasi oleh tim admin/pengurus.' },
-        { key: 'Keputusan', label: 'Keputusan Pengurus', desc: 'Hasil verifikasi data Anda.' },
-        { key: 'Selesai', label: 'Selesai', desc: 'Proses telah selesai sepenuhnya.' }
-      ];
+        document.getElementById('txt-status-label').style.color = (req.status || '').toLowerCase().includes('selesai') ? 'var(--hc-toska)' : 'var(--hc-blue)';
+        document.getElementById('txt-status-label').innerText = req.status;
+        document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-price-tag-3-line"></i> ${typeLabel}</div>`;
 
-      // Map event yang ada ke stage
-      const eventMap = {};
-      events.forEach(ev => {
-        if(ev.type === 'created') eventMap['created'] = ev;
-        else eventMap[ev.toStatus] = ev;
-      });
+        // 2. Render Header Identitas
+        const content = document.getElementById('detail-content');
+        content.innerHTML = `
+            <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
+            <div class="req-meta">KODE: ${req.code} • DIPERBARUI: ${formatDT(req.updatedAt)}</div>
+            <div class="note-box"><strong>Status Terkini:</strong> ${req.status}</div>
+            <div class="timeline" id="timeline-list"></div>
+        `;
 
-      // Render Content
-      const content = document.getElementById('detail-content');
-      let timelineHTML = '';
+        const timelineContainer = document.getElementById('timeline-list');
+        let timelineHTML = '';
 
-      masterStages.forEach((stage, index) => {
-        const ev = eventMap[stage.key] || null;
-        
-        let displayLabel = stage.label;
-        let displayDesc = stage.desc;
-        let dotClass = ev ? 'on' : '';
-        let isFuture = !ev;
+        // 3. LOGIKA TIMELINE DINAMIS
+        events.forEach((ev, index) => {
+            let displayLabel = "";
+            let displayDesc = ev.note || "";
+            let dotClass = "on";
 
-        if(stage.key === 'Keputusan') {
-          const approvedEv = eventMap['Disetujui'];
-          const rejectedEv = eventMap['Ditolak'];
-          
-          if(approvedEv) {
-            displayLabel = 'Disetujui';
-            displayDesc = approvedEv.note || 'Data Anda telah disetujui oleh pengurus.';
-            timelineHTML += renderRow(approvedEv.at, 'on', displayLabel, displayDesc, false);
-          } else if(rejectedEv) {
-            displayLabel = 'Ditolak';
-            dotClass = 'err';
-            displayDesc = `<span style="color:var(--hc-red); font-weight:600;">Alasan:</span> ${rejectedEv.note || 'Data tidak sesuai ketentuan.'}`;
-            
-            // Tambahkan tombol perbaikan jika PA (FOLDER DIPERBARUI)
-            if(prefix === 'PA') {
-              displayDesc += `<br><a href="../../keanggotaan/pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
+            if (ev.type === 'created') {
+                displayLabel = "Permintaan Terkirim";
+                if (!displayDesc) displayDesc = "Permintaan telah masuk ke sistem.";
+            } else {
+                displayLabel = ev.toStatus || "Pembaruan Status";
             }
-            timelineHTML += renderRow(rejectedEv.at, 'err', displayLabel, displayDesc, false);
-          } else {
-            timelineHTML += renderRow('', '', displayLabel, 'Menunggu keputusan hasil verifikasi.', true);
-          }
-          return;
+
+            if (displayLabel === "Ditolak") {
+                dotClass = "err";
+                if (index === events.length - 1 && req.status === "Ditolak" && prefix === "PA") {
+                    displayDesc += `<br><a href="../../keanggotaan/pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
+                }
+            }
+
+            timelineHTML += `
+                <div class="t-row">
+                    <div class="t-date">${formatDTLine(ev.at)}</div>
+                    <div class="t-dot-col">
+                        <div class="t-dot ${dotClass}"></div>
+                        <div class="t-line"></div>
+                    </div>
+                    <div class="t-main">
+                        <div class="t-title">${displayLabel}</div>
+                        <div class="t-sub">${displayDesc}</div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // 4. Tambahkan Baris "Langkah Selanjutnya" (Hanya jika belum Selesai/Ditolak)
+        if (!req.status.toLowerCase().includes('selesai') && !req.status.toLowerCase().includes('ditolak')) {
+            timelineHTML += `
+                <div class="t-row future">
+                    <div class="t-date">--:--</div>
+                    <div class="t-dot-col">
+                        <div class="t-dot"></div>
+                        <div class="t-line"></div>
+                    </div>
+                    <div class="t-main">
+                        <div class="t-title">Tahap Selanjutnya</div>
+                        <div class="t-sub">Menunggu tindakan dari pengurus.</div>
+                    </div>
+                </div>
+            `;
         }
 
-        timelineHTML += renderRow(ev ? ev.at : '', dotClass, displayLabel, displayDesc, isFuture);
-      });
+        timelineContainer.innerHTML = timelineHTML;
 
-      content.innerHTML = `
-        <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
-        <div class="req-meta">KODE: ${req.code} • DIPERBARUI: ${formatDT(req.updatedAt)}</div>
-        <div class="note-box"><strong>Status Terkini:</strong> ${req.status}</div>
-        <div class="timeline">${timelineHTML}</div>
-      `;
-
-      // --- LOGIKA TAMBAHAN: Matikan tombol jika status sudah bukan Ditolak ---
-      if (req.status !== 'Ditolak') {
-        const btn = document.getElementById(`btn-fix-${req.code}`);
-        if (btn) {
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.5';
-            btn.style.background = 'var(--hc-toska)'; // Ubah warna jadi hijau toska agar senada dengan sukses
-            btn.innerHTML = '<i class="ri-check-line"></i> Perbaikan Terkirim / Diproses';
+        // Matikan tombol jika perbaikan sudah dikirim
+        if (req.status !== 'Ditolak') {
+            const btn = document.getElementById(`btn-fix-${req.code}`);
+            if (btn) {
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.5';
+                btn.style.background = 'var(--hc-toska)';
+                btn.innerHTML = '<i class="ri-check-line"></i> Perbaikan Telah Dikirim';
+            }
         }
-      }
-    }
-
-    function renderRow(date, dotClass, title, sub, isFuture) {
-      return `
-        <div class="t-row ${isFuture ? 'future' : ''}">
-          <div class="t-date">${date ? formatDTLine(date) : '--:--'}</div>
-          <div class="t-dot-col">
-            <div class="t-dot ${dotClass}"></div>
-            <div class="t-line"></div>
-          </div>
-          <div class="t-main">
-            <div class="t-title">${title}</div>
-            <div class="t-sub">${sub}</div>
-          </div>
-        </div>
-      `;
     }
 
     function formatDT(s) {
