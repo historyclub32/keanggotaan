@@ -273,7 +273,7 @@
       const secret = document.getElementById('inp-secret').value.trim();
 
       if (!code || !secret) {
-        if(window.showHC32Status) window.showHC32Status('warning', 'Lengkapi Data', 'Harap isi kode tracking dan verifikasi.');
+        if(window.showHC32Status) window.showHC32Status('error', 'Lengkapi Data', 'Harap isi kode tracking dan verifikasi.');
         return;
       }
 
@@ -301,96 +301,94 @@
     }
 
     function renderDetail(out) {
-        const req = out.request;
-        const events = out.events || []; 
-        const prefix = (req.code || '').substring(0, 2).toUpperCase();
+      const req = out.request;
+      const events = out.events || [];
+      const prefix = (req.code || '').substring(0, 2).toUpperCase();
+      
+      let typeLabel = "Permintaan Umum";
+      if(prefix === "PA") typeLabel = "Pendaftaran Anggota";
+      else if(prefix === "PD") typeLabel = "Perbaikan Data";
+      else if(prefix === "LS") typeLabel = "Layanan Support";
 
-        // 1. Setup Header & Badge
-        let typeLabel = "Permintaan Umum";
-        if(prefix === "PA") typeLabel = "Pendaftaran Anggota";
-        else if(prefix === "PD") typeLabel = "Perbaikan Data";
-        else if(prefix === "LS") typeLabel = "Layanan Support";
+      document.getElementById('txt-status-label').style.color = (req.status || '').toLowerCase().includes('selesai') ? 'var(--hc-toska)' : 'var(--hc-blue)';
+      document.getElementById('txt-status-label').innerText = req.status;
+      document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-price-tag-3-line"></i> ${typeLabel}</div>`;
 
-        document.getElementById('txt-status-label').style.color = (req.status || '').toLowerCase().includes('selesai') ? 'var(--hc-toska)' : 'var(--hc-blue)';
-        document.getElementById('txt-status-label').innerText = req.status;
-        document.getElementById('badge-container').innerHTML = `<div class="badge"><i class="ri-price-tag-3-line"></i> ${typeLabel}</div>`;
+      const content = document.getElementById('detail-content');
+      let timelineHTML = '';
 
-        // 2. Render Header Identitas
-        const content = document.getElementById('detail-content');
-        content.innerHTML = `
-            <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
-            <div class="req-meta">KODE: ${req.code} • DIPERBARUI: ${formatDT(req.updatedAt)}</div>
-            <div class="note-box"><strong>Status Terkini:</strong> ${req.status}</div>
-            <div class="timeline" id="timeline-list"></div>
-        `;
+      // Balik urutan agar kronologis (lama ke baru)
+      const sortedEvents = [...events].sort((a, b) => new Date(a.at) - new Date(b.at));
 
-        const timelineContainer = document.getElementById('timeline-list');
-        let timelineHTML = '';
+      sortedEvents.forEach((ev, index) => {
+        let displayLabel = "";
+        let displayDesc = ev.note || "";
+        let dotClass = "on";
+        let isLast = (index === sortedEvents.length - 1);
 
-        // 3. LOGIKA TIMELINE DINAMIS
-        events.forEach((ev, index) => {
-            let displayLabel = "";
-            let displayDesc = ev.note || "";
-            let dotClass = "on";
-
-            if (ev.type === 'created') {
-                displayLabel = "Permintaan Terkirim";
-                if (!displayDesc) displayDesc = "Permintaan telah masuk ke sistem.";
-            } else {
-                displayLabel = ev.toStatus || "Pembaruan Status";
-            }
-
-            if (displayLabel === "Ditolak") {
+        if (ev.type === 'created') {
+            displayLabel = "Permintaan Terkirim";
+            if (!displayDesc) displayDesc = "Permintaan telah kami terima dan masuk ke sistem.";
+        } else {
+            displayLabel = ev.toStatus;
+            
+            if (ev.toStatus === 'Ditolak') {
                 dotClass = "err";
-                if (index === events.length - 1 && req.status === "Ditolak" && prefix === "PA") {
-                    displayDesc += `<br><a href="../../keanggotaan/pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
+                displayDesc = `<span style="color:var(--hc-red); font-weight:600;">Alasan:</span> ${ev.note || 'Data tidak sesuai ketentuan.'}`;
+                
+                if (prefix === 'PA' && req.status === 'Ditolak' && isLast) {
+                  displayDesc += `<br><a href="../../keanggotaan/pendaftaran/perbaikan/?code=${req.code}" class="btn-fix" id="btn-fix-${req.code}"><i class="ri-edit-2-line"></i> Perbaiki Data Sekarang</a>`;
                 }
             }
-
-            timelineHTML += `
-                <div class="t-row">
-                    <div class="t-date">${formatDTLine(ev.at)}</div>
-                    <div class="t-dot-col">
-                        <div class="t-dot ${dotClass}"></div>
-                        <div class="t-line"></div>
-                    </div>
-                    <div class="t-main">
-                        <div class="t-title">${displayLabel}</div>
-                        <div class="t-sub">${displayDesc}</div>
-                    </div>
-                </div>
-            `;
-        });
-
-        // 4. Tambahkan Baris "Langkah Selanjutnya" (Hanya jika belum Selesai/Ditolak)
-        if (!req.status.toLowerCase().includes('selesai') && !req.status.toLowerCase().includes('ditolak')) {
-            timelineHTML += `
-                <div class="t-row future">
-                    <div class="t-date">--:--</div>
-                    <div class="t-dot-col">
-                        <div class="t-dot"></div>
-                        <div class="t-line"></div>
-                    </div>
-                    <div class="t-main">
-                        <div class="t-title">Tahap Selanjutnya</div>
-                        <div class="t-sub">Menunggu tindakan dari pengurus.</div>
-                    </div>
-                </div>
-            `;
         }
 
-        timelineContainer.innerHTML = timelineHTML;
+        timelineHTML += renderRow(ev.at, dotClass, displayLabel, displayDesc, false);
+      });
 
-        // Matikan tombol jika perbaikan sudah dikirim
-        if (req.status !== 'Ditolak') {
-            const btn = document.getElementById(`btn-fix-${req.code}`);
-            if (btn) {
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.5';
-                btn.style.background = 'var(--hc-toska)';
-                btn.innerHTML = '<i class="ri-check-line"></i> Perbaikan Telah Dikirim';
-            }
+      if (req.status !== 'Selesai' && req.status !== 'Ditolak') {
+          let nextStep = "";
+          if (req.status === 'Permintaan Terkirim') nextStep = "Menunggu Verifikasi";
+          else if (req.status === 'Menunggu Verifikasi') nextStep = "Dalam Proses Verifikasi";
+          else if (req.status === 'Dalam Proses Verifikasi') nextStep = "Keputusan (Disetujui/Ditolak)";
+          else if (req.status === 'Disetujui') nextStep = "Selesai";
+
+          if (nextStep) {
+              timelineHTML += renderRow('', '', nextStep, "Menunggu tindakan selanjutnya dari pengurus.", true);
+          }
+      }
+
+      content.innerHTML = `
+        <h2 class="req-owner">${req.ownerName || 'Pemohon'}</h2>
+        <div class="req-meta">KODE: ${req.code} • DIPERBARUI: ${formatDT(req.updatedAt)}</div>
+        <div class="note-box"><strong>Status Terkini:</strong> ${req.status}</div>
+        <div class="timeline">${timelineHTML}</div>
+      `;
+
+      if (req.status !== 'Ditolak') {
+        const btn = document.getElementById(`btn-fix-${req.code}`);
+        if (btn) {
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.5';
+            btn.style.background = 'var(--hc-toska)';
+            btn.innerHTML = '<i class="ri-check-line"></i> Perbaikan Terkirim';
         }
+      }
+    }
+
+    function renderRow(date, dotClass, title, sub, isFuture) {
+      return `
+        <div class="t-row ${isFuture ? 'future' : ''}">
+          <div class="t-date">${date ? formatDTLine(date) : '--:--'}</div>
+          <div class="t-dot-col">
+            <div class="t-dot ${dotClass}"></div>
+            <div class="t-line"></div>
+          </div>
+          <div class="t-main">
+            <div class="t-title">${title}</div>
+            <div class="t-sub">${sub}</div>
+          </div>
+        </div>
+      `;
     }
 
     function formatDT(s) {
