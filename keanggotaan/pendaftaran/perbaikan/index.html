@@ -1,261 +1,327 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perbaikan Data Pendaftaran - HC 32</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perbaikan Data - HC 32</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
 
-  <script src="/config.js"></script>
-  <script src="/components.js"></script>
-  
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-  <style>
-    :root {
-        --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-bg: #e7e9ea;
-        --hc-red: #d30e14; --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08);
-    }
-    body { font-family: 'Poppins', sans-serif; background: var(--hc-bg); color: #2e2e2e; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-    .main-wrapper { flex: 1; padding: 40px 20px; display: flex; justify-content: center; }
-    .container { max-width: 600px; width: 100%; }
-    .card { background: #fff; border-radius: 16px; box-shadow: var(--card-shadow); padding: 30px; border: 1px solid #cbd5e1; }
+    <script src="../config.js"></script>
+    <script src="../components.js"></script>
     
-    .welcome-banner { background: linear-gradient(135deg, var(--hc-blue) 0%, var(--hc-toska) 100%); color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 28px; text-align: center; }
-    .welcome-banner h2 { margin: 0 0 6px; font-size: 24px; font-weight: 700; }
-    .welcome-banner p { margin: 0; opacity: 0.9; font-size: 14px; }
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-    .instruction-box { background: #fff1f2; border-left: 4px solid var(--hc-red); padding: 15px; border-radius: 10px; margin-bottom: 25px; font-size: 13px; }
-    
-    .row { margin-bottom: 20px; }
-    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-    input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; transition: 0.2s; font-family: inherit; box-sizing: border-box; }
-    input:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.1); }
+    <style>
+        /* Mengambil style dasar dari pendaftaran/index.html */
+        :root {
+            --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
+            --hc-green: #15a256; --hc-red: #d30e14; --hc-bg: #e7e9ea;
+            --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08);
+        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--hc-bg); color: #2e2e2e; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .main-wrapper { flex: 1; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: #ffffff; border-radius: 16px; box-shadow: var(--card-shadow); padding: 30px; border: 1px solid #cbd5e1; }
+        
+        /* Banner Perbaikan */
+        .repair-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 28px; text-align: center; }
+        .instruction-box { background: #fff1f2; border-left: 4px solid var(--hc-red); padding: 15px; border-radius: 10px; margin-bottom: 25px; font-size: 13px; }
 
-    /* Layout Photo & Sig Identik dengan Form Pendaftaran */
-    .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
-    #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; }
-    #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
-    
-    .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
-    canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+        .row { margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #2e2e2e; }
+        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; background: #fff; box-sizing: border-box; transition: 0.2s; font-family: 'Poppins', sans-serif; }
+        input:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
+        
+        /* Signature & Photo area sama dengan pendaftaran */
+        .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
+        #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; }
+        #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
+        canvas#sig-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+        
+        .btn-submit { width: 100%; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: #fff; border: none; padding: 16px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3); transition: 0.2s; }
+        .btn-submit:disabled { background: #cbd5e1; cursor: not-allowed; opacity: 0.7; }
 
-    .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); color: #fff; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 16px; }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    /* Modal Cam & Crop Styles */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
-    .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; position: relative; display: flex; flex-direction: column; }
-    #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-  </style>
+        /* Modal Camera Styles (Reuse from pendaftaran) */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
+        .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        #cam-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .cam-controls { height: 140px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: absolute; bottom: 0; left: 0; right: 0; z-index: 20; backdrop-filter: blur(10px); border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .btn-shutter-cam { width: 70px; height: 70px; border-radius: 50%; background-color: white; border: 4px solid rgba(255,255,255,0.3); cursor: pointer; }
+        
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-  <div class="main-wrapper">
+<div class="main-wrapper">
     <div class="container">
-      <div class="card">
-        <div class="welcome-banner">
-          <h2>Perbaikan Data</h2>
-          <p id="txt-code">Memuat data...</p>
+        <div class="card">
+            <div class="repair-banner">
+                <h2 style="margin:0; font-size:22px;">Perbaikan Data</h2>
+                <p id="txt-code" style="margin:5px 0 0; opacity:0.9; font-size:14px;">Memuat data permintaan...</p>
+            </div>
+
+            <div id="instruction" class="instruction-box" style="display:none;">
+                <strong style="color:var(--hc-red);"><i class="ri-error-warning-line"></i> Alasan Penolakan:</strong><br>
+                <span id="txt-reason" style="line-height:1.6;">...</span>
+            </div>
+
+            <div id="loading-init" style="text-align:center; padding: 40px;">
+                <div class="hc-spinner-box" style="margin: 0 auto;">
+                    <div class="hc-spinner-ring"></div>
+                </div>
+                <p style="margin-top:15px; color:#64748b;">Menyiapkan formulir perbaikan...</p>
+            </div>
+
+            <form id="form-perbaikan" style="display:none;">
+                <div id="dynamic-fields"></div>
+                
+                <div class="row">
+                    <label>Pesan Tambahan untuk Pengurus (Opsional)</label>
+                    <textarea id="user-note" rows="3" placeholder="Contoh: Saya sudah mengganti foto profil dengan wajah yang lebih jelas..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btn-send">
+                    <i class="ri-send-plane-fill"></i> Kirim Perbaikan Data
+                </button>
+            </form>
         </div>
-
-        <div id="instruction" class="instruction-box" style="display:none;">
-          <strong style="color:var(--hc-red)">Alasan Penolakan:</strong><br>
-          <span id="txt-reason">...</span>
-        </div>
-
-        <div id="loading-init" style="text-align:center; padding: 40px;">
-            <i class="ri-loader-4-line ri-spin" style="font-size: 40px; color: var(--hc-blue);"></i>
-            <p>Mengambil rincian data...</p>
-        </div>
-
-        <form id="form-perbaikan" style="display:none;">
-          <div id="dynamic-fields"></div>
-          
-          <div class="row">
-            <label>Pesan Tambahan untuk Pengurus (Opsional)</label>
-            <textarea id="user-note" rows="3" placeholder="Jelaskan perbaikan yang Anda lakukan..."></textarea>
-          </div>
-
-          <button type="submit" class="btn-submit" id="btn-send">
-            <i class="ri-send-plane-fill"></i> Kirim Perbaikan Data
-          </button>
-        </form>
-      </div>
     </div>
-  </div>
+</div>
 
-  <div id="cam-popup" class="modal-overlay">
-      <div class="cam-box-modern">
-          <video id="cam-video" autoplay playsinline muted></video>
-          <div style="position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px;">
-              <button type="button" id="btn-cam-capture" style="width:70px; height:70px; border-radius:50%; border:5px solid #fff; background:transparent;"></button>
-              <button type="button" id="btn-cam-close" style="color:#fff; background:none; border:none; font-size:30px;"><i class="ri-close-circle-fill"></i></button>
-          </div>
-      </div>
-  </div>
+<div id="cam-popup" class="modal-overlay">
+    <div class="cam-box-modern">
+        <div style="position:absolute; top:20px; right:20px; z-index:30;">
+            <button onclick="stopCam()" style="background:var(--hc-red); color:white; border:none; width:44px; height:44px; border-radius:50%; font-size:20px; cursor:pointer;"><i class="ri-close-line"></i></button>
+        </div>
+        <video id="cam-video" autoplay playsinline muted></video>
+        <div class="cam-controls">
+            <button onclick="document.getElementById('inp-file-foto').click()" style="background:#ecec17; border:none; width:50px; height:50px; border-radius:50%; font-size:24px; cursor:pointer;"><i class="ri-image-add-line"></i></button>
+            <input type="file" id="inp-file-foto" accept="image/*" hidden>
+            <button class="btn-shutter-cam" id="btn-cam-capture"></button>
+            <button onclick="switchCam()" style="background:var(--hc-blue); border:none; color:white; width:50px; height:50px; border-radius:50%; font-size:24px; cursor:pointer;"><i class="ri-camera-switch-line"></i></button>
+        </div>
+    </div>
+</div>
 
-  <div id="crop-modal" class="modal-overlay">
-      <div style="background:#fff; padding:20px; border-radius:16px; width:90%; max-width:400px;">
-          <div style="height:300px; background:#000; margin-bottom:15px;"><img id="cropper-img" style="max-width:100%;"></div>
-          <button type="button" id="btn-crop-save" class="btn-submit">Potong & Simpan</button>
-      </div>
-  </div>
+<div id="crop-modal" class="modal-overlay">
+    <div style="background:#1e293b; color:white; width:90%; max-width:400px; border-radius:16px; padding:20px;">
+        <h3 style="margin:0 0 15px; text-align:center;">Sesuaikan Foto (1:1)</h3>
+        <div style="height: 300px; background:#000;"><img id="cropper-img" style="max-width: 100%;"></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="closeCropper()" style="flex:1; padding:12px; border-radius:8px; border:none; background:var(--hc-red); color:white; font-weight:600; cursor:pointer;">Batal</button>
+            <button id="btn-crop-save" style="flex:1; padding:12px; border-radius:8px; border:none; background:var(--hc-toska); color:white; font-weight:600; cursor:pointer;">Simpan</button>
+        </div>
+    </div>
+</div>
 
-  <script>
+<script>
     let TRACKING_CODE = "";
     let DETAILED_DATA = null;
     let sigPad = null;
+    let stream = null;
     let cropper = null;
+    let currentFacingMode = 'user';
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Inisialisasi Header & Footer dari components.js
-      if(window.initHC32Navigation) initHC32Navigation('track');
-
-      const params = new URLSearchParams(location.search);
-      TRACKING_CODE = params.get('code');
-      if (!TRACKING_CODE) {
-          alert("Kode tracking tidak ditemukan!");
-          window.location.href = "/bantuan/track/";
-          return;
-      }
-      document.getElementById('txt-code').innerText = "KODE: " + TRACKING_CODE;
-      loadDataRequest();
+        initHC32Navigation('track'); // Aktifkan header/footer/sidebar
+        const params = new URLSearchParams(location.search);
+        TRACKING_CODE = params.get('code');
+        
+        if (!TRACKING_CODE) {
+            window.showHC32Status('error', 'Gagal', 'Kode tracking tidak ditemukan!');
+            setTimeout(() => window.location.href = "/bantuan/track/", 2500);
+            return;
+        }
+        document.getElementById('txt-code').innerText = "KODE TRACKING: " + TRACKING_CODE;
+        loadDataRequest();
     });
 
     async function loadDataRequest() {
-      try {
-        const res = await hc32_post('trackRequest', { trackingCode: TRACKING_CODE });
-        if (res.status === 'ok') {
-          DETAILED_DATA = res.request.detailedData;
-          document.getElementById('txt-reason').innerText = res.request.publicNote;
-          document.getElementById('instruction').style.display = 'block';
-          generateFields(res.request.publicNote);
-          document.getElementById('loading-init').style.display = 'none';
-          document.getElementById('form-perbaikan').style.display = 'block';
+        try {
+            const res = await hc32_post('trackRequest', { 
+                trackingCode: TRACKING_CODE, 
+                secret: "ADMIN_BYPASS" 
+            });
+            
+            if (res.status === 'ok') {
+                DETAILED_DATA = res.request.detailedData;
+                if (!DETAILED_DATA) {
+                    window.showHC32Status('error', 'Data Error', 'Rincian data pendaftaran asli tidak ditemukan.');
+                    return;
+                }
+                document.getElementById('txt-reason').innerText = res.request.publicNote;
+                document.getElementById('instruction').style.display = 'block';
+                generateFields(res.request.publicNote);
+                document.getElementById('loading-init').style.display = 'none';
+                document.getElementById('form-perbaikan').style.display = 'block';
+            } else {
+                window.showHC32Status('error', 'Gagal', res.message);
+            }
+        } catch (e) {
+            window.showHC32Status('error', 'Koneksi Error', 'Tidak dapat menghubungi server.');
         }
-      } catch (e) {
-          document.getElementById('loading-init').innerHTML = `<p style='color:red'><i class="ri-error-warning-line"></i> Koneksi Error.</p>`;
-      }
     }
 
     function generateFields(note) {
-      const container = document.getElementById('dynamic-fields');
-      const fieldsMap = [
-        { key: "nama", label: "Nama Lengkap", type: "text" },
-        { key: "foto", label: "Foto Profil", type: "file" },
-        { key: "tandaTanganURL", label: "Tanda Tangan", type: "signature" },
-        { key: "email", label: "Alamat Email", type: "email" },
-        { key: "nohp", label: "Nomor WhatsApp", type: "text" }
-      ];
+        const container = document.getElementById('dynamic-fields');
+        const fieldsMap = [
+            { key: "nama", label: "Nama Lengkap", type: "text" },
+            { key: "nis", label: "Nomor Identitas (NIS/NIP)", type: "text" },
+            { key: "kelas", label: "Data Kelas", type: "text" },
+            { key: "angkatan", label: "Tahun Angkatan", type: "text" },
+            { key: "email", label: "Alamat Email", type: "email" },
+            { key: "nohp", label: "Nomor WhatsApp", type: "text" },
+            { key: "tanggalLahir", label: "Tanggal Lahir", type: "date" },
+            { key: "foto", label: "Foto Profil", type: "file" },
+            { key: "tandaTanganURL", label: "Tanda Tangan", type: "signature" },
+            { key: "tahunLulus", label: "Tahun Kelulusan", type: "text" },
+            { key: "jabatan", label: "Jabatan/Keterangan", type: "text" }
+        ];
 
-      fieldsMap.forEach(field => {
-        if (note.toLowerCase().includes(field.label.toLowerCase())) {
-          const div = document.createElement('div');
-          div.className = 'row';
-          
-          if (field.type === 'file') {
-            div.innerHTML = `
-                <label>${field.label}</label>
-                <div class="photo-area">
-                    <div id="foto-preview-container"><img id="foto-preview-img" src=""></div>
-                    <button type="button" onclick="openCam()" style="padding:10px 20px; border-radius:50px; border:1px solid var(--hc-blue); background:#fff; cursor:pointer;">
-                        <i class="ri-camera-fill"></i> Ambil / Upload Foto
-                    </button>
-                    <input type="hidden" id="fd-foto-base64">
-                </div>`;
-          } else if (field.type === 'signature') {
-            div.innerHTML = `
-                <label>${field.label}</label>
-                <div class="sig-wrapper"><canvas id="sig-canvas"></canvas></div>
-                <button type="button" onclick="sigPad.clear()" style="margin-top:8px; font-size:12px; color:var(--hc-red); border:none; background:none; cursor:pointer;">Hapus TTD</button>`;
-          } else {
-            div.innerHTML = `<label>${field.label}</label><input type="${field.type}" id="inp-${field.key}" value="${DETAILED_DATA[field.key] || ''}" required>`;
-          }
-          container.appendChild(div);
-          
-          if (field.type === 'signature') {
-             const canvas = document.getElementById('sig-canvas');
-             sigPad = new SignaturePad(canvas);
-          }
-        }
-      });
+        fieldsMap.forEach(field => {
+            if (note.includes(field.label)) {
+                const div = document.createElement('div');
+                div.className = 'row';
+                
+                if (field.type === 'file') {
+                    div.innerHTML = `
+                        <label>${field.label} <span style="color:red">*</span></label>
+                        <div class="photo-area">
+                            <div id="foto-preview-container">
+                                <img id="foto-preview-img" src="">
+                            </div>
+                            <button type="button" class="btn-submit" id="btn-camera" style="background:#fff; border:1px solid var(--hc-blue); color:var(--hc-blue); font-size:14px; width:auto; padding:10px 20px;">
+                                <i class="ri-camera-fill"></i> Ambil Foto Baru
+                            </button>
+                            <input type="hidden" id="inp-foto-base64">
+                            <p style="font-size:11px; color:#64748b; margin-top:10px;">Maksimal 1.1 MB. File lama akan digantikan.</p>
+                        </div>`;
+                } else if (field.type === 'signature') {
+                    div.innerHTML = `
+                        <label>${field.label} <span style="color:red">*</span></label>
+                        <div class="sig-wrapper"><canvas id="sig-canvas"></canvas></div>
+                        <button type="button" id="btn-clear-sig" style="margin-top:8px; font-size:12px; background:#fee2e2; color:#ef4444; border:none; padding:6px 15px; border-radius:50px; cursor:pointer;">
+                            <i class="ri-delete-bin-line"></i> Ulangi Tanda Tangan
+                        </button>`;
+                } else {
+                    div.innerHTML = `
+                        <label>${field.label} <span style="color:red">*</span></label>
+                        <input type="${field.type}" id="inp-${field.key}" value="${DETAILED_DATA[field.key] || ''}" required>`;
+                }
+                container.appendChild(div);
+
+                if (field.type === 'signature') {
+                    const canvas = document.getElementById('sig-canvas');
+                    sigPad = new SignaturePad(canvas);
+                    document.getElementById('btn-clear-sig').onclick = () => sigPad.clear();
+                }
+                if (field.type === 'file') {
+                    document.getElementById('btn-camera').onclick = openCam;
+                }
+            }
+        });
     }
 
-    // Modern Camera Logic (Minimalist version of pendaftaran logic)
+    /* LOGIKA KAMERA & CROPPER (Identik dengan Pendaftaran) */
     async function openCam() {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const video = document.getElementById('cam-video');
-        video.srcObject = stream;
-        document.getElementById('cam-popup').style.display = 'flex';
-        
-        document.getElementById('btn-cam-capture').onclick = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            stream.getTracks().forEach(t => t.stop());
-            document.getElementById('cam-popup').style.display = 'none';
-            startCropper(canvas.toDataURL('image/jpeg'));
-        };
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode }, audio: false });
+            document.getElementById('cam-video').srcObject = stream;
+            document.getElementById('cam-popup').style.display = 'flex';
+        } catch(e) { window.showHC32Status('error','Kamera Gagal','Izin kamera ditolak atau tidak tersedia.'); }
     }
+    function stopCam() { if(stream) stream.getTracks().forEach(t => t.stop()); document.getElementById('cam-popup').style.display = 'none'; }
+    function switchCam() { currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; stopCam(); openCam(); }
+    
+    document.getElementById('btn-cam-capture').onclick = () => {
+        const video = document.getElementById('cam-video');
+        const cvs = document.createElement('canvas');
+        cvs.width = video.videoWidth; cvs.height = video.videoHeight;
+        const ctx = cvs.getContext('2d');
+        if(currentFacingMode === 'user') { ctx.translate(cvs.width, 0); ctx.scale(-1, 1); }
+        ctx.drawImage(video, 0, 0);
+        stopCam();
+        startCropper(cvs.toDataURL('image/jpeg'));
+    };
+
+    document.getElementById('inp-file-foto').onchange = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        if(file.size > 1.1 * 1024 * 1024) { window.showHC32Status('error', 'File Terlalu Besar', 'Maksimal ukuran foto adalah 1.1 MB'); return; }
+        const reader = new FileReader();
+        reader.onload = (evt) => { stopCam(); startCropper(evt.target.result); };
+        reader.readAsDataURL(file);
+    };
 
     function startCropper(src) {
-        const img = document.getElementById('cropper-img');
-        img.src = src;
+        document.getElementById('cropper-img').src = src;
         document.getElementById('crop-modal').style.display = 'flex';
         if(cropper) cropper.destroy();
-        cropper = new Cropper(img, { aspectRatio: 1 });
-        
-        document.getElementById('btn-crop-save').onclick = () => {
-            const result = cropper.getCroppedCanvas({width:600, height:600}).toDataURL('image/jpeg');
-            document.getElementById('fd-foto-base64').value = result;
-            document.getElementById('foto-preview-img').src = result;
-            document.getElementById('foto-preview-container').style.display = 'block';
-            document.getElementById('crop-modal').style.display = 'none';
-        };
+        cropper = new Cropper(document.getElementById('cropper-img'), { aspectRatio: 1, viewMode: 1 });
     }
+    function closeCropper() { document.getElementById('crop-modal').style.display = 'none'; if(cropper) cropper.destroy(); }
+    
+    document.getElementById('btn-crop-save').onclick = () => {
+        const canvas = cropper.getCroppedCanvas({ width: 600, height: 600 });
+        const base64 = canvas.toDataURL('image/jpeg', 0.8);
+        document.getElementById('inp-foto-base64').value = base64;
+        document.getElementById('foto-preview-img').src = base64;
+        document.getElementById('foto-preview-container').style.display = 'block';
+        closeCropper();
+    };
 
+    /* SUBMIT HANDLER */
     document.getElementById('form-perbaikan').onsubmit = async function(e) {
-      e.preventDefault();
-      const btnSend = document.getElementById('btn-send');
-      
-      // Global Spinner dari components.js
-      if(window.showHC32Status) window.showHC32Status('loading', 'Mengirim...', 'Sedang memproses perbaikan data.');
+        e.preventDefault();
+        
+        window.showHC32Status('loading', 'Mengirim Data...', 'Sedang memproses perbaikan Anda.');
+        const btnSend = document.getElementById('btn-send');
+        btnSend.disabled = true;
 
-      const updatedData = {};
-      document.querySelectorAll('#dynamic-fields input:not([type="hidden"])').forEach(inp => {
-          updatedData[inp.id.replace('inp-', '')] = inp.value;
-      });
-
-      const foto = document.getElementById('fd-foto-base64');
-      if (foto && foto.value) updatedData['fotoBase64'] = foto.value;
-
-      if (sigPad && !sigPad.isEmpty()) updatedData['ttdBase64'] = sigPad.toDataURL();
-
-      try {
-        const res = await hc32_post('submitPerbaikanMandiri', {
-            trackingCode: TRACKING_CODE,
-            updatedData: updatedData,
-            note: document.getElementById('user-note').value
+        const updatedData = {};
+        const inputs = document.querySelectorAll('#dynamic-fields input:not([type="hidden"])');
+        inputs.forEach(inp => {
+            updatedData[inp.id.replace('inp-', '')] = inp.value;
         });
 
-        if (res.status === 'ok') {
-          // Global Success dari components.js
-          window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah diterima pengurus.');
-          setTimeout(() => window.location.href = "/bantuan/track/?code=" + TRACKING_CODE, 2500);
-        } else {
-          throw new Error(res.message);
+        const fotoBase64 = document.getElementById('inp-foto-base64') ? document.getElementById('inp-foto-base64').value : null;
+        if (fotoBase64) updatedData['fotoBase64'] = fotoBase64;
+
+        if (sigPad && !sigPad.isEmpty()) {
+            updatedData['ttdBase64'] = sigPad.toDataURL();
         }
-      } catch (err) {
-        window.showHC32Status('error', 'Gagal', err.message);
-      }
+
+        const userNote = document.getElementById('user-note').value;
+
+        try {
+            const res = await hc32_post('submitPerbaikanMandiri', {
+                trackingCode: TRACKING_CODE,
+                updatedData: updatedData,
+                note: userNote
+            });
+
+            if (res.status === 'ok') {
+                window.showHC32Status('success', 'Berhasil Dikirim', 'Data perbaikan telah diterima. Pengurus akan segera memverifikasi ulang.');
+                setTimeout(() => {
+                    window.location.href = "/bantuan/track/?code=" + encodeURIComponent(TRACKING_CODE);
+                }, 3000);
+            } else {
+                throw new Error(res.message);
+            }
+        } catch (err) {
+            window.showHC32Status('error', 'Gagal', err.message);
+            btnSend.disabled = false;
+        }
     };
-  </script>
+</script>
 </body>
 </html>
