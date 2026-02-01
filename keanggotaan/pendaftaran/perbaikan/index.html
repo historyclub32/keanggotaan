@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" rel="stylesheet">
 
@@ -18,14 +18,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
   <style>
+    /* Sinkronisasi Desain dengan pendaftaran/index.html */
     :root {
-      --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-bg: #e7e9ea;
-      --hc-red: #d30e14; --card: #ffffff; --radius: 16px;
+        --hc-blue: #1a4787; --hc-toska: #0f8a94; --hc-dark: #2e2e2e;
+        --hc-green: #15a256; --hc-red: #d30e14; --hc-yellow: #ecec17;
+        --hc-bg: #e7e9ea;
+        --card-shadow: 0 8px 30px rgba(26, 71, 135, 0.08);
     }
-    body { font-family: 'Poppins', sans-serif; background: var(--hc-bg); color: #2e2e2e; margin: 0; }
-    .main-wrapper { padding: 40px 20px; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; }
-    .container { max-width: 600px; width: 100%; }
-    .card { background: var(--card); border-radius: var(--radius); box-shadow: 0 8px 30px rgba(26, 71, 135, 0.08); padding: 30px; border: 1px solid #cbd5e1; }
+    body { font-family: 'Poppins', sans-serif; background-color: var(--hc-bg); color: #2e2e2e; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    .main-wrapper { flex: 1; padding: 40px 20px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .card { background: #ffffff; border-radius: 16px; box-shadow: var(--card-shadow); padding: 30px; border: 1px solid #cbd5e1; }
     
     .welcome-banner { background: linear-gradient(135deg, var(--hc-blue) 0%, var(--hc-toska) 100%); color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 25px; text-align: center; }
     .welcome-banner h2 { margin: 0 0 6px; font-size: 22px; font-weight: 700; }
@@ -35,36 +38,43 @@
     
     .row { margin-bottom: 20px; }
     label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #2e2e2e; }
+    .req-star { color: var(--hc-red); margin-left: 2px; font-weight: bold; }
+    
     input, select, textarea { 
       width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px; 
-      font-family: 'Poppins', sans-serif; font-size: 15px; outline: none; transition: 0.2s; background: #fff; box-sizing: border-box;
+      font-size: 15px; outline: none; background: #fff; box-sizing: border-box; transition: 0.2s; font-family: 'Poppins', sans-serif;
     }
-    input:focus, textarea:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
-    .input-error { border-color: var(--hc-red) !important; box-shadow: 0 0 0 3px rgba(211, 14, 20, 0.1) !important; }
-
-    /* Photo & Sig Area */
-    .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; }
-    #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: none; }
-    #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
-    .btn-main-camera { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: white; border: 1px solid var(--hc-blue); color: var(--hc-blue); padding: 12px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; }
+    input:focus, select:focus, textarea:focus { border-color: var(--hc-blue); box-shadow: 0 0 0 3px rgba(26, 71, 135, 0.15); }
+    input:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-style: dashed; }
     
+    /* Field Preview Label */
+    .prev-label { font-size: 11px; color: #64748b; margin-bottom: 4px; font-style: italic; display: flex; align-items: center; gap: 4px; }
+
+    .photo-area { border: 2px dashed var(--hc-toska); border-radius: 16px; padding: 24px; text-align: center; background: #f0f9fa; position: relative; }
+    #foto-preview-container { width: 150px; height: 150px; margin: 0 auto 16px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #e2e8f0; display: none; }
+    #foto-preview-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .btn-main-camera { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: white; border: 1px solid var(--hc-blue); color: var(--hc-blue); padding: 12px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-delete-photo { background: #fee2e2; color: #ef4444; border: none; margin-top: 10px; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: none; }
+
     .sig-wrapper { height: 180px; border: 1px solid #cbd5e1; border-radius: 10px; position: relative; background: #fff; overflow: hidden; }
     canvas#sig-canvas { width: 100%; height: 100%; display: block; touch-action: none; }
-    .sig-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
-    .sig-btn { padding: 8px 16px; font-size: 12px; border-radius: 50px; cursor: pointer; font-weight: 600; border: 1px solid #cbd5e1; }
+    .sig-tools { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; gap: 8px; }
+    .sig-btn { padding: 8px 16px; font-size: 12px; border: none; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600; transition: 0.2s; }
+    .sig-btn-undo { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+    .sig-btn-clear { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
 
     .btn-submit { 
       width: 100%; padding: 16px; background: linear-gradient(135deg, var(--hc-blue), var(--hc-toska)); 
-      color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 20px;
+      color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(15, 138, 148, 0.3);
     }
-    .btn-submit:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #64748b; }
+    .btn-submit:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* Modals */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2500; display: none; align-items: center; justify-content: center; }
-    .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; position: relative; display: flex; flex-direction: column; }
+    .cam-box-modern { width: 100%; max-width: 500px; height: 100%; max-height: 100vh; background: #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
     #cam-video { width: 100%; height: 100%; object-fit: cover; }
-    .cam-controls { height: 140px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: absolute; bottom: 0; left: 0; right: 0; backdrop-filter: blur(10px); border-radius: 20px 20px 0 0; }
-    
+    .cam-controls { height: 140px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: absolute; bottom: 0; left: 0; right: 0; backdrop-filter: blur(10px); border-top-left-radius: 20px; border-top-right-radius: 20px; }
+    .btn-shutter-cam { width: 70px; height: 70px; border-radius: 50%; background: white; border: 4px solid rgba(255,255,255,0.3); cursor: pointer; }
     .btn-back-header { background: none; border: none; color: var(--hc-blue); font-size: 24px; cursor: pointer; }
   </style>
 </head>
@@ -83,6 +93,14 @@
           <span id="txt-reason">...</span>
         </div>
 
+        <div id="loading-init" style="text-align:center; padding: 60px;">
+            <div class="hc-spinner-box" style="margin:0 auto;">
+                <div class="hc-spinner-ring"></div>
+                <img src="https://drive.google.com/thumbnail?id=16VXxbcOF9h5zAzYEo2faAzmgqqhtHLlH&sz=w200" class="hc-spinner-logo">
+            </div>
+            <p style="margin-top:15px; font-size:14px; color:#64748b;">Mengambil rincian data...</p>
+        </div>
+
         <form id="form-perbaikan" style="display:none;" novalidate>
           <div id="dynamic-fields"></div>
           
@@ -93,9 +111,6 @@
 
           <button type="submit" class="btn-submit" id="btn-send" disabled>Kirim Perbaikan Data</button>
         </form>
-
-        <div id="loading-init" style="text-align:center; padding: 60px;">
-             </div>
       </div>
     </div>
   </div>
@@ -103,14 +118,14 @@
   <div id="cam-popup" class="modal-overlay">
       <div class="cam-box-modern">
           <div style="position:absolute; top:20px; right:20px; z-index:30;">
-              <button onclick="stopCam()" style="background:var(--hc-red); color:white; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer;"><i class="ri-close-line"></i></button>
+              <button onclick="stopCam()" style="background:var(--hc-red); color:white; border:none; width:44px; height:44px; border-radius:50%; font-size:24px; cursor:pointer;"><i class="ri-close-line"></i></button>
           </div>
           <video id="cam-video" autoplay playsinline muted></video>
           <div class="cam-controls">
-              <button onclick="document.getElementById('inp-file-foto').click()" style="background:#ecec17; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer;"><i class="ri-image-add-line"></i></button>
+              <button onclick="document.getElementById('inp-file-foto').click()" style="background:#ecec17; border:none; width:50px; height:50px; border-radius:50%; font-size:24px; cursor:pointer;"><i class="ri-image-add-line"></i></button>
               <input type="file" id="inp-file-foto" accept="image/*" hidden>
-              <button onclick="capturePhoto()" style="width:70px; height:70px; border-radius:50%; background:white; border:4px solid rgba(255,255,255,0.3); cursor:pointer;"></button>
-              <button id="btn-switch-toggle" style="background:var(--hc-blue); color:white; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer;"><i class="ri-camera-switch-line"></i></button>
+              <button class="btn-shutter-cam" onclick="capturePhoto()"></button>
+              <button onclick="switchCam()" style="background:var(--hc-blue); color:white; border:none; width:50px; height:50px; border-radius:50%; font-size:24px; cursor:pointer;"><i class="ri-camera-switch-line"></i></button>
           </div>
       </div>
   </div>
@@ -120,8 +135,8 @@
           <h3 style="margin-top:0; text-align:center;">Sesuaikan Foto (1:1)</h3>
           <div style="height: 300px; background:#000;"><img id="cropper-img" src="" style="max-width:100%;"></div>
           <div style="display:flex; gap:10px; margin-top:20px;">
-              <button onclick="document.getElementById('crop-modal').style.display='none'; cropper.destroy();" style="flex:1; padding:12px; background:var(--hc-red); color:white; border:none; border-radius:8px; cursor:pointer;">Batal</button>
-              <button id="btn-save-crop" style="flex:1; padding:12px; background:var(--hc-toska); color:white; border:none; border-radius:8px; cursor:pointer;">Simpan</button>
+              <button onclick="closeCropper()" style="flex:1; padding:12px; background:var(--hc-red); color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Batal</button>
+              <button id="btn-save-crop" style="flex:1; padding:12px; background:var(--hc-toska); color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Simpan</button>
           </div>
       </div>
   </div>
@@ -136,21 +151,10 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       initHC32Navigation('track'); 
-      
-      // Header Back Button
       const btnMenu = document.getElementById('hc32-btn-menu');
       if(btnMenu) {
         btnMenu.outerHTML = `<button class="btn-back-header" onclick="window.location.href='../../../bantuan/track/'"><i class="ri-arrow-left-line"></i></button>`;
       }
-
-      // Inject Spinner UI ke loading-init sesuai component.js
-      document.getElementById('loading-init').innerHTML = `
-        <div class="hc-spinner-box" style="margin:0 auto;">
-          <div class="hc-spinner-ring"></div>
-          <img src="https://drive.google.com/thumbnail?id=16VXxbcOF9h5zAzYEo2faAzmgqqhtHLlH&sz=w200" class="hc-spinner-logo">
-        </div>
-        <p style="margin-top:15px; font-size:14px; color:#64748b;">Mengambil rincian data...</p>
-      `;
 
       const params = new URLSearchParams(location.search);
       TRACKING_CODE = params.get('code');
@@ -173,7 +177,7 @@
           DETAILED_DATA = res.request.detailedData;
           document.getElementById('txt-reason').innerText = res.request.publicNote;
           document.getElementById('instruction').style.display = 'block';
-          generateFields(res.request.publicNote, res.request.type); // Kirim tipe juga
+          generateFields(res.request.publicNote, res.request.type); 
           document.getElementById('loading-init').style.display = 'none';
           document.getElementById('form-perbaikan').style.display = 'block';
         } else { throw new Error(res.message); }
@@ -184,13 +188,12 @@
 
     function generateFields(note, type) {
       const container = document.getElementById('dynamic-fields');
-      // Mapping label sesuai halaman pendaftaran
-      const idLabel = (type==='PA-Siswa') ? "Nomor Identitas (NIS)" : 
-                      (type==='PA-Guru') ? "Nomor Identitas (NIP)" : 
-                      (type==='PA-Alumni') ? "Nomor Identitas (No Anggota Perpus 32)" : "Nomor Identitas (NIP/NISN/No Anggota)";
+      const idLabel = (DETAILED_DATA?.tipe === 'siswa-aktif') ? "Nomor Identitas (NIS)" : 
+                      (DETAILED_DATA?.tipe === 'guru') ? "Nomor Identitas (NIP)" : 
+                      (DETAILED_DATA?.tipe === 'alumni') ? "Nomor Identitas (No Anggota Perpus 32)" : "Nomor Identitas (NIP/NISN/No Anggota)";
 
       const fieldsMap = [
-        { key: "nis", label: "Nomor Identitas", type: "tel" },
+        { key: "nis", label: "Nomor Identitas", type: "tel", id_hint: idLabel },
         { key: "nama", label: "Nama Lengkap", type: "text" },
         { key: "kelas", label: "Kelas", type: "text" },
         { key: "angkatan", label: "Angkatan", type: "text" },
@@ -204,33 +207,43 @@
       ];
 
       fieldsMap.forEach(field => {
-        // Cek label generik atau spesifik ID
         if (note.includes(field.label) || (field.key === 'nis' && note.includes("Nomor Identitas"))) {
           const div = document.createElement('div');
           div.className = 'row';
-          const labelText = (field.key === 'nis') ? idLabel : field.label;
+          const labelText = field.id_hint || field.label;
+          const oldVal = DETAILED_DATA ? (DETAILED_DATA[field.key] || '-') : '-';
+
+          // Template Data Sebelumnya
+          let prevHTML = `<div class="prev-label"><i class="ri-history-line"></i> Data Sebelumnya:</div>
+                          <input type="text" value="${oldVal}" disabled style="margin-bottom:10px;">`;
 
           if (field.type === 'file') {
-            div.innerHTML = `<label>${labelText} <span style="color:red">*</span></label>
+            div.innerHTML = `
+              <label>${labelText} <span class="req-star">*</span></label>
+              ${prevHTML}
               <div class="photo-area">
                 <div id="foto-preview-container"><img id="foto-preview-img" src=""></div>
-                <button type="button" class="btn-main-camera" id="btn-start-cam"><i class="ri-camera-fill"></i> Aktifkan Kamera</button>
-                <button type="button" id="btn-del-photo" style="display:none; color:red; border:none; background:none; margin-top:10px; cursor:pointer;">Hapus Foto</button>
+                <button type="button" class="btn-main-camera" id="btn-start-cam"><i class="ri-camera-fill"></i> Aktifkan Kamera Baru</button>
+                <button type="button" id="btn-del-photo" class="btn-delete-photo"><i class="ri-delete-bin-line"></i> Hapus Foto</button>
                 <input type="hidden" id="fd-foto-base64" class="req-field">
               </div>`;
           } else if (field.type === 'signature') {
-            div.innerHTML = `<label>${labelText} <span style="color:red">*</span></label>
+            div.innerHTML = `
+              <label>${labelText} <span class="req-star">*</span></label>
+              ${prevHTML}
               <div class="sig-wrapper">
                 <canvas id="sig-canvas"></canvas>
                 <div class="sig-tools">
-                  <button type="button" class="sig-btn" id="sig-undo">Undo</button>
-                  <button type="button" class="sig-btn" id="sig-clear" style="color:red;">Ulangi</button>
+                  <button type="button" class="sig-btn sig-btn-undo" id="sig-undo"><i class="ri-arrow-go-back-line"></i> Undo</button>
+                  <button type="button" class="sig-btn sig-btn-clear" id="sig-clear"><i class="ri-delete-bin-line"></i> Ulangi</button>
                 </div>
                 <input type="hidden" id="fd-sig-base64" class="req-field">
               </div>`;
           } else {
-            div.innerHTML = `<label>${labelText} <span style="color:red">*</span></label>
-                             <input type="${field.type}" id="inp-${field.key}" class="req-field" value="${DETAILED_DATA ? (DETAILED_DATA[field.key] || '') : ''}" required>`;
+            div.innerHTML = `
+              <label>${labelText} <span class="req-star">*</span></label>
+              ${prevHTML}
+              <input type="${field.type}" id="inp-${field.key}" class="req-field" placeholder="Masukkan perbaikan ${field.label}..." required>`;
           }
           container.appendChild(div);
 
@@ -238,28 +251,22 @@
           if (field.type === 'signature') initSigLogic();
         }
       });
-      
-      // Tambahkan event listener validasi ke semua field baru
+
       document.querySelectorAll('.req-field').forEach(el => {
         el.addEventListener('input', checkFormValidity);
-        el.addEventListener('change', checkFormValidity);
       });
     }
 
-    // --- VALIDASI TOMBOL (LOGIKA PENDAFTARAN) ---
     function checkFormValidity() {
       const fields = document.querySelectorAll('.req-field');
       let allFilled = true;
       fields.forEach(f => { if(!f.value) allFilled = false; });
-      
-      const btn = document.getElementById('btn-send');
-      btn.disabled = !allFilled;
+      document.getElementById('btn-send').disabled = !allFilled;
     }
 
     // --- PHOTO LOGIC ---
     function initPhotoLogic() {
       document.getElementById('btn-start-cam').onclick = startCam;
-      document.getElementById('btn-switch-toggle').onclick = switchCam;
       document.getElementById('btn-del-photo').onclick = () => {
         document.getElementById('fd-foto-base64').value = "";
         document.getElementById('foto-preview-container').style.display = 'none';
@@ -282,18 +289,13 @@
         stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
         const video = document.getElementById('cam-video');
         video.srcObject = stream;
-        // Hanya Mirror jika Kamera Depan ('user')
         video.style.transform = (currentFacingMode === 'user') ? 'scaleX(-1)' : 'none';
         document.getElementById('cam-popup').style.display = 'flex';
       } catch(e) { window.showHC32Status('error', 'Kamera', 'Gagal akses.'); }
     }
 
-    function stopCam() { if(stream) stream.getTracks().forEach(t => t.stop()); document.getElementById('cam-popup').style.display = 'none'; }
-
-    function switchCam() {
-      currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
-      startCam();
-    }
+    function stopCam() { if(stream) stream.getTracks().forEach(t => t.stop()); stream = null; document.getElementById('cam-popup').style.display = 'none'; }
+    function switchCam() { currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; startCam(); }
 
     function capturePhoto() {
       const video = document.getElementById('cam-video');
@@ -313,14 +315,15 @@
       cropper = new Cropper(document.getElementById('cropper-img'), { aspectRatio: 1, viewMode: 1 });
     }
 
+    function closeCropper() { document.getElementById('crop-modal').style.display = 'none'; if(cropper) cropper.destroy(); }
+
     document.getElementById('btn-save-crop').onclick = () => {
       const base64 = cropper.getCroppedCanvas({ width: 600, height: 600 }).toDataURL('image/jpeg', 0.8);
       document.getElementById('fd-foto-base64').value = base64;
       document.getElementById('foto-preview-img').src = base64;
       document.getElementById('foto-preview-container').style.display = 'block';
       document.getElementById('btn-del-photo').style.display = 'block';
-      document.getElementById('crop-modal').style.display = 'none';
-      cropper.destroy();
+      closeCropper();
       checkFormValidity();
     };
 
@@ -337,16 +340,17 @@
       window.onresize = resize; resize();
 
       document.getElementById('sig-clear').onclick = () => { sigPad.clear(); document.getElementById('fd-sig-base64').value=""; checkFormValidity(); };
-      document.getElementById('sig-undo').onclick = () => { const d = sigPad.toData(); if(d){ d.pop(); sigPad.fromData(d); } };
+      document.getElementById('sig-undo').onclick = () => { const d = sigPad.toData(); if(d){ d.pop(); sigPad.fromData(d); document.getElementById('fd-sig-base64').value = sigPad.isEmpty() ? "" : sigPad.toDataURL(); checkFormValidity(); } };
       
-      canvas.addEventListener('touchend', () => { document.getElementById('fd-sig-base64').value = sigPad.toDataURL(); checkFormValidity(); });
-      canvas.addEventListener('mouseup', () => { document.getElementById('fd-sig-base64').value = sigPad.toDataURL(); checkFormValidity(); });
+      const updateSigVal = () => { document.getElementById('fd-sig-base64').value = sigPad.toDataURL(); checkFormValidity(); };
+      canvas.addEventListener('touchend', updateSigVal);
+      canvas.addEventListener('mouseup', updateSigVal);
     }
 
     // --- SUBMIT ---
     document.getElementById('form-perbaikan').onsubmit = async function(e) {
       e.preventDefault();
-      window.showHC32Status('loading', 'Mengirim Data', 'Mohon tunggu...');
+      window.showHC32Status('loading', 'Mengirim Perbaikan...', 'Mohon tunggu sebentar.');
       
       const updatedData = {};
       document.querySelectorAll('.req-field').forEach(inp => {
@@ -362,7 +366,7 @@
         });
 
         if (res.status === 'ok') {
-          window.showHC32Status('success', 'Berhasil', 'Data terkirim.');
+          window.showHC32Status('success', 'Berhasil', 'Data perbaikan telah dikirim.');
           setTimeout(() => { window.location.href = "../../../bantuan/track/?code=" + TRACKING_CODE; }, 2500);
         } else { throw new Error(res.message); }
       } catch (err) {
